@@ -1,3 +1,3 @@
 
 
-{% include_relative publications.html %}
+{% include_relative publications.md %}
