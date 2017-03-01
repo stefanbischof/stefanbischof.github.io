@@ -26,4 +26,5 @@ gems:
    - jekyll-feed
    - jekyll-seo-tag
 
-theme: jekyll-theme-dinky
+# theme: jekyll-theme-dinky
+theme: jekyll-athena
