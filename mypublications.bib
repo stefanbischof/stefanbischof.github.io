@@ -7,366 +7,703 @@ Publications
  {% raw %}
 
 @inproceedings{DBLP:conf/i-semantics/Posada-Sanchez016,
-  author    = {M{\'{o}}nica Posada{-}S{\'{a}}nchez and
-               Stefan Bischof and
-               Axel Polleres},
-  title     = {Extracting Geo-Semantics About Cities From OpenStreetMap},
-  booktitle = {Joint Proceedings of the Posters and Demos Track of the 12th International
-               Conference on Semantic Systems - SEMANTiCS2016 and the 1st International
-               Workshop on Semantic Change {\&} Evolving Semantics (SuCCESS'16)
-               co-located with the 12th International Conference on Semantic Systems
-               (SEMANTiCS 2016), Leipzig, Germany, September 12-15, 2016.},
-  year      = {2016},
-  url       = {http://ceur-ws.org/Vol-1695/paper39.pdf},
-  timestamp = {Fri, 21 Oct 2016 15:23:34 +0200},
-  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/i-semantics/Posada-Sanchez016},
-  bibsource = {dblp computer science bibliography, http://dblp.org}
+  author       = {M{\'{o}}nica Posada{-}S{\'{a}}nchez and Stefan
+                  Bischof and Axel Polleres},
+  title	       = {Extracting Geo-Semantics About Cities From
+                  OpenStreetMap},
+  booktitle    = {Joint Proceedings of the Posters and Demos Track of
+                  the 12th International Conference on Semantic
+                  Systems - SEMANTiCS2016 and the 1st International
+                  Workshop on Semantic Change {\&} Evolving Semantics
+                  (SuCCESS'16) co-located with the 12th International
+                  Conference on Semantic Systems (SEMANTiCS
+                  2016),Leipzig,Germany,September 12-15,2016.},
+  year	       = 2016,
+  url	       = {http://ceur-ws.org/Vol-1695/paper39.pdf},
+  timestamp    = {Fri,21 Oct 2016 15:23:34 +0200},
+  biburl       =
+                  {http://dblp.uni-trier.de/rec/bib/conf/i-semantics/Posada-Sanchez016},
+  abstract     = {Access to high quality and updated data is crucial
+                  to assess and contextualize city state of affairs.
+                  The City Data Pipeline uses diverse Open Data
+                  sources to integrate statistical information about
+                  cities.  The resulting incomplete dataset is not
+                  directly usable for data analysis.  We exploit data
+                  from a geographic information system,namely
+                  OpenStreetMap,to obtain new indicators for cities
+                  with better coverage.  We show that OpenStreetMap is
+                  a promising data source for statistical data about
+                  cities.},
+  demo	       = {http://citydata.wu.ac.at/semanticsdemo},
+  poster       = {http://citydata.wu.ac.at/semanticsposter.pdf},
+  eventtype    = {poster}
 }
 
-
-
-
-
-
 @MastersThesis{Bischof2010,
-  author =     {Stefan Bischof},
-  title =      { {I}mplementation and {O}ptimisation of {Q}ueries in {XSPARQL}},
-  school =     {Vienna University of Technology},
-  year =       {2010},
-  address =    {Karlsplatz 13, 1040 Wien, Austria},
-  month =      {November},
-  abstract =   { {XSPARQL} is a language for transforming data between {XML} and {RDF}.
-	{XML} is a widely used format for data exchange. {RDF} is a data
-	format based on directed graphs, primarily used to represent {S}emantic
-	{W}eb data. {XSPARQL} is built by combining the strengths of the
-	two corresponding query languages {XQ}uery for {XML}, and {SPARQL}
-	for {RDF}. {I}n this thesis we present two {XSPARQL} enhancements
-	called {C}onstructed {D}ataset and {D}ataset {S}coping, the {XDEP}
-	dependent join optimisation, and a new {XSPARQL} implementation.
-	{C}onstructed {D}ataset allows to create and query intermediary {RDF}
-	graphs. {T}he {D}ataset {S}coping enhancement provides an optional
-	fix for unintended results which may occur when evaluating complex
-	{XSPARQL} queries containing nested {SPARQL} query parts. {T}he {XSPARQL}
-	implementation works by first rewriting an {XSPARQL} query to {XQ}uery
-	expressions containing interleaved calls to a {SPARQL} engine for
-	processing {RDF} data. {T}he resulting query is then evaluated by
-	standard {XQ}uery and {SPARQL} engines. {T}he dependent join optimisation
-	{XDEP} is designed to reduce query evaluation time for queries demanding
-	repeated evaluation of embedded {SPARQL} query parts. {XDEP} minimises
-	the number of interactions between the {XQ}uery and {SPARQL} engines
-	by bundling similar queries and let the {XQ}uery engine select relevant
-	data on its own. {W}e did an experimental evaluation of our approach
-	using an adapted version of the {XQ}uery benchmark suite {XM}ark.
-	{W}e will show that the {XDEP} optimisation reduces the evaluation
-	time of all compatible benchmark queries. {U}sing this optimisation
-	we could evaluate certain {XSPARQL} queries by two orders of magnitude
-	faster than with unoptimised {XSPARQL}.},
-  bdsk-url-1 = {http://stefanbischof.at/masterthesis/thesis.pdf},
-  file =       {Thesis fulltext:http\://stefanbischof.at/masterthesis/thesis:PDF},
-  keywords =   {XML, RDF, XQuery, SPARQL, Data Integration, Data Management},
-  owner =      {stefanbischof},
-  timestamp =  {2010.09.25},
-  url =        {http://stefanbischof.at/masterthesis/thesis.pdf}
+  author       = {Stefan Bischof},
+  title	       = { {I}mplementation and {O}ptimisation of {Q}ueries in
+                  {XSPARQL}},
+  school       = {Vienna University of Technology},
+  year	       = 2010,
+  address      = {Karlsplatz 13,1040 Wien,Austria},
+  month	       = {November},
+  abstract     = { {XSPARQL} is a language for transforming data
+                  between {XML} and {RDF}.  {XML} is a widely used
+                  format for data exchange. {RDF} is a data format
+                  based on directed graphs,primarily used to represent
+                  {S}emantic {W}eb data. {XSPARQL} is built by
+                  combining the strengths of the two corresponding
+                  query languages {XQ}uery for {XML},and {SPARQL} for
+                  {RDF}. {I}n this thesis we present two {XSPARQL}
+                  enhancements called {C}onstructed {D}ataset and
+                  {D}ataset {S}coping,the {XDEP} dependent join
+                  optimisation,and a new {XSPARQL} implementation.
+                  {C}onstructed {D}ataset allows to create and query
+                  intermediary {RDF} graphs. {T}he {D}ataset {S}coping
+                  enhancement provides an optional fix for unintended
+                  results which may occur when evaluating complex
+                  {XSPARQL} queries containing nested {SPARQL} query
+                  parts. {T}he {XSPARQL} implementation works by first
+                  rewriting an {XSPARQL} query to {XQ}uery expressions
+                  containing interleaved calls to a {SPARQL} engine
+                  for processing {RDF} data. {T}he resulting query is
+                  then evaluated by standard {XQ}uery and {SPARQL}
+                  engines. {T}he dependent join optimisation {XDEP} is
+                  designed to reduce query evaluation time for queries
+                  demanding repeated evaluation of embedded {SPARQL}
+                  query parts. {XDEP} minimises the number of
+                  interactions between the {XQ}uery and {SPARQL}
+                  engines by bundling similar queries and let the
+                  {XQ}uery engine select relevant data on its
+                  own. {W}e did an experimental evaluation of our
+                  approach using an adapted version of the {XQ}uery
+                  benchmark suite {XM}ark.  {W}e will show that the
+                  {XDEP} optimisation reduces the evaluation time of
+                  all compatible benchmark queries. {U}sing this
+                  optimisation we could evaluate certain {XSPARQL}
+                  queries by two orders of magnitude faster than with
+                  unoptimised {XSPARQL}.},
+  bdsk-url-1   = {http://stefanbischof.at/masterthesis/thesis.pdf},
+  file	       = {Thesis
+                  fulltext:http\://stefanbischof.at/masterthesis/thesis:PDF},
+  keywords     = {XML,RDF,XQuery,SPARQL,Data Integration,Data
+                  Management},
+  owner	       = {stefanbischof},
+  timestamp    = {2010.09.25},
+  url	       = {http://stefanbischof.at/masterthesis/thesis.pdf}
 }
 
 @InProceedings{Bischof2012,
-  author =     {Bischof, Stefan},
-  title =      {Optimising XML--RDF Data Integration},
-  booktitle =  {The Semantic Web: Research and Applications},
-  year =       {2012},
-  editor =     {Simperl, Elena and Cimiano, Philipp and Polleres, Axel and Corcho, Oscar and Presutti, Valentina},
-  volume =     {7295},
-  series =     {Lecture Notes in Computer Science},
-  pages =      {838--843},
-  publisher =  {Springer Berlin Heidelberg},
-  abstract =   {The Semantic Web provides a wealth of open data in RDF format. XML remains a widespread format for data exchange. When combining data of these two formats several problems arise due to representational incompatibilities. The query language XSPARQL, which is built by combining XQuery and SPARQL, addresses some of these problems. However the evaluation of complex XSPARQL queries by a naive implementation shows slow response times. Establishing an integrated formal model for a core fragment of XSPARQL will allow us to improve performance of query answering by defining query equivalences.},
-  bdsk-url-1 = {http://dx.doi.org/10.1007/978-3-642-30284-8_67},
-  doi =        {10.1007/978-3-642-30284-8_67},
-  isbn =       {978-3-642-30283-1},
-  keywords =   {Data Integration; Query Optimisation; XQuery; SPARQL}
+  author       = {Bischof,Stefan},
+  title	       = {Optimising XML--RDF Data Integration},
+  booktitle    = {The Semantic Web: Research and Applications},
+  year	       = 2012,
+  volume       = 7295,
+  series       = {Lecture Notes in Computer Science},
+  pages	       = {838--843},
+  publisher    = {Springer Berlin Heidelberg},
+  abstract     = {The Semantic Web provides a wealth of open data in
+                  RDF format. XML remains a widespread format for data
+                  exchange. When combining data of these two formats
+                  several problems arise due to representational
+                  incompatibilities. The query language XSPARQL,which
+                  is built by combining XQuery and SPARQL,addresses
+                  some of these problems. However the evaluation of
+                  complex XSPARQL queries by a naive implementation
+                  shows slow response times. Establishing an
+                  integrated formal model for a core fragment of
+                  XSPARQL will allow us to improve performance of
+                  query answering by defining query equivalences.},
+  bdsk-url-1   = {http://dx.doi.org/10.1007/978-3-642-30284-8_67},
+  doi	       = {10.1007/978-3-642-30284-8_67},
+  isbn	       = {978-3-642-30283-1},
+  keywords     = {Data Integration; Query Optimisation; XQuery;
+                  SPARQL}
 }
 
 @TechReport{BischofDeckerKrennwallnerEtAl2012,
-  author =      {Bischof, Stefan and Decker, Stefan and Krennwallner, Thomas and Lopes, Nuno and Polleres, Axel},
-  title =       {Mapping between RDF and XML with XSPARQL},
-  institution = {DERI},
-  year =        {2012},
-  abstract =    {One of the promises of Semantic Web applications is to seamlessly deal with heterogeneous data. While the Extensible Markup Language (XML) has become widely adopted as an almost ubiquitous interchange format for data, along with transformation languages like XSLT and XQuery to translate from one XML format into another, the more recent Resource Description Framework (RDF) has become another popular standard for data representation and exchange, supported by its own powerful query language SPARQL, that enables extraction and transformation of RDF data. Being able to work with these two languages using a common framework eliminates several unnecessary steps that are currently necessary when handling both formats side by side. In this report we present the XSPARQL language that, by combining XQuery and SPARQL, allows to query XML and RDF data using the same framework and, respectively transform one format into the other. We focus on the semantics of this combined language and present an implementation, including discussion of query optimisations along with benchmark evaluation. },
-  bdsk-url-1 =  {http://www.deri.ie/fileadmin/documents/DERI-TR-2011-04-04.pdf},
-  url =         {http://www.deri.ie/fileadmin/documents/DERI-TR-2011-04-04.pdf}
+  author       = {Bischof,Stefan and Decker,Stefan and Krennwallner,
+                  Thomas and Lopes,Nuno and Polleres,Axel},
+  title	       = {Mapping between RDF and XML with XSPARQL},
+  institution  = {DERI},
+  year	       = 2012,
+  abstract     = {One of the promises of Semantic Web applications is
+                  to seamlessly deal with heterogeneous data. While
+                  the Extensible Markup Language (XML) has become
+                  widely adopted as an almost ubiquitous interchange
+                  format for data,along with transformation languages
+                  like XSLT and XQuery to translate from one XML
+                  format into another,the more recent Resource
+                  Description Framework (RDF) has become another
+                  popular standard for data representation and
+                  exchange,supported by its own powerful query
+                  language SPARQL,that enables extraction and
+                  transformation of RDF data. Being able to work with
+                  these two languages using a common framework
+                  eliminates several unnecessary steps that are
+                  currently necessary when handling both formats side
+                  by side. In this report we present the XSPARQL
+                  language that,by combining XQuery and SPARQL, allows
+                  to query XML and RDF data using the same framework
+                  and,respectively transform one format into the
+                  other. We focus on the semantics of this combined
+                  language and present an implementation, including
+                  discussion of query optimisations along with
+                  benchmark evaluation. },
+  bdsk-url-1   =
+                  {http://www.deri.ie/fileadmin/documents/DERI-TR-2011-04-04.pdf},
+  url	       =
+                  {http://www.deri.ie/fileadmin/documents/DERI-TR-2011-04-04.pdf}
 }
 
 @Article{BischofDeckerKrennwallnerEtAl2012a,
-  author =     {Bischof, Stefan and Decker, Stefan and Krennwallner, Thomas and Lopes, Nuno and Polleres, Axel},
-  title =      {Mapping between RDF and XML with XSPARQL},
-  journal =    {Journal on Data Semantics},
-  year =       {2012},
-  volume =     {1},
-  number =     {3},
-  pages =      {147--185},
-  abstract =   {One promise of Semantic Web applications is to seamlessly deal with heterogeneous data. The Extensible Markup Language (XML) has become widely adopted as an almost ubiquitous interchange format for data, along with transformation languages like XSLT and XQuery to translate data from one XML format into another. However, the more recent Resource Description Framework (RDF) has become another popular standard for data representation and exchange, supported by its own query language SPARQL, that enables extraction and transformation of RDF data. Being able to work with XML and RDF using a common framework eliminates several unnecessary steps that are currently required when handling both formats side by side. In this paper we present the XSPARQL language that, by combining XQuery and SPARQL, allows to query XML and RDF data using the same framework and transform data from one format into the other. We focus on the semantics of this combined language and present an implementation, including discussion of query optimisations along with benchmark evaluation.},
-  bdsk-url-1 = {http://dx.doi.org/10.1007/s13740-012-0008-7},
-  doi =        {10.1007/s13740-012-0008-7},
-  issn =       {1861-2032},
-  keywords =   {Query processing; XML; RDF; SPARQL; XQuery; XSPARQL},
-  language =   {English},
-  publisher =  {Springer-Verlag}
+  author       = {Bischof,Stefan and Decker,Stefan and Krennwallner,
+                  Thomas and Lopes,Nuno and Polleres,Axel},
+  title	       = {Mapping between RDF and XML with XSPARQL},
+  journal      = {Journal on Data Semantics},
+  year	       = 2012,
+  volume       = 1,
+  number       = 3,
+  pages	       = {147--185},
+  abstract     = {One promise of Semantic Web applications is to
+                  seamlessly deal with heterogeneous data. The
+                  Extensible Markup Language (XML) has become widely
+                  adopted as an almost ubiquitous interchange format
+                  for data,along with transformation languages like
+                  XSLT and XQuery to translate data from one XML
+                  format into another. However,the more recent
+                  Resource Description Framework (RDF) has become
+                  another popular standard for data representation and
+                  exchange,supported by its own query language
+                  SPARQL,that enables extraction and transformation of
+                  RDF data. Being able to work with XML and RDF using
+                  a common framework eliminates several unnecessary
+                  steps that are currently required when handling both
+                  formats side by side. In this paper we present the
+                  XSPARQL language that,by combining XQuery and
+                  SPARQL,allows to query XML and RDF data using the
+                  same framework and transform data from one format
+                  into the other. We focus on the semantics of this
+                  combined language and present an
+                  implementation,including discussion of query
+                  optimisations along with benchmark evaluation.},
+  bdsk-url-1   = {http://dx.doi.org/10.1007/s13740-012-0008-7},
+  doi	       = {10.1007/s13740-012-0008-7},
+  issn	       = {1861-2032},
+  keywords     = {Query processing; XML; RDF; SPARQL; XQuery; XSPARQL},
+  language     = {English},
+  publisher    = {Springer-Verlag}
 }
 
 @InProceedings{BischofKarapantelakisNechiforEtAl2014,
-  author =        {Bischof, Stefan and Karapantelakis, Athanasios and Nechifor, Cosmin-Septimiu and Sheth, Amit and Mileo, Alessandra and Barnaghi, Payam},
-  title =         {Semantic Modelling of Smart City Data},
-  booktitle =     {Proceedings of the W3C Workshop on the Web of Things},
-  year =          {2014},
-  month =         {June},
-  abstract =      {Cities present an opportunity for rendering Web of Things-enabled services. According to the World Health Organization, population in cities will double by the middle of this century, while cities deal with increasingly pressing issues such as environmental sustainability, economic growth and citizen mobility. In this paper, we propose a discussion around the need for common semantic descriptions for smart city data to facilitate future services in "smart cities". We present examples of data that can be collected from cities, discuss issues around this data and put forward some preliminary thoughts for creating a semantic description model to describe and help discover, index and query smart city data.},
-  date-modified = {2014-08-07 09:28:03 +0000},
-  url =           {http://www.w3.org/2014/02/wot/papers/karapantelakis.pdf}
+  author       = {Bischof,Stefan and Karapantelakis,Athanasios and
+                  Nechifor,Cosmin-Septimiu and Sheth,Amit and Mileo,
+                  Alessandra and Barnaghi,Payam},
+  title	       = {Semantic Modelling of Smart City Data},
+  booktitle    = {Proceedings of the W3C Workshop on the Web of
+                  Things},
+  year	       = 2014,
+  month	       = {June},
+  abstract     = {Cities present an opportunity for rendering Web of
+                  Things-enabled services. According to the World
+                  Health Organization,population in cities will double
+                  by the middle of this century,while cities deal with
+                  increasingly pressing issues such as environmental
+                  sustainability,economic growth and citizen
+                  mobility. In this paper,we propose a discussion
+                  around the need for common semantic descriptions for
+                  smart city data to facilitate future services in
+                  "smart cities". We present examples of data that can
+                  be collected from cities, discuss issues around this
+                  data and put forward some preliminary thoughts for
+                  creating a semantic description model to describe
+                  and help discover, index and query smart city data.},
+  date-modified= {2014-08-07 09:28:03 +0000},
+  url	       =
+                  {http://www.w3.org/2014/02/wot/papers/karapantelakis.pdf},
+  eventtype    = {workshop}
 }
 
 @InProceedings{BischofKroetzschPolleresEtAl2014,
-  author =        {Bischof, Stefan and Kr{\"o}tzsch, Markus and Polleres, Axel and Rudolph, Sebastian},
-  title =         {Schema-Agnostic Query Rewriting in SPARQL 1.1},
-  booktitle =     {ISWC 2014},
-  year =          {2014},
-  series =        {LNCS},
-  month =         {October},
-  publisher =     {Springer},
-  abstract =      {SPARQL 1.1 supports the use of ontologies to enrich query results with logical entailments, and OWL 2 provides a dedicated fragment OWL QL for this purpose. Typical implementations use the OWL QL schema to rewrite a conjunctive query into an equivalent set of queries, to be answered against the non-schema part of the data. With the adoption of the recent SPARQL 1.1 standard, however, RDF databases are capable of answering much more expressive queries directly, and we ask how this can be exploited in query rewriting. We find that SPARQL 1.1 is powerful enough to ``implement'' a full-fledged OWL QL reasoner in a single query. Using additional SPARQL 1.1 features, we develop a new method of schema-agnostic query rewriting, where arbitrary conjunctive queries over OWL QL are rewritten into equivalent SPARQL 1.1 queries in a way that is fully independent of the actual schema. This allows us to query RDF data under OWL QL entailment without extracting or preprocessing OWL axioms.
-},
-  date-added =    {2014-08-07 09:24:06 +0000},
-  date-modified = {2014-08-07 09:28:18 +0000},
-  doi =           {10.1007/978-3-319-11964-9_37}
+  author       = {Bischof,Stefan and Kr{\"o}tzsch,Markus and
+                  Polleres,Axel and Rudolph,Sebastian},
+  title	       = {Schema-Agnostic Query Rewriting in SPARQL 1.1},
+  booktitle    = {ISWC 2014},
+  year	       = 2014,
+  series       = {LNCS},
+  month	       = {October},
+  publisher    = {Springer},
+  abstract     = {SPARQL 1.1 supports the use of ontologies to enrich
+                  query results with logical entailments,and OWL 2
+                  provides a dedicated fragment OWL QL for this
+                  purpose. Typical implementations use the OWL QL
+                  schema to rewrite a conjunctive query into an
+                  equivalent set of queries,to be answered against the
+                  non-schema part of the data. With the adoption of
+                  the recent SPARQL 1.1 standard,however,RDF databases
+                  are capable of answering much more expressive
+                  queries directly,and we ask how this can be
+                  exploited in query rewriting. We find that SPARQL
+                  1.1 is powerful enough to ``implement'' a
+                  full-fledged OWL QL reasoner in a single
+                  query. Using additional SPARQL 1.1 features,we
+                  develop a new method of schema-agnostic query
+                  rewriting,where arbitrary conjunctive queries over
+                  OWL QL are rewritten into equivalent SPARQL 1.1
+                  queries in a way that is fully independent of the
+                  actual schema. This allows us to query RDF data
+                  under OWL QL entailment without extracting or
+                  preprocessing OWL axioms.  },
+  date-added   = {2014-08-07 09:24:06 +0000},
+  date-modified= {2014-08-07 09:28:18 +0000},
+  doi	       = {10.1007/978-3-319-11964-9_37}
 }
 
 @TechReport{BischofKroetzschPolleresEtAl2014a,
-  author =       {Stefan Bischof and Markus Kr\"{o}tzsch and Axel Polleres and Sebastian Rudolph},
-  title =        {Schema-Agnostic Query Rewriting in {SPARQL} 1.1: {Technical} report},
-  year =         {2014},
-  abstract =     {SPARQL 1.1 supports the use of ontologies to enrich query results
-with logical entailments, and OWL 2 provides a dedicated fragment OWL QL
-for this purpose. Typical implementations use the OWL QL schema to rewrite
-a conjunctive query into an equivalent set of queries, to be answered against
-the non-schema part of the data. With the adoption of the recent SPARQL 1.1
-standard, however, RDF databases are capable of answering much more expressive
-queries directly, and we ask how this can be exploited in query rewriting. We find
-that SPARQL 1.1 is powerful enough to “implement” a full-fledged OWL QL
-reasoner in a single query. Using additional SPARQL 1.1 features, we develop
-a new method of schema-agnostic query rewriting, where arbitrary conjunctive
-queries over OWL QL are rewritten into equivalent SPARQL 1.1 queries in a way
-that is fully independent of the actual schema. This allows us to query RDF data
-under OWL QL entailment without extracting or preprocessing OWL axioms.},
+  author       = {Stefan Bischof and Markus Kr\"{o}tzsch and Axel
+                  Polleres and Sebastian Rudolph},
+  title	       = {Schema-Agnostic Query Rewriting in {SPARQL} 1.1:
+                  {Technical} report},
+  year	       = 2014,
+  abstract     = {SPARQL 1.1 supports the use of ontologies to enrich
+                  query results with logical entailments,and OWL 2
+                  provides a dedicated fragment OWL QL for this
+                  purpose. Typical implementations use the OWL QL
+                  schema to rewrite a conjunctive query into an
+                  equivalent set of queries,to be answered against the
+                  non-schema part of the data. With the adoption of
+                  the recent SPARQL 1.1 standard,however,RDF databases
+                  are capable of answering much more expressive
+                  queries directly,and we ask how this can be
+                  exploited in query rewriting. We find that SPARQL
+                  1.1 is powerful enough to “implement” a full-fledged
+                  OWL QL reasoner in a single query. Using additional
+                  SPARQL 1.1 features,we develop a new method of
+                  schema-agnostic query rewriting,where arbitrary
+                  conjunctive queries over OWL QL are rewritten into
+                  equivalent SPARQL 1.1 queries in a way that is fully
+                  independent of the actual schema. This allows us to
+                  query RDF data under OWL QL entailment without
+                  extracting or preprocessing OWL axioms.},
   howpublished = {\url{http://stefanbischof.at/publications/iswc14/}},
-  url =          {http://stefanbischof.at/publications/iswc14/tr.pdf}
+  url	       = {http://stefanbischof.at/publications/iswc14/tr.pdf}
 }
 
 @InProceedings{BischofKroetzschPolleresEtAl2015,
-  author =    {Bischof, Stefan and Kr{\"o}tzsch, Markus and Polleres, Axel and Rudolph, Sebastian},
-  title =     {Schema-Agnostic Query Rewriting for {OWL QL}},
-  booktitle = {Proceedings of the 28th International Workshop on Description Logics (DL'15)},
-  year =      {2015},
-  editor =    {Diego Calvanese and Boris Konev},
-  volume =    {1350},
-  series =    { {CEUR} Workshop Proceedings},
-  address =   {Athens, Greece},
-  month =     jun,
-  publisher = {CEUR-WS.org},
-  day =       {7--10},
-  url =       {http://ceur-ws.org/Vol-1350/paper-12.pdf}
+  author       = {Bischof,Stefan and Kr{\"o}tzsch,Markus and
+                  Polleres,Axel and Rudolph,Sebastian},
+  title	       = {Schema-Agnostic Query Rewriting for {OWL QL}},
+  booktitle    = {Proceedings of the 28th International Workshop on
+                  Description Logics (DL'15)},
+  year	       = 2015,
+  volume       = 1350,
+  series       = { {CEUR} Workshop Proceedings},
+  address      = {Athens,Greece},
+  month	       = jun,
+  publisher    = {CEUR-WS.org},
+  day	       = {7--10},
+  url	       = {http://ceur-ws.org/Vol-1350/paper-12.pdf}
 }
 
 @InProceedings{BischofLopesPolleres2011,
-  author =     {Bischof, Stefan and Lopes, Nuno and Polleres, Axel},
-  title =      {Improve Efficiency of Mapping Data between XML and RDF with XSPARQL},
-  booktitle =  {Web Reasoning and Rule Systems},
-  year =       {2011},
-  editor =     {Rudolph, Sebastian and Gutierrez, Claudio},
-  volume =     {6902},
-  series =     {Lecture Notes in Computer Science},
-  pages =      {232--237},
-  publisher =  {Springer Berlin Heidelberg},
-  abstract =   {XSPARQL is a language to transform data between the tree-based XML format and the graph-based RDF format. XML is a widely adopted data exchange format which brings its own query language XQuery along. RDF is the standard data format of the Semantic Web with SPARQL being the corresponding query language. XSPARQL combines XQuery and SPARQL to a unified query language which provides a more intuitive and maintainable way to translate data between the two data formats. A naive implementation of XSPARQL can be inefficient when evaluating nested queries. However, such queries occur often in practice when dealing with XML data. We present and compare several approaches to optimise nested queries. By implementing these optimisations we improve efficiency up to two orders of magnitude in a practical evaluation.},
-  bdsk-url-1 = {http://dx.doi.org/10.1007/978-3-642-23580-1_17},
-  doi =        {10.1007/978-3-642-23580-1_17},
-  isbn =       {978-3-642-23579-5},
-  keywords =   {RDF; XML; SPARQL; XQuery; XSPARQL}
+  author       = {Bischof,Stefan and Lopes,Nuno and Polleres,Axel},
+  title	       = {Improve Efficiency of Mapping Data between XML and
+                  RDF with XSPARQL},
+  booktitle    = {Web Reasoning and Rule Systems},
+  year	       = 2011,
+  volume       = 6902,
+  series       = {Lecture Notes in Computer Science},
+  pages	       = {232--237},
+  publisher    = {Springer Berlin Heidelberg},
+  abstract     = {XSPARQL is a language to transform data between the
+                  tree-based XML format and the graph-based RDF
+                  format. XML is a widely adopted data exchange format
+                  which brings its own query language XQuery
+                  along. RDF is the standard data format of the
+                  Semantic Web with SPARQL being the corresponding
+                  query language. XSPARQL combines XQuery and SPARQL
+                  to a unified query language which provides a more
+                  intuitive and maintainable way to translate data
+                  between the two data formats. A naive implementation
+                  of XSPARQL can be inefficient when evaluating nested
+                  queries. However,such queries occur often in
+                  practice when dealing with XML data. We present and
+                  compare several approaches to optimise nested
+                  queries. By implementing these optimisations we
+                  improve efficiency up to two orders of magnitude in
+                  a practical evaluation.},
+  bdsk-url-1   = {http://dx.doi.org/10.1007/978-3-642-23580-1_17},
+  doi	       = {10.1007/978-3-642-23580-1_17},
+  isbn	       = {978-3-642-23579-5},
+  keywords     = {RDF; XML; SPARQL; XQuery; XSPARQL}
 }
 
 @InProceedings{BischofMartinPolleresEtAl2015,
-  author =    {Stefan Bischof and Christoph Martin and Axel Polleres and Patrik Schneider},
-  title =     {Open City Data Pipeline: Collecting, Integrating, and Predicting Open City Data},
-  booktitle = {Proceedings of the 4th Workshop on Knowledge Discovery and Data Mining Meets Linked Open Data co-located with 12th Extended Semantic Web Conference (ESWC'15)},
-  year =      {2015},
-  editor =    {Johanna V{\"o}lker and Heiko Paulheim and Jens Lehmann and Vojtech Svate},
-  volume =    {1365},
-  series =    { {CEUR} Workshop Proceedings},
-  address =   {Portoroz, Slovenia},
-  month =     may,
-  publisher = {CEUR-WS.org},
-  abstract =  {Having access to high quality and recent data is crucial both for decision makers in cities as well as for informing the public, likewise, infrastructure
-providers could offer more tailored solutions to cities based on such data. However, even though there are many data sets containing relevant indicators about
-cities available as open data, it is cumbersome to integrate and analyze them,
-since the collection is still a manual process and the sources are not connected
-to each other upfront. Further, disjoint indicators and cities across the available
-data sources lead to a large proportion of missing values when integrating these
-sources. In this paper we present a platform for collecting, integrating, and enriching open data about cities in a re-usable and comparable manner: we have integrated various open data sources and present approaches for predicting missing
-values, where we use standard regression methods in combination with principal
-component analysis to improve quality and amount of predicted values. Further,
-we re-publish the integrated and predicted values as linked open data.},
-  day =       {31},
-  url =       {http://ceur-ws.org/Vol-1365/paper3.pdf}
+  author       = {Stefan Bischof and Christoph Martin and Axel
+                  Polleres and Patrik Schneider},
+  title	       = {Open City Data Pipeline: Collecting,Integrating, and
+                  Predicting Open City Data},
+  booktitle    = {Proceedings of the 4th Workshop on Knowledge
+                  Discovery and Data Mining Meets Linked Open Data
+                  co-located with 12th Extended Semantic Web
+                  Conference (ESWC'15)},
+  year	       = 2015,
+  volume       = 1365,
+  series       = { {CEUR} Workshop Proceedings},
+  address      = {Portoroz,Slovenia},
+  month	       = may,
+  publisher    = {CEUR-WS.org},
+  abstract     = {Having access to high quality and recent data is
+                  crucial both for decision makers in cities as well
+                  as for informing the public,likewise, infrastructure
+                  providers could offer more tailored solutions to
+                  cities based on such data. However, even though
+                  there are many data sets containing relevant
+                  indicators about cities available as open data,it is
+                  cumbersome to integrate and analyze them,since the
+                  collection is still a manual process and the sources
+                  are not connected to each other
+                  upfront. Further,disjoint indicators and cities
+                  across the available data sources lead to a large
+                  proportion of missing values when integrating these
+                  sources. In this paper we present a platform for
+                  collecting,integrating,and enriching open data about
+                  cities in a re-usable and comparable manner: we have
+                  integrated various open data sources and present
+                  approaches for predicting missing values, where we
+                  use standard regression methods in combination with
+                  principal component analysis to improve quality and
+                  amount of predicted values. Further,we re-publish
+                  the integrated and predicted values as linked open
+                  data.},
+  day	       = 31,
+  url	       = {http://ceur-ws.org/Vol-1365/paper3.pdf},
+  eventtype    = {workshop}
 }
 
 @InProceedings{BischofMartinPolleresEtAl2015a,
-  author =    {Bischof, Stefan and Martin, Christoph and Polleres, Axel and Schneider, Patrik},
-  title =     {Collecting, Integrating, Enriching and Republishing Open City Data as Linked Data},
-  booktitle = {The Semantic Web - ISWC 2015: 14th International Semantic Web Conference, Bethlehem, PA, USA, October 11-15, 2015, Proceedings, Part II},
-  year =      {2015},
-  editor =    {Arenas, Marcelo and Corcho, Oscar and Simperl, Elena and Strohmaier, Markus and d'Aquin, Mathieu and Srinivas, Kavitha and Groth, Paul and Dumontier, Michel and Heflin, Jeff and Thirunarayan, Krishnaprasad and Staab, Steffen},
-  volume =    {9367},
-  series =    {LNCS},
-  pages =     {57--75},
-  month =     oct,
-  publisher = {Springer International Publishing},
-  abstract =  {Access to high quality and recent data is crucial both for decision makers in cities as well as for the public. Likewise, infrastructure providers could offer more tailored solutions to cities based on such data. However, even though there are many data sets containing relevant indicators about cities available as open data, it is cumbersome to integrate and analyze them, since the collection is still a manual process and the sources are not connected to each other upfront. Further, disjoint indicators and cities across the available data sources lead to a large proportion of missing values when integrating these sources. In this paper we present a platform for collecting, integrating, and enriching open data about cities in a reusable and comparable manner: we have integrated various open data sources and present approaches for predicting missing values, where we use standard regression methods in combination with principal component analysis (PCA) to improve quality and amount of predicted values. Since indicators and cities only have partial overlaps across data sets, we particularly focus on predicting indicator values across data sets, where we extend, adapt, and evaluate our prediction model for this particular purpose: as a “side product” we learn ontology mappings (simple equations and sub-properties) for pairs of indicators from different data sets. Finally, we republish the integrated and predicted values as linked open data.},
-  chapter =   {Collecting, Integrating, Enriching and Republishing Open City Data as Linked Data},
-  doi =       {10.1007/978-3-319-25010-6_4},
-  isbn =      {978-3-319-25010-6}
+  author       = {Bischof,Stefan and Martin,Christoph and Polleres,
+                  Axel and Schneider,Patrik},
+  title	       = {Collecting,Integrating,Enriching and Republishing
+                  Open City Data as Linked Data},
+  booktitle    = {The Semantic Web - ISWC 2015: 14th International
+                  Semantic Web Conference,Bethlehem,PA,USA,October
+                  11-15,2015,Proceedings,Part II},
+  year	       = 2015,
+  volume       = 9367,
+  series       = {LNCS},
+  pages	       = {57--75},
+  month	       = oct,
+  publisher    = {Springer International Publishing},
+  abstract     = {Access to high quality and recent data is crucial
+                  both for decision makers in cities as well as for
+                  the public. Likewise,infrastructure providers could
+                  offer more tailored solutions to cities based on
+                  such data. However,even though there are many data
+                  sets containing relevant indicators about cities
+                  available as open data,it is cumbersome to integrate
+                  and analyze them,since the collection is still a
+                  manual process and the sources are not connected to
+                  each other upfront. Further,disjoint indicators and
+                  cities across the available data sources lead to a
+                  large proportion of missing values when integrating
+                  these sources. In this paper we present a platform
+                  for collecting,integrating,and enriching open data
+                  about cities in a reusable and comparable manner: we
+                  have integrated various open data sources and
+                  present approaches for predicting missing
+                  values,where we use standard regression methods in
+                  combination with principal component analysis (PCA)
+                  to improve quality and amount of predicted
+                  values. Since indicators and cities only have
+                  partial overlaps across data sets,we particularly
+                  focus on predicting indicator values across data
+                  sets,where we extend,adapt,and evaluate our
+                  prediction model for this particular purpose: as a
+                  “side product” we learn ontology mappings (simple
+                  equations and sub-properties) for pairs of
+                  indicators from different data sets. Finally,we
+                  republish the integrated and predicted values as
+                  linked open data.},
+  chapter      = {Collecting,Integrating,Enriching and Republishing
+                  Open City Data as Linked Data},
+  doi	       = {10.1007/978-3-319-25010-6_4},
+  isbn	       = {978-3-319-25010-6},
+  video	       =
+                  {http://videolectures.net/iswc2015_bischof_linked_data/}
 }
 
 @InProceedings{BischofPolleres2013,
-  author =     {Bischof, Stefan and Polleres, Axel},
-  title =      {RDFS with Attribute Equations via SPARQL Rewriting},
-  booktitle =  {The Semantic Web: Semantics and Big Data},
-  year =       {2013},
-  editor =     {Cimiano, Philipp and Corcho, Oscar and Presutti, Valentina and Hollink, Laura and Rudolph, Sebastian},
-  volume =     {7882},
-  series =     {Lecture Notes in Computer Science},
-  pages =      {335--350},
-  publisher =  {Springer Berlin Heidelberg},
-  abstract =   {In addition to taxonomic knowledge about concepts and properties typically expressible in languages such as RDFS and OWL, implicit information in an RDF graph may be likewise determined by arithmetic equations. The main use case here is exploiting knowledge about functional dependencies among numerical attributes expressible by means of such equations. While some of this knowledge can be encoded in rule extensions to ontology languages, we provide an arguably more flexible framework that treats attribute equations as first class citizens in the ontology language. The combination of ontological reasoning and attribute equations is realized by extending query rewriting techniques already successfully applied for ontology languages such as (the DL-Lite-fragment of) RDFS or OWL, respectively. We deploy this technique for rewriting SPARQL queries and discuss the feasibility of alternative implementations, such as rule-based approaches.},
-  bdsk-url-1 = {http://dx.doi.org/10.1007/978-3-642-38288-8_23},
-  doi =        {10.1007/978-3-642-38288-8_23},
-  isbn =       {978-3-642-38287-1},
-  slides =     {http://stefanbischof.at/publications/ESWC2013-slides.pdf},
-  video =      {http://videolectures.net/eswc2013_bischof_sparql_rewriting/}
+  author       = {Bischof,Stefan and Polleres,Axel},
+  title	       = {RDFS with Attribute Equations via SPARQL Rewriting},
+  booktitle    = {The Semantic Web: Semantics and Big Data},
+  year	       = 2013,
+  volume       = 7882,
+  series       = {Lecture Notes in Computer Science},
+  pages	       = {335--350},
+  publisher    = {Springer Berlin Heidelberg},
+  abstract     = {In addition to taxonomic knowledge about concepts
+                  and properties typically expressible in languages
+                  such as RDFS and OWL,implicit information in an RDF
+                  graph may be likewise determined by arithmetic
+                  equations. The main use case here is exploiting
+                  knowledge about functional dependencies among
+                  numerical attributes expressible by means of such
+                  equations. While some of this knowledge can be
+                  encoded in rule extensions to ontology languages,we
+                  provide an arguably more flexible framework that
+                  treats attribute equations as first class citizens
+                  in the ontology language. The combination of
+                  ontological reasoning and attribute equations is
+                  realized by extending query rewriting techniques
+                  already successfully applied for ontology languages
+                  such as (the DL-Lite-fragment of) RDFS or OWL,
+                  respectively. We deploy this technique for rewriting
+                  SPARQL queries and discuss the feasibility of
+                  alternative implementations,such as rule-based
+                  approaches.},
+  bdsk-url-1   = {http://dx.doi.org/10.1007/978-3-642-38288-8_23},
+  doi	       = {10.1007/978-3-642-38288-8_23},
+  isbn	       = {978-3-642-38287-1},
+  slides       =
+                  {http://stefanbischof.at/publications/ESWC2013-slides.pdf},
+  video	       =
+                  {http://videolectures.net/eswc2013_bischof_sparql_rewriting/}
 }
 
 @InProceedings{BischofPolleresSperl2013,
-  author =     {Bischof, Stefan and Polleres, Axel and Sperl, Simon},
-  title =      {City Data Pipeline - A System for Making Open Data Useful for Cities},
-  booktitle =  {Proceedings of the I-SEMANTICS 2013 Posters {\&} Demonstrations Track, Graz, Austria, September 4-6, 2013},
-  year =       {2013},
-  editor =     {Lohmann, Steffen},
-  volume =     {1026},
-  series =     {CEUR Workshop Proceedings},
-  pages =      {45--49},
-  publisher =  {CEUR-WS.org},
-  abstract =   {Some cities publish data in an open form. But even more
-cities can profit from the data that is already available as open or linked
-data. Unfortunately open data of different sources is usually given also
-in different heterogeneous data formats. With the City Data Pipeline
-we aim to integrate data about cities in a common data model by using
-Semantic Web technologies. Eventually we want to support city officials
-with their decisions by providing automated analytics support.},
-  bdsk-url-1 = {http://ceur-ws.org/Vol-1026/paper10.pdf},
-  ee =         {http://ceur-ws.org/Vol-1026/paper10.pdf},
-  url =        {http://ceur-ws.org/Vol-1026/paper10.pdf}
+  author       = {Bischof,Stefan and Polleres,Axel and Sperl,Simon},
+  title	       = {City Data Pipeline - A System for Making Open Data
+                  Useful for Cities},
+  booktitle    = {Proceedings of the I-SEMANTICS 2013 Posters {\&}
+                  Demonstrations Track,Graz,Austria,September 4-6,
+                  2013},
+  year	       = 2013,
+  volume       = 1026,
+  series       = {CEUR Workshop Proceedings},
+  pages	       = {45--49},
+  publisher    = {CEUR-WS.org},
+  abstract     = {Some cities publish data in an open form. But even
+                  more cities can profit from the data that is already
+                  available as open or linked data. Unfortunately open
+                  data of different sources is usually given also in
+                  different heterogeneous data formats. With the City
+                  Data Pipeline we aim to integrate data about cities
+                  in a common data model by using Semantic Web
+                  technologies. Eventually we want to support city
+                  officials with their decisions by providing
+                  automated analytics support.},
+  bdsk-url-1   = {http://ceur-ws.org/Vol-1026/paper10.pdf},
+  eventtype    = {poster},
+  ee	       = {http://ceur-ws.org/Vol-1026/paper10.pdf},
+  url	       = {http://ceur-ws.org/Vol-1026/paper10.pdf},
+  eventtype    = {poster}
 }
 
 @InProceedings{BoranBediniMatheusEtAl2012,
-  author =        {Boran, Aidan and Bedini, Ivan and Matheus, Christopher J. and Patel-Schneider, Peter F. and Bischof, Stefan},
-  title =         {An Empirical Analysis of Semantic Techniques Applied to a Network Management Classification Problem},
-  booktitle =     {Web Intelligence and Intelligent Agent Technology, IEEE/WIC/ACM International Conference on},
-  year =          {2012},
-  volume =        {1},
-  pages =         {90--96},
-  address =       {Los Alamitos, CA, USA},
-  publisher =     {IEEE Computer Society},
-  abstract =      {Semantic technologies are increasingly being employed to integrate, relate and classify heterogeneous data from various problem domains. To date, however, little empirical analysis has been carried out to help identify the benefits and limitations of different semantic approaches on specific data integration and classification problems. This paper evaluates three alternative semantic techniques for performing classification over data derived from the telecommunications domain. The problem of interest involves inferring the "health" status of network nodes (femtocells) from synthesized performance management (PM) instance data based on the operational PM schema. The semantic approaches used in the comparison include OWL2 axioms, SPARQL queries and SWRL rules. Empirical tests were performed across a range of data set sizes, using Pellet for axioms and rules and ARQ for queries. The experimental results provide (mostly) quantitative and (some) qualitative indication of the relative merits of each approach. Key among these findings is confirmation of the clear superiority of queries over rules and axioms in terms of raw performance and scalability.},
-  bdsk-url-1 =    {http://doi.ieeecomputersociety.org/10.1109/WI-IAT.2012.177},
-  date-modified = {2014-08-07 09:30:00 +0000},
-  doi =           {http://doi.ieeecomputersociety.org/10.1109/WI-IAT.2012.177},
-  isbn =          {978-1-4673-6057-9}
+  author       = {Boran,Aidan and Bedini,Ivan and Matheus, Christopher
+                  J. and Patel-Schneider,Peter F. and Bischof,Stefan},
+  title	       = {An Empirical Analysis of Semantic Techniques Applied
+                  to a Network Management Classification Problem},
+  booktitle    = {Web Intelligence and Intelligent Agent Technology,
+                  IEEE/WIC/ACM International Conference on},
+  year	       = 2012,
+  volume       = 1,
+  pages	       = {90--96},
+  address      = {Los Alamitos,CA,USA},
+  publisher    = {IEEE Computer Society},
+  abstract     = {Semantic technologies are increasingly being
+                  employed to integrate,relate and classify
+                  heterogeneous data from various problem domains. To
+                  date,however,little empirical analysis has been
+                  carried out to help identify the benefits and
+                  limitations of different semantic approaches on
+                  specific data integration and classification
+                  problems. This paper evaluates three alternative
+                  semantic techniques for performing classification
+                  over data derived from the telecommunications
+                  domain. The problem of interest involves inferring
+                  the "health" status of network nodes (femtocells)
+                  from synthesized performance management (PM)
+                  instance data based on the operational PM
+                  schema. The semantic approaches used in the
+                  comparison include OWL2 axioms,SPARQL queries and
+                  SWRL rules. Empirical tests were performed across a
+                  range of data set sizes,using Pellet for axioms and
+                  rules and ARQ for queries. The experimental results
+                  provide (mostly) quantitative and (some) qualitative
+                  indication of the relative merits of each
+                  approach. Key among these findings is confirmation
+                  of the clear superiority of queries over rules and
+                  axioms in terms of raw performance and scalability.},
+  bdsk-url-1   =
+                  {http://doi.ieeecomputersociety.org/10.1109/WI-IAT.2012.177},
+  date-modified= {2014-08-07 09:30:00 +0000},
+  doi	       =
+                  {http://doi.ieeecomputersociety.org/10.1109/WI-IAT.2012.177},
+  isbn	       = {978-1-4673-6057-9}
 }
 
 @InProceedings{DellAglioPolleresLopesEtAl2014,
-  author =    {Daniele Dell'Aglio and Axel Polleres and Nuno Lopes and Stefan Bischof},
-  title =     {Querying the Web of Data with {XSPARQL} 1.1},
-  booktitle = {Proceedings ISWC2014 Developers Workshop},
-  year =      {2014},
-  editor =    {Ruben Verborgh and Erik Mannens},
-  volume =    {1268},
-  series =    {CEUR Workshop Proceedings},
-  pages =     {113--118},
-  address =   {Riva del Garda, Italy},
-  month =     oct,
-  publisher = {CEUR-WS.org},
-  abstract =  {On the Web and in corporate environments there exists a lot of XML data in various formats. XQuery and XSLT serve as query and transformation languages for XML. But as RDF also becomes a mainstream format for Web of data, transformations languages between these formats are required. XSPARQL is a hybrid language that provides an integration framework for XML, RDF, but also JSON and relational data by partially combining several languages such as XQuery, SPARQL 1.1 and SQL. In this paper we present the latest open source release of the XSPARQL engine, which is based on standard software components (Jena and Saxon) and outline possible applications of XSPARQL 1.1 to address Web data integration use cases.},
-  day =       {19--20},
-  url =       {http://ceur-ws.org/Vol-1268/paper19.pdf}
+  author       = {Daniele Dell'Aglio and Axel Polleres and Nuno Lopes
+                  and Stefan Bischof},
+  title	       = {Querying the Web of Data with {XSPARQL} 1.1},
+  booktitle    = {Proceedings ISWC2014 Developers Workshop},
+  year	       = 2014,
+  volume       = 1268,
+  series       = {CEUR Workshop Proceedings},
+  pages	       = {113--118},
+  address      = {Riva del Garda,Italy},
+  month	       = oct,
+  publisher    = {CEUR-WS.org},
+  abstract     = {On the Web and in corporate environments there
+                  exists a lot of XML data in various formats. XQuery
+                  and XSLT serve as query and transformation languages
+                  for XML. But as RDF also becomes a mainstream format
+                  for Web of data,transformations languages between
+                  these formats are required. XSPARQL is a hybrid
+                  language that provides an integration framework for
+                  XML,RDF,but also JSON and relational data by
+                  partially combining several languages such as
+                  XQuery,SPARQL 1.1 and SQL. In this paper we present
+                  the latest open source release of the XSPARQL
+                  engine,which is based on standard software
+                  components (Jena and Saxon) and outline possible
+                  applications of XSPARQL 1.1 to address Web data
+                  integration use cases.},
+  day	       = {19--20},
+  url	       = {http://ceur-ws.org/Vol-1268/paper19.pdf},
+  eventtype    = {workshop}
 }
 
 @InProceedings{LopesBischofDeckerEtAl2011,
-  author =     {Lopes, Nuno and Bischof, Stefan and Decker, Stefan and Polleres, Axel},
-  title =      {On the Semantics of Heterogeneous Querying of Relational, XML and RDF Data with XSPARQL},
-  booktitle =  {Proceedings of the 15th Portuguese Conference on Artificial Intelligence},
-  year =       {2011},
-  pages =      {268--282},
-  abstract =   {XSPARQL is a transformation and query language that caters for heterogenous sources: in its present status it is possible to transform data between XML and RDF formats due to the integration of the XQuery and SPARQL query languages. In this paper we propose an extension of the XSPARQL language to incorporate data contained in relational databases by integrating a subset of SQL in the syntax of XSPARQL. Exposing data contained in relational databases as RDF is a necessary step towards the realisation of the Semantic Web and Web of Data. We present the syntax of an extension of the XSPARQL language catering for the inclusion of the SQL query language along with the semantics based on the XQuery formal semantics and sketch how this extended XSPARQL language can be used to expose RDB2RDF mappings, as currently being discussed in the W3C RDB2RDF Working Group.},
-  bdsk-url-1 = {http://epia2011.appia.pt/LinkClick.aspx?fileticket=4KQ-90gB-BU%3D&tabid=562},
-  isbn =       {978-989-95618-4-7},
-  url =        {http://epia2011.appia.pt/LinkClick.aspx?fileticket=4KQ-90gB-BU%3D&tabid=562}
+  author       = {Nuno Lopes and Bischof,Stefan and Decker,Stefan and
+                  Polleres,Axel},
+  title	       = {On the Semantics of Heterogeneous Querying of
+                  Relational,XML and RDF Data with XSPARQL},
+  booktitle    = {Proceedings of the 15th Portuguese Conference on
+                  Artificial Intelligence},
+  year	       = 2011,
+  pages	       = {268--282},
+  abstract     = {XSPARQL is a transformation and query language that
+                  caters for heterogenous sources: in its present
+                  status it is possible to transform data between XML
+                  and RDF formats due to the integration of the XQuery
+                  and SPARQL query languages. In this paper we propose
+                  an extension of the XSPARQL language to incorporate
+                  data contained in relational databases by
+                  integrating a subset of SQL in the syntax of
+                  XSPARQL. Exposing data contained in relational
+                  databases as RDF is a necessary step towards the
+                  realisation of the Semantic Web and Web of Data. We
+                  present the syntax of an extension of the XSPARQL
+                  language catering for the inclusion of the SQL query
+                  language along with the semantics based on the
+                  XQuery formal semantics and sketch how this extended
+                  XSPARQL language can be used to expose RDB2RDF
+                  mappings,as currently being discussed in the W3C
+                  RDB2RDF Working Group.},
+  bdsk-url-1   =
+                  {http://epia2011.appia.pt/LinkClick.aspx?fileticket=4KQ-90gB-BU%3D&tabid=562},
+  isbn	       = {978-989-95618-4-7},
+  url	       =
+                  {http://epia2011.appia.pt/LinkClick.aspx?fileticket=4KQ-90gB-BU%3D&tabid=562}
 }
 
 @InProceedings{LopesBischofErlingEtAl2010,
-  author =       {Lopes, Nuno and Bischof, Stefan and Erling, Orri and Polleres, Axel and Passant, Alexandre and Berrueta, Diego and Campos, Antonio and Euzenat, J{\'e}r{\^o}me and Idehen, Kingsley and Decker, Stefan and Corlosquet, St{\'e}phane and Kopecky, Jacek and Saarela, Janne and Krennwallner, Thomas and Palmisano, Davide and Zaremba, Michal},
-  title =        { {RDF} and {XML}: {T}owards a {U}nified {Q}uery {L}ayer},
-  booktitle =    {Proceedings of the W3C Workshop on RDF Next Steps},
-  year =         {2010},
-  editor =       {Wood, David and Decker, Stefan and Herman, Ivan},
-  address =      {Stanford, Palo Alto, CA, USA},
-  month =        {June},
+  author       = {Lopes,Nuno and Bischof,Stefan and Erling,Orri and
+                  Polleres,Axel and Passant,Alexandre and Berrueta,
+                  Diego and Campos,Antonio and Euzenat, J{\'e}r{\^o}me
+                  and Idehen,Kingsley and Decker, Stefan and
+                  Corlosquet,St{\'e}phane and Kopecky, Jacek and
+                  Saarela,Janne and Krennwallner,Thomas and
+                  Palmisano,Davide and Zaremba,Michal},
+  title	       = { {RDF} and {XML}: {T}owards a {U}nified {Q}uery
+                  {L}ayer},
+  booktitle    = {Proceedings of the W3C Workshop on RDF Next Steps},
+  year	       = 2010,
+  address      = {Stanford,Palo Alto,CA,USA},
+  month	       = {June},
   organization = {W3C},
-  abstract =     { {O}ne of the requirements of current {S}emantic {W}eb applications
-	is to deal with heterogeneous data. {T}he {R}esource {D}escription
-	{F}ramework ({RDF}) is the {W}3{C} recommended standard for data
-	representation, yet data represented and stored using the {E}xtensible
-	{M}arkup {L}anguage ({XML}) is almost ubiquitous and remains the
-	standard for data exchange. {W}hile {RDF} has a standard {XML} representation,
-	{XML} {Q}uery languages are of limited use for transformations between
-	natively stored {RDF} data and {XML}. {B}eing able to work with both
-	{XML} and {RDF} data using a common framework would be a great advantage
-	and eliminate unnecessary intermediate steps that are currently used
-	when handling both formats.},
-  bdsk-url-1 =   {http://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf},
-  file =         {:http\://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf:PDF},
-  keywords =     {RDF, SPARQL, XML, XQuery},
-  owner =        {stefanbischof},
-  timestamp =    {2010.09.25},
-  url =          {http://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf}
+  abstract     = { {O}ne of the requirements of current {S}emantic
+                  {W}eb applications is to deal with heterogeneous
+                  data. {T}he {R}esource {D}escription {F}ramework
+                  ({RDF}) is the {W}3{C} recommended standard for data
+                  representation,yet data represented and stored using
+                  the {E}xtensible {M}arkup {L}anguage ({XML}) is
+                  almost ubiquitous and remains the standard for data
+                  exchange. {W}hile {RDF} has a standard {XML}
+                  representation,{XML} {Q}uery languages are of
+                  limited use for transformations between natively
+                  stored {RDF} data and {XML}. {B}eing able to work
+                  with both {XML} and {RDF} data using a common
+                  framework would be a great advantage and eliminate
+                  unnecessary intermediate steps that are currently
+                  used when handling both formats.},
+  bdsk-url-1   = {http://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf},
+  file	       =
+                  {:http\://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf:PDF},
+  keywords     = {RDF,SPARQL,XML,XQuery},
+  owner	       = {stefanbischof},
+  timestamp    = {2010.09.25},
+  url	       = {http://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf},
+  eventtype    = {workshop}
 }
 
 @InProceedings{PolleresBischofSchreiner2014,
-  author =        {Polleres, Axel and Bischof, Stefan and Schreiner, Herwig},
-  title =         {City Data Pipeline -- A report about experiences from using Open Data to gather indicators of city performance},
-  booktitle =     {European Data Forum 2014},
-  year =          {2014},
-  month =         {May},
-  abstract =      {We present the City Data Pipeline -- a system for gathering city performance indicators published as Open Data in order to ease the compilation of studies and reports used within Siemens. Under the assumption that Open Data provides means to automatise tedious data research tasks, we have built a system that integrates basic indicators for cities from various Open Data sources. The architecture is flexible, extensible, and natively based on RDF & SPARQL. We report on challenges (data quality, coverage, heterogeneity), on the usability of Open Data for industry in general, and our research to overcome some of the involved issues.},
-  date-modified = {2014-08-07 09:23:41 +0000},
-  slides =        {http://www.slideshare.net/EUDataForum/edf2014-talk-of-axel-polleres-full-professor-wu-vienna-university-of-economics-and-business-austria-city-data-pipeline-a-report-about-experiences-from-using-open-data-to-gather-indicators-of-city-performance}
+  author       = {Polleres,Axel and Bischof,Stefan and Schreiner,
+                  Herwig},
+  title	       = {City Data Pipeline -- A report about experiences
+                  from using Open Data to gather indicators of city
+                  performance},
+  booktitle    = {European Data Forum 2014},
+  year	       = 2014,
+  month	       = {May},
+  abstract     = {We present the City Data Pipeline -- a system for
+                  gathering city performance indicators published as
+                  Open Data in order to ease the compilation of
+                  studies and reports used within Siemens. Under the
+                  assumption that Open Data provides means to
+                  automatise tedious data research tasks,we have built
+                  a system that integrates basic indicators for cities
+                  from various Open Data sources. The architecture is
+                  flexible,extensible,and natively based on RDF &
+                  SPARQL. We report on challenges (data
+                  quality,coverage,heterogeneity),on the usability of
+                  Open Data for industry in general,and our research
+                  to overcome some of the involved issues.},
+  date-modified= {2014-08-07 09:23:41 +0000},
+  slides       =
+                  {http://www.slideshare.net/EUDataForum/edf2014-talk-of-axel-polleres-full-professor-wu-vienna-university-of-economics-and-business-austria-city-data-pipeline-a-report-about-experiences-from-using-open-data-to-gather-indicators-of-city-performance}
 }
 
 @InProceedings{SchennerBischofPolleresEtAl2014,
-  author =        {Schenner, Gottfried and Bischof, Stefan and Polleres, Axel and Steyskal, Simon},
-  title =         {Integrating Distributed Configurations with RDFS and SPARQL},
-  booktitle =     {Config Workshop 2014},
-  year =          {2014},
-  month =         {September},
-  abstract =      {Large interconnected technical systems (e.g. railway networks, power grid, computer networks) are typically configured with the help of multiple configurators, which store their configurations in separate databases based on heterogeneous domain models (ontologies). In practice users often want to ask queries over several distributed configurations. In order to reason over these distributed configurations in a uniform manner a mechanism for ontology align- ment and data integration is required. In this paper we describe our experience with using standard Semantic Web technologies (RDFS and SPARQL) for data integration and reasoning.},
-  date-added =    {2014-08-07 09:21:51 +0000},
-  date-modified = {2014-08-07 09:28:36 +0000},
-  url =           {http://ceur-ws.org/Vol-1220/02_confws2014_submission_3.pdf}
+  author       = {Schenner,Gottfried and Bischof,Stefan and
+                  Polleres,Axel and Steyskal,Simon},
+  title	       = {Integrating Distributed Configurations with RDFS and
+                  SPARQL},
+  booktitle    = {Config Workshop 2014},
+  year	       = 2014,
+  month	       = {September},
+  abstract     = {Large interconnected technical systems (e.g. railway
+                  networks,power grid,computer networks) are typically
+                  configured with the help of multiple
+                  configurators,which store their configurations in
+                  separate databases based on heterogeneous domain
+                  models (ontologies). In practice users often want to
+                  ask queries over several distributed
+                  configurations. In order to reason over these
+                  distributed configurations in a uniform manner a
+                  mechanism for ontology align- ment and data
+                  integration is required. In this paper we describe
+                  our experience with using standard Semantic Web
+                  technologies (RDFS and SPARQL) for data integration
+                  and reasoning.},
+  date-added   = {2014-08-07 09:21:51 +0000},
+  date-modified= {2014-08-07 09:28:36 +0000},
+  url	       =
+                  {http://ceur-ws.org/Vol-1220/02_confws2014_submission_3.pdf},
+  eventtype    = {workshop}
 }
+
 {% endraw %}

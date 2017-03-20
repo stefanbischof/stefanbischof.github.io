@@ -1,0 +1,278 @@
+---
+---
+@import "normalize";
+@import "syntax-highlighting";
+
+
+$fontsize: 1rem;
+$baseline: 1.6875rem;
+$gutter:   10%;
+$big-scale:    4/3;
+$small-scale: 6/5;
+$sansfont:  'Source Sans Pro', 'Open Sans', 'Droid Serif', 'Source Sans Pro', Helvetica Neue, Helvetica, Arial, sans-serif;
+$seriffont: 'Playfair Display', serif;
+$highlight: #c33;
+@mixin baseline-before($lh) {
+    &:before {
+        content:'';
+	display: inline-block;
+	vertical-align: baseline;
+	height: $baseline*$lh;
+    }
+}
+@mixin baseline-after($lh) {
+    &:after {
+	content:'';
+	display: inline-block;
+	vertical-align: -$baseline;
+	height: $baseline*$lh;
+    }
+}
+
+@function pow($number, $exponent) {
+  $value: 1;
+
+  @if $exponent > 0 {
+    @for $i from 1 through $exponent {
+      $value: $value * $number;
+    }
+  }
+
+  @return $value;
+}
+
+@mixin font-size($scale, $level) {
+    font-size: pow($scale, $level) * 1rem;
+}
+
+@mixin button() {
+    background-color: #666;
+	color: white;
+	text-decoration: none;
+	padding: 0.2rem 0.5rem 0.1rem;
+	font-family: $sansfont;
+	font-size: 0.8rem;
+	-moz-border-radius: 0.2rem;
+	-webkit-border-radius: 0.2rem;
+	border-radius: 0.2rem;
+	text-shadow: none;
+	background-image: none;
+	position: relative;
+	top: -0.2rem;
+	list-style-type: none;
+	margin: 0;
+	&:hover {
+	    background-color: $highlight;
+	  
+	}
+}
+
+html {
+line-height: $baseline;
+color: #403830;
+padding: 0 $baseline;
+font-size: $fontsize;
+}
+body {
+margin: 0 auto;
+font-family: Crimson Text, Georgia, Times New Roman, serif;
+font-family: $sansfont;
+font-variant-numeric: oldstyle-nums proportional-nums slashed-zero;
+font-variant-ligatures: common-ligatures  contextual;
+max-width: 80rem;
+
+}
+body > header {
+    font-weight:700;
+    margin: 0;
+    padding: $baseline 0 $baseline;
+    @include font-size($big-scale, 1);
+    font-family: $sansfont;
+    a {
+        color: $highlight;
+        text-decoration: none;
+        border-width: 0;
+        font-weight: 900;
+        background-image: none;
+        text-shadow: none;
+    }
+    &.big {
+        @include font-size($big-scale, 2);
+        padding-top: $baseline*2;
+	
+    }
+}
+h1, h2, h3 {
+    padding: 0;
+    font-weight: 400;
+    font-family:  $sansfont;
+}
+h1, h2, header.big {
+    line-height: $baseline*2;
+    @include baseline-before(2);
+    @include baseline-after(2);
+}
+h1 {
+    @include font-size($big-scale, 2);
+line-height: $baseline*2;
+margin: 0;
+}
+h2 {
+ @include font-size($big-scale, 1);
+margin: 0;
+}
+h3 {
+font-size: 1rem;
+margin: 0;
+}
+p, ul, ol, pre, figure {
+padding: 0;
+margin: 0;
+}
+p, li:first-child, h3, body > header, pre, textarea {
+    @include baseline-before(1);
+}
+p, li:last-child, h3, body > header, pre, textarea {
+    @include baseline-after(1);
+}
+/*p > em {
+    font-style: normal;
+    font-weight: bold;
+}*/
+ul, ol, figure.highlight {
+    margin: 0;
+}
+dd {
+margin-top: $baseline;
+}
+li {
+padding: 0;
+list-style-type: circle;
+margin: 0 0 0 1rem;
+.button {
+    @include button();
+}
+}
+.bibliography {
+    li {
+	list-style-type: none;
+        text-indent: -1rem;	
+    }
+    .details {
+	@include button();
+    }
+}
+.buttonlist li {
+list-style-type: none;
+padding-left: 0;
+}
+.code {
+
+}
+.caps {
+    /*letter-spacing: 0.05em;*/
+    font-variant-caps: small-caps;
+}
+a {
+text-decoration: none;
+color: #333;
+background-image: linear-gradient(to top, transparent 0%, $highlight 1%, $highlight 5%, transparent 8%);
+text-shadow: white 0.1rem 0px 0px, white -0.1rem 0px 0px;
+}
+hr ~ * a {
+border-width: 0;
+}
+hr {
+clear: both;
+border: 0.1rem solid #ccc;
+margin: $baseline 0 $baseline;
+}
+
+.row {
+margin: 0 0;
+}
+.row:after, .row:before {
+clear:both;
+content:"";
+display:table; 
+}
+.col, .col4, .col8, .col6 {
+float: left;
+display: block;
+margin: 0 0 $baseline $gutter;
+}
+.col4 {
+width: (100%-$gutter)/3;
+}
+.col8 {
+width: (100%-$gutter)/3*2;
+}
+.col6 {
+width: (100%-$gutter)/2;
+}
+pre, figure, code, textarea {
+    font-family: 'Lucida Console', monospace;
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0;
+    line-height: $baseline*3/4;
+    color: #666;
+    resize: none;
+    overflow: hidden;
+ white-space: pre-wrap;       /* css-3 */
+ white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+ white-space: -pre-wrap;      /* Opera 4-6 */
+ white-space: -o-pre-wrap;    /* Opera 7 */
+ word-wrap: break-word;       /* Internet Explorer  */
+}
+pre, textarea {
+    margin-top: $baseline/3;
+}
+textarea{
+    font-family: 'Lucida Console', monospace;
+    font-size: 0.8rem;
+    width: 100%;
+    height: auto;
+}
+
+.col4:first-child,.col8:first-child,.col6:first-child { margin-left: 0; }
+.authors {
+    font-family: $sansfont;
+    color: #678;
+    .first, .last {
+	
+    }
+}
+@media only screen and (max-width: 40rem) {
+    html { font-size: 0.9rem; }
+}
+@media only screen and (max-width: 60rem) {
+    .col, .col4, .col8, .col6 {
+	width: 100%;
+	margin: 0;
+    }
+    .col8:last-child, .col6:last-child {
+        margin-bottom: 2em
+    }
+    body > header {
+        padding: $baseline/2 0 0;
+	@include font-size($small-scale, 1);
+	&.big {
+            @include font-size($small-scale, 3);
+	    line-height: 2rem;
+	    padding-top: $baseline;
+	}
+    }
+    h1 {
+	@include font-size($small-scale, 2);
+	line-height: $baseline*1.5;
+    }
+    h2 {
+	@include font-size($small-scale, 1);
+	line-height: $baseline;
+	@include baseline-before(1);
+        @include baseline-after(1);
+    }
+}
+
+
