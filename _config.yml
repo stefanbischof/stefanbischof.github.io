@@ -3,13 +3,19 @@ title: Stefan Bischof - semantic web researcher
 email: stefan@stefanbischof.at
 description: > # this means to ignore newlines until "baseurl:"
   Hi! I am a research scientist at Siemens AG Österreich and a PhD student with the Technical University of Vienna.
-  I think Semantic Web technologies are useful tools, not only for academia or for fun but also for enterprises. 
+  Semantic Web technologies are useful tools, not only for academia or for fun but also for enterprises. 
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://stefanbischof.at" # the base hostname & protocol for your site
+url: "http://www.stefanbischof.at" # the base hostname & protocol for your site
 twitter_username: stefanbischof
 github_username:  stefanbischof
 author: 
   twitter: stefanbischof
+social:
+  name: Stefan Bischof
+  links:
+    - http://twittern.com/stefanbischof
+    - http://github.com/stefanbischof
+webmaster_verifications:
 
 # Build settings
 markdown: kramdown
