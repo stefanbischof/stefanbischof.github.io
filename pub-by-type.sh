@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export TMPDIR=.
+
 BIB=mypublications.bib
 HTML=mypublications.html
 
