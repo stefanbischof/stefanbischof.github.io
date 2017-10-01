@@ -40,8 +40,9 @@ defaults:
       layout: "post"
       author: "Stefan Bischof"
 
-collection:
-- publications
+collections:
+  doc:
+    output: true
 
 sass:
     style: compressed
