@@ -13,7 +13,7 @@ author:
 social:
   name: Stefan Bischof
   links:
-    - http://twittern.com/stefanbischof
+    - http://twitter.com/stefanbischof
     - http://github.com/stefanbischof
 webmaster_verifications:
   google: uCs0oiMeUVzn9UBXLcNZXLddVbmM7oOy408K8tzeFbw
@@ -27,7 +27,6 @@ gems:
   - jekyll-sitemap
   - jekyll-seo-tag
 #  - jekyll-typogrify
-
 
 include: ['.htaccess']
 
