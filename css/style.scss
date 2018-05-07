@@ -180,7 +180,7 @@ background-image: linear-gradient(to top, transparent 0%, $highlight 1%, $highli
 text-shadow: white 0.1rem 0px 0px, white -0.1rem 0px 0px;
 }
 a[href*="doi.org"] {
-text-decoration: none;
+background-image: none;
 }
 hr ~ * a {
 border-width: 0;
