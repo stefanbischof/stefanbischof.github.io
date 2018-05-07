@@ -179,7 +179,7 @@ color: #333;
 background-image: linear-gradient(to top, transparent 0%, $highlight 1%, $highlight 5%, transparent 8%);
 text-shadow: white 0.1rem 0px 0px, white -0.1rem 0px 0px;
 }
-a[href*="doi.org"] {
+a[href*="doi.org"], a[href*="ceur-ws.org"] {
 background-image: none;
 }
 hr ~ * a {
