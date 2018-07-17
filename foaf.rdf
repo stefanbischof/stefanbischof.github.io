@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+  xmlns:foaf="http://xmlns.com/foaf/0.1/" 
+  xmlns:owl="http://www.w3.org/2002/07/owl#" 
+  xml:base="http://stefanbischof.at/foaf.rdf"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+  
+  <foaf:PersonalProfileDocument rdf:about="">
+   <foaf:maker rdf:resource="#me"/>
+   <foaf:primaryTopic rdf:resource="#me"/>
+  </foaf:PersonalProfileDocument>
+
+  <foaf:Person rdf:ID="me">
+    <foaf:name>Stefan Bischof</foaf:name>
+    <foaf:firstName>Stefan</foaf:firstName>
+    <foaf:surname>Bischof</foaf:surname>
+    <foaf:title>Mr</foaf:title>
+    <foaf:homepage rdf:resource="https://www.stefanbischof.at/"/>
+    <owl:differentFrom rdf:resource="https://dblp.org/pers/b/Bischof_0001:Stefan" />
+    <owl:differentFrom rdf:resource="https://dblp.org/pers/b/Bischof_0003:Stefan"/>
+    <owl:sameAs rdf:resource="https://dblp.org/pers/b/Bischof_0002:Stefan" rdfs:seeAlso="https://dblp.org/pers/xr/b/Bischof_0002:Stefan.rdf" />
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://www.polleres.net/foaf.rdf#me">
+        <rdfs:seeAlso rdf:resource="http://www.polleres.net/foaf.rdf"/>
+        <foaf:name>Axel Polleres</foaf:name>
+        <foaf:homepage rdf:resource="http://www.polleres.net/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://more.zites.net/morefiles/foaf.rdf#me">
+        <rdfs:seeAlso rdf:resource="http://more.zites.net/morefiles/foaf.rdf"/>
+        <foaf:name>Wolfgang Ziegler</foaf:name>
+        <foaf:homepage rdf:resource="http://more.zites.net"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://voque.org/saokhue_foaf.rdf#SaoKhue">
+        <rdfs:seeAlso rdf:resource="http://voque.org/saokhue_foaf.rdf"/>
+        <foaf:name>Khue Vo Sao</foaf:name>
+        <foaf:homepage rdf:resource="http://voque.org"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://stud3.tuwien.ac.at/~e9827053/foaf.rdf#me">
+        <rdfs:seeAlso rdf:resource="http://stud3.tuwien.ac.at/~e9827053/foaf.rdf"/>
+        <foaf:name>Jesia Zakraoui</foaf:name>
+        <foaf:homepage rdf:resource="http://stud3.tuwien.ac.at/~e9827053/default.html"/>
+      </foaf:Person>
+    </foaf:knows> 
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://xover.htu.tuwien.ac.at/~stoiko/techsemweb/stoiko.rdf#me">
+        <!--rdfs:seeAlso rdf:resource="http://xover.htu.tuwien.ac.at/~stoiko/techsemweb/stoiko.rdf"/-->
+        <foaf:name>Stoiko Ivanov</foaf:name>
+        <foaf:homepage rdf:resource="http://xover.htu.tuwien.ac.at/~stoiko/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://nunolopes.org/foaf.rdf#me">
+        <foaf:name>Nuno Lopes</foaf:name>
+        <rdfs:seeAlso rdf:resource="http://nunolopes.org/foaf.rdf"/>
+        <foaf:homepage rdf:resource="http://nunolopes.org/" />
+      </foaf:Person>
+    </foaf:knows>
+	
+    <foaf:knows>
+      <foaf:Person rdf:about="http://richard.cyganiak.de/foaf.rdf#cygri">
+        <foaf:name>Richard Cyganiak</foaf:name>
+        <rdfs:seeAlso rdf:resource="http://richard.cyganiak.de/foaf.rdf"/>
+        <foaf:homepage rdf:resource="http://richard.cyganiak.de/" />
+      </foaf:Person>
+    </foaf:knows>
+  
+    <foaf:knows>
+      <foaf:Person rdf:about="http://www.deri.ie/about/team/member/Behrang_Qasemizadeh#me">
+        <foaf:name>Behrang Qasemizadeh</foaf:name>
+        <rdfs:seeAlso rdf:resource="http://www.deri.ie/fileadmin/scripts/foaf.php?id=402"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://www.deri.ie/about/team/member/Antoine_Zimmermann#me">
+        <foaf:name>Antoine Zimmermann</foaf:name>
+        <rdfs:seeAlso rdf:resource="http://www.deri.ie/fileadmin/scripts/foaf.php?id=392"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://www.postsubmeta.net/foaf.rdf#TK">
+        <foaf:name>Thomas Krennwallner</foaf:name>
+        <rdfs:seeAlso rdf:resource="http://www.postsubmeta.net/foaf.rdf"/>
+        <foaf:homepage rdf:resource="http://www.postsubmeta.net/" />
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person>
+        <foaf:name>Thomas Eiter</foaf:name>
+        <foaf:homepage rdf:resource="http://www.kr.tuwien.ac.at/staff/eiter/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://sw.deri.org/~sheila/foaf.rdf#me">
+        <foaf:name>Sheila Kinsella</foaf:name>
+        <!--rdfs:seeAlso rdf:resource="http://sw.deri.org/~sheila/foaf.rdf"/-->
+        <foaf:homepage rdf:resource="http://sw.deri.org/~sheila/" />
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://sw-app.org/mic.xhtml#i">
+        <foaf:name>Michael Hausenblas</foaf:name>
+        <rdfs:seeAlso rdf:resource="http://sw-app.org/mic.rdf" />
+        <foaf:homepage rdf:resource="http://sw-app.org/" />
+      </foaf:Person>
+    </foaf:knows>
+
+  </foaf:Person>
+  
+</rdf:RDF>
