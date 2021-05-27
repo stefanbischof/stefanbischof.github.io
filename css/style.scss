@@ -9,7 +9,11 @@ $baseline: 1.6875rem;
 $gutter:   10%;
 $big-scale:    4/3;
 $small-scale: 6/5;
-$sansfont:  'Source Sans Pro', 'Open Sans', 'Droid Serif', 'Source Sans Pro', Helvetica Neue, Helvetica, Arial, sans-serif;
+$sansfont: -apple-system, BlinkMacSystemFont,
+"Segoe UI", "Roboto", "Oxygen",
+"Ubuntu", "Cantarell", "Fira Sans",
+"Droid Sans", "Helvetica Neue", sans-serif;
+
 $seriffont: 'Playfair Display', serif;
 $highlight: #c33;
 @mixin baseline-before($lh) {
@@ -75,7 +79,6 @@ font-size: $fontsize;
 }
 body {
 margin: 0 auto;
-font-family: Crimson Text, Georgia, Times New Roman, serif;
 font-family: $sansfont;
 font-variant-numeric: oldstyle-nums proportional-nums slashed-zero;
 font-variant-ligatures: common-ligatures  contextual;
@@ -178,9 +181,6 @@ text-decoration: none;
 color: #333;
 background-image: linear-gradient(to top, transparent 0%, $highlight 1%, $highlight 5%, transparent 8%);
 text-shadow: white 0.1rem 0px 0px, white -0.1rem 0px 0px;
-}
-a[href*="doi.org"], a[href*="ceur-ws.org"] {
-background-image: none;
 }
 hr ~ * a {
 border-width: 0;
