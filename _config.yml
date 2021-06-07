@@ -1,33 +1,35 @@
 # Site settings
-title: Stefan Bischof - semantic web researcher
+title: Stefan Bischof - Semantic Web Researcher
 email: stefan@stefanbischof.at
 description: > # this means to ignore newlines until "baseurl:"
-  I am a research scientist at Siemens AG Österreich, specifically in the research division Corporate Technology. I am working on Semantic Web technologies and (Industrial) Knowledge Graphs. 
+  I am a research scientist at Siemens AG Österreich, specifically in the research division Technology working on (Industrial) Knowledge Graphs and semantic modelling.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "https://www.stefanbischof.at" # the base hostname & protocol for your site
-twitter_username: stefanbischof
+twitter:
+  username: stefanbischof
+  card: summary
 github_username:  stefanbischof
-author: 
+author:
+  name: Stefan Bischof
   twitter: stefanbischof
 social:
   name: Stefan Bischof
   links:
     - https://twitter.com/stefanbischof
     - https://github.com/stefanbischof
+    - http://linkedin.com/in/stefanbischof
 webmaster_verifications:
   google: uCs0oiMeUVzn9UBXLcNZXLddVbmM7oOy408K8tzeFbw
 
 # Build settings
 markdown: kramdown
 
-gems:
+plugins:
 #  - 'jekyll/scholar'
 #  - jekyll-assets
   - jekyll-sitemap
-  - jekyll-seo-tag
+    #  - jekyll-seo-tag
 #  - jekyll-typogrify
-
-include: ['.htaccess']
 
 defaults:
   -
