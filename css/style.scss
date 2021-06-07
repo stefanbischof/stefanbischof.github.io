@@ -9,10 +9,7 @@ $baseline: 1.6875rem;
 $gutter:   10%;
 $big-scale:    4/3;
 $small-scale: 6/5;
-$sansfont: -apple-system, BlinkMacSystemFont,
-"Segoe UI", "Roboto", "Oxygen",
-"Ubuntu", "Cantarell", "Fira Sans",
-"Droid Sans", "Helvetica Neue", sans-serif;
+$sansfont: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
 $seriffont: 'Playfair Display', serif;
 $highlight: #c33;
