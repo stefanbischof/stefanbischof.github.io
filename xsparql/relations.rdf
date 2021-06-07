@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:nodeID="genid2">
+    <foaf:name>Alice</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <foaf:name>Stefan</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <foaf:homepage rdf:resource="http://stefanbischof.at/"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid1">
+    <foaf:knows rdf:nodeID="genid2"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid4">
+    <foaf:name>Bob</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <foaf:name>Stefan</foaf:name>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <foaf:homepage rdf:resource="http://www.stefandecker.org/"/>
+  </rdf:Description>
+  <rdf:Description rdf:nodeID="genid3">
+    <foaf:knows rdf:nodeID="genid4"/>
+  </rdf:Description>
+</rdf:RDF>

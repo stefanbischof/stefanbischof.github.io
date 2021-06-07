@@ -1,0 +1,928 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<title>JabRef References output</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript">
+<!--
+// QuickSearch script for JabRef HTML export 
+// Version: 2.0
+//
+// Copyright (c) 2006-2008, Mark Schenk
+//
+// This software is distributed under a Creative Commons Attribution 3.0 License
+// http://creativecommons.org/licenses/by/3.0/
+
+// Some features:
+// + allows RegExp searches
+//   e.g. to search for entries between 1980 and 1989, type:  198[0-9]
+//   e.g. for any entry ending with 'symmetry', type:  symmetry$
+//   e.g. for all reftypes that are books: ^book$, or ^article$
+//   e.g. for entries by either John or Doe, type john|doe
+
+// Speed optimisation introduced some esoteric problems with certain RegExp searches
+// e.g. if the previous search is 200[-7] and the next search is 200[4-7] then the search doesn't work properly until the next 'keyup'
+// hence the searchOpt can be turned off for RegExp adepts
+var searchOpt = true;
+
+if (window.addEventListener) {
+	window.addEventListener("load",initSearch,false); }
+else if (window.attachEvent) {
+	window.attachEvent("onload", initSearch); }
+
+function initSearch() {
+	// basic object detection
+	if(!document.getElementById || !document.getElementsByTagName) { return; }
+	if (!document.getElementById('qstable')||!document.getElementById('qs')) { return; }
+
+	// find QS table and appropriate rows
+	searchTable = document.getElementById('qstable');
+	var allRows = searchTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+	// split all rows into entryRows and infoRows (e.g. abstract, review, bibtex)
+	entryRows = new Array();
+	infoRows = new Array();
+
+	for (var i=0, k=0, j=0; i<allRows.length;i++) {
+		if (allRows[i].className.indexOf('entry') != -1) {
+			entryRows[j++] = allRows[i];
+		} else {
+			infoRows[k++] = allRows[i];		
+		}
+	}
+
+	//number of entries and rows
+	numRows = allRows.length;
+	numEntries = entryRows.length;
+	numInfo = infoRows.length;
+
+	//find the query field
+	qsfield = document.getElementById('qsfield');
+
+	// previous search term; used for speed optimisation
+	prevSearch = '';
+
+	//find statistics location
+	stats = document.getElementById('stat');
+	setStatistics(-1);
+
+	// shows the searchfield
+	document.getElementById('qs').style.display = 'block';
+	document.getElementById('qsfield').onkeyup = testEvent;
+}
+
+function quickSearch(tInput){
+
+	 if (tInput.value.length == 0) {
+		showAll();
+		setStatistics(-1);
+		qsfield.className = '';
+		return;
+	} else {
+		// only search for valid RegExp
+		try {
+			var searchText = new RegExp(tInput.value,"i")
+			closeAllInfo();
+			qsfield.className = '';
+		}
+		catch(err) {
+			prevSearch = tInput.value;
+			qsfield.className = 'invalidsearch';
+			return;
+		}
+	}
+	
+	// count number of hits
+	var hits = 0;
+
+	// start looping through all entry rows
+	for (var i = 0; cRow = entryRows[i]; i++){
+
+		// only show search the cells if it isn't already hidden OR if the search term is getting shorter, then search all
+		// some further optimisation is possible: if the search string is getting shorter, and the row is already visible, skip it. Future work.
+		if(!searchOpt || cRow.className.indexOf('noshow')==-1 || tInput.value.length <= prevSearch.length){
+			var found = false; 
+
+			var inCells = cRow.getElementsByTagName('td');
+			var numCols = inCells.length;
+				
+			for (var j=0; j<numCols; j++) {
+				cCell = inCells[j];
+				var t = cCell.innerText?cCell.innerText:getTextContent(cCell);
+				if (t.search(searchText) != -1){ 
+					found=true; 
+					break;
+				} 
+			}
+			
+			if(found) {
+				cRow.className = 'entry show';
+				hits++;
+			} else {
+				cRow.className = 'entry noshow';
+			}
+		}
+	}
+
+	// update statistics
+	setStatistics(hits)
+	
+	// set previous search value
+	prevSearch = tInput.value;
+}
+
+function setStatistics (hits) {
+	if(hits < 0) { hits=numEntries; }
+	if(stats) { stats.firstChild.data = hits + '/' + numEntries}
+}
+
+function getTextContent(node) {
+	// Function written by Arve Bersvendsen
+	// http://www.virtuelvis.com
+	
+	if (node.nodeType == 3) {
+	return node.nodeValue;
+	} // text node
+	if (node.nodeType == 1) { // element node
+	var text = [];
+	for (var chld = node.firstChild;chld;chld=chld.nextSibling) {
+		text.push(getTextContent(chld));
+	}
+	return text.join("");
+	} return ""; // some other node, won't contain text nodes.
+}
+
+function showAll(){
+	// first close all abstracts, reviews, etc.
+	closeAllInfo();
+
+	for (var i = 0; i < numEntries; i++){
+		entryRows[i].className = 'entry show'; 
+	}
+}
+
+function closeAllInfo(){
+	for (var i=0; i < numInfo; i++){
+		if (infoRows[i].className.indexOf('noshow') ==-1) {
+			infoRows[i].className = infoRows[i].className + ' noshow';
+		}
+	}
+}
+
+function testEvent(e){
+	if (!e) var e = window.event;
+	quickSearch(this);
+}
+
+function clearQS() {
+	qsfield.value = '';
+	quickSearch(qsfield);
+}
+
+function redoQS(){
+	showAll();
+	quickSearch(qsfield);
+}
+-->
+</script>
+<style type="text/css">
+body { background-color: white; font-family: "Trebuchet MS", Arial, sans-serif; font-size: 12px; line-height: 1.2; padding: 1em; color: #2E2E2E; }
+
+#qs { width: auto; border-style: solid; border-color: gray; border-width: 1px 1px 0px 1px; padding: 0.5em 0.5em; display:none;  }
+#qs form { padding: 0px; margin: 0px; }
+#qs form p { padding: 0px; margin: 0px; }
+
+.invalidsearch { background-color: red; }
+
+table { border: 1px gray solid; width: 100%; empty-cells: show; }
+th, td { border: 1px gray solid; padding: 0.5em; vertical-align: top;  }
+td { text-align: left; vertical-align: top; }
+th { background-color: #EFEFEF; }
+
+td a { color: navy; text-decoration: none; }
+td a:hover  { text-decoration: underline; }
+
+tr.noshow { display: none;}
+
+@media print {
+	p.infolinks, #qssettings, #qs { display: none !important; }
+	table { border-width: 0px; }
+	tr { page-break-inside: avoid; }
+	tr > * + * + * + * + * {display: none; }
+	thead tr::before { content: "Reference"; border: 1px gray solid; padding: 0.5em; vertical-align: top; font-weight: bold; text-align: center; display: table-cell; background-color: #EFEFEF; }
+	tr[id]::before { content: attr(id); display: table-cell; border: 1px gray solid; padding: 0.5em; vertical-align: top; font-style: italic; }
+}
+</style>
+</head>
+<body>
+
+<div id="qs"><form action=""><p>QuickSearch: <input type="text" name="qsfield" id="qsfield" autocomplete="off" title="Allows plain text as well as RegExp searches" /><input type="button" onclick="clearQS()" value="clear" />&nbsp; Number of matching entries: <span id="stat">0</span>.</p></form></div>
+<table id="qstable" border="1">
+<thead><tr><th width="20%">Author</th><th width="30%">Title</th><th width="5%">Year</th><th width="30%">Journal/Proceedings</th><th width="10%">Reftype</th><th width="5%">DOI/URL</th></tr></thead>
+<tbody><tr id="Abiteboul1997" class="entry">
+	<td>Abiteboul, S.</td>
+	<td>Querying Semi-Structured Data</td>
+	<td>1997</td>
+	<td><br/>Vol. 1186Database Theory - ICDT '97, pp. 1-18&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1007/3-540-62222-5_33">DOI</a> &nbsp;</td>
+</tr>
+<tr id="rdfa" class="entry">
+	<td>Adida, B. &amp; Birbeck, M.</td>
+	<td>RDFa Primer. Bridging the Human and Data Webs</td>
+	<td>2008</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2008/NOTE-xhtml-rdfa-primer-20081014/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Afanasiev:2008fr" class="entry">
+	<td>Afanasiev, L. &amp; Marx, M.</td>
+	<td>An analysis of XQuery benchmarks</td>
+	<td>2008</td>
+	<td>Information Systems<br/>Vol. 33(2), pp. 155-181&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://dx.doi.org/10.1016/j.is.2007.05.002">DOI</a> <a href="http://www.sciencedirect.com/science/article/B6V0G-4NT9GJR-1/2/e60ed0e8bc466c687c09712900111a6d">URL</a>&nbsp;</td>
+</tr>
+<tr id="Akhtar:2007kl" class="entry">
+	<td>Akhtar, W., Kopeck&yacute;, J., Krennwallner, T. &amp; Polleres, A.</td>
+	<td>XSPARQL: Traveling between the XML and RDF worlds - and Avoiding the XSLT pilgrimage</td>
+	<td>2008</td>
+	<td><br/>Vol. 50215th European Semantic Web Conference (ESWC2008), pp. 432-447&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1007/978-3-540-68234-9">DOI</a> <a href="http://www.springerlink.com/content/qx68n5h481364805/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Akhtar2007" class="entry">
+	<td>Akhtar, W., Kopeck&yacute;, J., Krennwallner, T. &amp; Polleres, A.</td>
+	<td>XSPARQL: Traveling between the XML and RDF worlds -- and avoiding the XSLT pilgrimage</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.deri.ie/fileadmin/documents/DERI-TR-2007-12-14.pdf">URL</a>&nbsp;</td>
+</tr>
+<tr id="Arenas2007" class="entry">
+	<td>Arenas, M., Gutierrez, C. &amp; P&eacute;rez, J.</td>
+	<td>An Extension of SPARQL for RDFS</td>
+	<td>2007</td>
+	<td><br/>Vol. 5005SWDB-ODBIS, pp. 1-20&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Battle2006" class="entry">
+	<td>Battle, S.</td>
+	<td>Gloze: XML to RDF and back again</td>
+	<td>2006</td>
+	<td>Proceedings of the First Jena User Conference&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1.1.88.8929">DOI</a> <a href="http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.88.8929">URL</a>&nbsp;</td>
+</tr>
+<tr id="rdfxml2004" class="entry">
+	<td>Beckett, D.</td>
+	<td>RDF/XML Syntax Specification (Revised)</td>
+	<td>2004</td>
+	<td>http://www.w3.org/TR/rdf-syntax-grammar/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2004/REC-rdf-syntax-grammar-20040210/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Beckett:2008dp" class="entry">
+	<td>Beckett, D. &amp; Berners-Lee, T.</td>
+	<td>Turtle -- Terse RDF Triple Languages</td>
+	<td>2008</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TeamSubmission/2008/SUBM-turtle-20080114/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Beckett:2008oq" class="entry">
+	<td>Beckett, D. &amp; Broekstra, J.</td>
+	<td>SPARQL Query Results XML Format</td>
+	<td>2008</td>
+	<td>http://www.w3.org/TR/rdf-sparql-XMLres/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2008/REC-rdf-sparql-XMLres-20080115/">URL</a>&nbsp;</td>
+</tr>
+<tr id="xpath20" class="entry">
+	<td>Berglund, A., Boag, S., Chamberlin, D., Fernández, M.F., Kay, M., Robie, J. &amp; Siméon, J.</td>
+	<td>XML Path Language (XPath) 2.0</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xpath20-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Berners-Lee2006" class="entry">
+	<td>Berners-Lee, T.</td>
+	<td>Linked Data</td>
+	<td>2006</td>
+	<td>http://www.w3.org/DesignIssues/LinkedData.html&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/DesignIssues/LinkedData.html">URL</a>&nbsp;</td>
+</tr>
+<tr id="Berners-Lee1998" class="entry">
+	<td>Berners-Lee, T.</td>
+	<td>Notation 3</td>
+	<td>1998</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/DesignIssues/Notation3">URL</a>&nbsp;</td>
+</tr>
+<tr id="Berners-Lee1998a" class="entry">
+	<td>Berners-Lee, T., Fielding, R. &amp; Masinter, L.</td>
+	<td>Uniform Resource Identifiers (URI): Generic Syntax</td>
+	<td>1998</td>
+	<td>(2396)&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.rfc-editor.org/rfc/rfc2396.txt">URL</a>&nbsp;</td>
+</tr>
+<tr id="Bikakis2009" class="entry">
+	<td>Bikakis, N., Gioldasis, N., Tsinaraki, C. &amp; Christodoulakis, S.</td>
+	<td>Querying XML Data with SPARQL</td>
+	<td>2009</td>
+	<td><br/>Vol. 5690Database and Expert Systems Applications, pp. 372-381&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1007/978-3-642-03573-9_32">DOI</a> &nbsp;</td>
+</tr>
+<tr id="xquery1" class="entry">
+	<td>Boag, S., Chamberlin, D., Fern&aacute;ndez, M.F., Florescu, D., Robie, J. &amp; Sim&eacute;on, J&eacute;.</td>
+	<td>XQuery 1.0: An XML Query Language</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xquery-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Bray2008" class="entry">
+	<td>Bray, T., Paoli, J., Sperberg-McQueen, C.M., Maler, E. &amp; Yergeau, F.</td>
+	<td>Extensible Markup Language (XML) 1.0 (Fifth Edition)</td>
+	<td>2008</td>
+	<td>http://www.w3.org/TR/xml/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2008/REC-xml-20081126/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Buneman1997" class="entry">
+	<td>Buneman, P.</td>
+	<td>Semistructured Data</td>
+	<td>1997</td>
+	<td>Proceedings of the sixteenth ACM SIGACT-SIGMOD-SIGART Symposium on Principles of database systems, pp. 117-121&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://doi.acm.org/10.1145/263661.263675">DOI</a> <a href="http://portal.acm.org/citation.cfm?id=263661.263675">URL</a>&nbsp;</td>
+</tr>
+<tr id="Cao:2007qe" class="entry">
+	<td>Cao, B. &amp; Badia, A.</td>
+	<td>SQL query optimization through nested relational algebra</td>
+	<td>2007</td>
+	<td>ACM Trans. Database Syst.<br/>Vol. 32(3), pp. 18&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://dx.doi.org/10.1145/1272743.1272748">DOI</a> <a href="http://portal.acm.org/citation.cfm?id=1272743.1272748">URL</a>&nbsp;</td>
+</tr>
+<tr id="Carroll2004" class="entry">
+	<td>Carroll, J.J. &amp; Stickler, P.</td>
+	<td>TriX: RDF Triples in XML</td>
+	<td>2004</td>
+	<td>(HPL-2004-56)&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.hpl.hp.com/techreports/2004/HPL-2004-56.html">URL</a>&nbsp;</td>
+</tr>
+<tr id="Chamberlin:2003bs" class="entry">
+	<td>Chamberlin, D.</td>
+	<td>XQuery: A Query Language for XML</td>
+	<td>2003</td>
+	<td>Proceedings of the 2003 ACM SIGMOD international conference on Management of data, pp. 682-682&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1145/872757.872877">DOI</a> <a href="http://portal.acm.org/citation.cfm?id=872757.872877">URL</a>&nbsp;</td>
+</tr>
+<tr id="Chamberlin:2007sp" class="entry">
+	<td>Chamberlin, D., Fankhauser, P., Florescu, D., Marchiori, M. &amp; Robie, J.</td>
+	<td>XML Query Use Cases</td>
+	<td>2007</td>
+	<td>http://www.w3.org/TR/xquery-use-cases/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/NOTE-xquery-use-cases-20070323/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Chaudhuri:1998mz" class="entry">
+	<td>Chaudhuri, S.</td>
+	<td>An Overview of Query Optimization in Relational Systems</td>
+	<td>1998</td>
+	<td>Proceedings of the 17th ACM SIGACT-SIGMOD-SIGART Symposium on Principles of Database Systems, pp. 34-43&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1145/275487.275492">DOI</a> <a href="http://portal.acm.org/citation.cfm?doid=275487.275492">URL</a>&nbsp;</td>
+</tr>
+<tr id="xmlinfoset" class="entry">
+	<td>Cowan, J. &amp; Tobin, R.</td>
+	<td>XML Information Set</td>
+	<td>2004</td>
+	<td>http://www.w3.org/TR/xml-infoset/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2004/REC-xml-infoset-20040204">URL</a>&nbsp;</td>
+</tr>
+<tr id="Cyganiak:2005vn" class="entry">
+	<td>Cyganiak, R.</td>
+	<td>A relational algebra for SPARQL</td>
+	<td>2005</td>
+	<td>Digital Media Systems Laboratory, Bristol, retrieved on September<br/>Vol. 12(HPL-2005-170), pp. 2005-170&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.hpl.hp.com/techreports/2005/HPL-2005-170.html">URL</a>&nbsp;</td>
+</tr>
+<tr id="Deursen2008" class="entry">
+	<td>Deursen, D.V.D.V., Poppe, C., Martens, G., Mannens, E. &amp; Walle, R.V. d.</td>
+	<td>XML to RDF Conversion: A Generic Approach</td>
+	<td>2008</td>
+	<td>Proceedings of the 2008 International Conference on Automated solutions for Cross Media Content and Multi-channel Distribution, pp. 138-144&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Diego2008" class="entry">
+	<td>Diego, B., E., L.J. &amp; Ivan, H.</td>
+	<td>XSLT+SPARQL : Scripting the Semantic Web with SPARQL embedded into XSLT stylesheets</td>
+	<td>2008</td>
+	<td>4th Workshop on Scripting for the Semantic Web&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Draper:2007th" class="entry">
+	<td>Draper, D., Fankhauser, P., Fern&aacute;ndez, M., Malhotra, A., Rose, K., Rys, M., Sim&eacute;on, J&eacute;. &amp; Wadler, P.</td>
+	<td>XQuery 1.0 and XPath 2.0 Formal Semantics</td>
+	<td>2007</td>
+	<td>http://www.w3.org/TR/xquery-semantics/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xquery-semantics-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Droop2007" class="entry">
+	<td>Droop, M., Flarer, M., Groppe, J., Groppe, S., Linnemann, V., Pinggera, J., Santner, F., Schier, M., Sch&ouml;pf, F., Staffler, H. &amp; Zugal, S.</td>
+	<td>Translating XPath Queries into SPARQL Queries</td>
+	<td>2007</td>
+	<td><br/>Vol. 4805On the Move to Meaningful Internet Systems 2007: OTM 2007 Workshops, pp. 9-10&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1007/978-3-540-76888-3_5">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Duerst2005" class="entry">
+	<td>Duerst, M. &amp; Signard, M.</td>
+	<td>Internationalized Resource Identifiers (IRIs)</td>
+	<td>2005</td>
+	<td>(3987)&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.rfc-editor.org/rfc/rfc3987.txt">URL</a>&nbsp;</td>
+</tr>
+<tr id="Fankhauser:2001fy" class="entry">
+	<td>Fankhauser, P.</td>
+	<td>XQuery Formal Semantics State and Challenges</td>
+	<td>2001</td>
+	<td>ACM SIGMOD Record<br/>Vol. 30(3), pp. 14-19&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://dx.doi.org/10.1145/603867.603870">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Fernandez:2005rr" class="entry">
+	<td>Fern&aacute;ndez, M., Hidders, J., Michiels, P., Simeon, J. &amp; Vercammen, R.</td>
+	<td>Optimizing Sorting and Duplicate Elimination in XQuery Path Expressions</td>
+	<td>2005</td>
+	<td>Lecture notes in computer science<br/>Vol. 3588Database and Expert Systems Applications, pp. 554-563&nbsp;</td>
+	<td>incollection</td>
+	<td><a href="http://dx.doi.org/10.1007/11546924_54">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Fernandez:2007dz" class="entry">
+	<td>Fern&aacute;ndez, M., Malhotra, A., Marsh, J., Nagy, M. &amp; Walsh, N.</td>
+	<td>XSLT 2.0 and XQuery 1.0 Serialization</td>
+	<td>2007</td>
+	<td>http://www.w3.org/TR/xslt-xquery-serialization/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xslt-xquery-serialization-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="xdm" class="entry">
+	<td>Fernández, M., Malhotra, A., Marsh, J., Nagy, M. &amp; Walsh, N.</td>
+	<td>XQuery 1.0 and XPath 2.0 Data Model (XDM)</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xpath-datamodel-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Garcia-Molina2008" class="entry">
+	<td>Garcia-Molina, H., Ullman, J.D. &amp; Widom, J.</td>
+	<td>Database Systems: The Complete Book</td>
+	<td>2008</td>
+	<td>&nbsp;</td>
+	<td>book</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Gottlob:2002ve" class="entry">
+	<td>Gottlob, G., Koch, C. &amp; Pichler, R.</td>
+	<td>Efficient Algorithms for Processing XPath Queries</td>
+	<td>2005</td>
+	<td>ACM Transa<br/>Vol. 30(2), pp. 444-491&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://dx.doi.org/10.1145/1071610.1071614">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Grinev" class="entry">
+	<td>Grinev, M.</td>
+	<td>XQuery Optimization Based on Rewriting</td>
+	<td></td>
+	<td>http://panda.ispras.ru/~grinev/mypapers/phd-short.pdf&nbsp;</td>
+	<td>unpublished</td>
+	<td><a href="http://panda.ispras.ru/~grinev/mypapers/phd-short.pdf">URL</a>&nbsp;</td>
+</tr>
+<tr id="Grinev:2002ys" class="entry">
+	<td>Grinev, M. &amp; Kuznetsov, S.</td>
+	<td>Towards an Exhaustive Set of Rewriting Rules for XQuery Optimization: BizQuery Experience</td>
+	<td>2002</td>
+	<td><br/>Vol. 2435Advances in Databases and Information Systems, pp. 1-5&nbsp;</td>
+	<td>incollection</td>
+	<td><a href="http://dx.doi.org/10.1007/3-540-45710-0_27">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Groppe2009" class="entry">
+	<td>Groppe, S., Groppe, J., Böttcher, S. &amp; Vollstedt, M.-A.</td>
+	<td>Shifting Predicates to Inner Sub-expressions for XQuery Optimization</td>
+	<td>2009</td>
+	<td><br/>Vol. 4879Advanced Internet Based Systems and Applications, pp. 67-79&nbsp;</td>
+	<td>incollection</td>
+	<td><a href="http://dx.doi.org/10.1007/978-3-642-01350-8_7">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Groppe2008" class="entry">
+	<td>Groppe, S., Groppe, J., Linnemann, V., Kukulenz, D., Hoeller, N. &amp; Reinke, C.</td>
+	<td>Embedding SPARQL into XQuery/XSLT</td>
+	<td>2008</td>
+	<td>Proceedings of the 2008 ACM Symposium on Applied Computing, pp. 2271-2278&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1145/1363686.1364228">DOI</a> &nbsp;</td>
+</tr>
+<tr id="sparql11" class="entry">
+	<td>Harris, S. &amp; Seaborne, A.</td>
+	<td>SPARQL 1.1 Query Language</td>
+	<td>2010</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2010/WD-sparql11-query-20100601/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Heese:2006rt" class="entry">
+	<td>Heese, R.</td>
+	<td>Query Graph Model for SPARQL</td>
+	<td>2006</td>
+	<td>Advances in Conceptual Modeling - Theory and Practice<br/>Vol. 4231Advances in Conceptual Modeling - Theory and Practice, pp. 445-454&nbsp;</td>
+	<td>incollection</td>
+	<td><a href="http://dx.doi.org/10.1007/11908883">DOI</a> &nbsp;</td>
+</tr>
+<tr id="dom" class="entry">
+	<td>Hors, A.L., Hégaret, P.L., Wood, L., Nicol, G., Robie, J., Champion, M. &amp; Byrne, S.</td>
+	<td>Document Object Model (DOM) Level 2 Core Specification</td>
+	<td>2000</td>
+	<td>http://www.w3.org/TR/DOM-Level-2-Core/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/">URL</a>&nbsp;</td>
+</tr>
+<tr id="xslt2" class="entry">
+	<td>Kay, M.</td>
+	<td>XSL Transformations (XSLT) Version 2.0</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xslt20-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="SAXON" class="entry">
+	<td>Kay, M.</td>
+	<td>The SAXON XSLT and XQuery Processor</td>
+	<td></td>
+	<td>http://saxon.sourceforge.net/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://saxon.sourceforge.net/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Kemper2004" class="entry">
+	<td>Kemper, A. &amp; Eickler, A.</td>
+	<td>Datenbanksysteme: Eine Einführung</td>
+	<td>2004</td>
+	<td>&nbsp;</td>
+	<td>book</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Klyne:2004wd" class="entry">
+	<td>Klyne, G. &amp; Carroll, J.</td>
+	<td>Resource Description Framework (RDF): Concepts and Abstract Syntax</td>
+	<td>2004</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2004/REC-rdf-concepts-20040210/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Krennwallner:2009dk" class="entry">
+	<td>Krennwallner, T., Lopes, N. &amp; Polleres, A.</td>
+	<td>XSPARQL: Semantics</td>
+	<td>2009</td>
+	<td>http://www.w3.org/Submission/xsparql-semantics/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/Submission/2009/SUBM-xsparql-semantics-20090120/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Layman1999" class="entry">
+	<td>Layman, A., Hollander, D. &amp; Bray, T.</td>
+	<td>Namespaces in XML</td>
+	<td>1999</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/1999/REC-xml-names-19990114">URL</a>&nbsp;</td>
+</tr>
+<tr id="Lehner2004" class="entry">
+	<td>Lehner, W. &amp; Schöning, H.</td>
+	<td>XQuery. Grundlagen und fortgeschrittene Methoden.</td>
+	<td>2004</td>
+	<td>&nbsp;</td>
+	<td>book</td>
+	<td><a href="http://ebooks.ulb.tu-darmstadt.de/180/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Lopes:2009pb" class="entry">
+	<td>Lopes, N., Krennwallner, T., Polleres, A., Akhtar, W. &amp; Corlosquet, S.</td>
+	<td>XSPARQL: Implementation and Test-cases</td>
+	<td>2009</td>
+	<td>http://www.w3.org/Submission/xsparql-language-specification/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/Submission/2009/SUBM-xsparql-implementation-20090120/">URL</a>&nbsp;</td>
+</tr>
+<tr id="xfnop" class="entry">
+	<td>Malhotra, A., Melton, J. &amp; Walsh, N.</td>
+	<td>XQuery 1.0 and XPath 2.0 Functions and Operators</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xpath-functions-20070123/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Manegold:2008zr" class="entry">
+	<td>Manegold, S.</td>
+	<td>An Empirical Evaluation of XQuery Processors</td>
+	<td>2008</td>
+	<td>Information Systems<br/>Vol. 33(2), pp. 203-220&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://dx.doi.org/10.1016/j.is.2007.05.004">DOI</a> <a href="http://www.sciencedirect.com/science/article/B6V0G-4NTRT7K-1/2/c92b901fc8bd42f4a60b223f60718c30">URL</a>&nbsp;</td>
+</tr>
+<tr id="rdfprimer" class="entry">
+	<td>Manola, F. &amp; Miller, E.</td>
+	<td>RDF Primer</td>
+	<td>2004</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/rdf-primer/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Manolescu:2001ly" class="entry">
+	<td>Manolescu, I., Florescu, D. &amp; Kossmann, D.</td>
+	<td>Answering XML Queries over Heterogeneous Data Sources</td>
+	<td>2001</td>
+	<td>Proceedings of the International Conference on Very Large Data Bases, pp. 241-250&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://citeseer.ist.psu.edu/manolescu01answering.html">URL</a>&nbsp;</td>
+</tr>
+<tr id="Martin2009" class="entry">
+	<td>Martín, M.S. &amp; Gutierrez, C.</td>
+	<td>Representing, Querying and Transforming Social Networks with RDF/SPARQL</td>
+	<td>2009</td>
+	<td><br/>Vol. 5554The Semantic Web: Research and Applications, pp. 293-307&nbsp;</td>
+	<td>incollection</td>
+	<td><a href="http://dx.doi.org/10.1007/978-3-642-02121-3_24">DOI</a> &nbsp;</td>
+</tr>
+<tr id="xqueryx" class="entry">
+	<td>Melton, J. &amp; Muralidhar, S.</td>
+	<td>XML Syntax for XQuery 1.0 (XQueryX)</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-xqueryx-20070123">URL</a>&nbsp;</td>
+</tr>
+<tr id="Michiels2003" class="entry">
+	<td>Michiels, P.</td>
+	<td>XQuery Optimization</td>
+	<td>2003</td>
+	<td>VLDB PhD Workshop<br/>Vol. 76VLDB PhD Workshop&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://citeseer.ist.psu.edu/757830.html">URL</a>&nbsp;</td>
+</tr>
+<tr id="Mitra2007" class="entry">
+	<td>Mitra, N. &amp; Lafon, Y.</td>
+	<td>SOAP Version 1.2 Part 0:Primer</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2007/REC-soap12-part0-20070427/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Park2007" class="entry">
+	<td>Park, J.-H. &amp; Kang, J.-H.</td>
+	<td>Optimization of XQuery Queries Including FOR Clauses</td>
+	<td>2007</td>
+	<td>Internet and Web Applications and Services, 2007. ICIW '07. Second International Conference on, pp. 37-42&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1109/ICIW.2007.44">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Parr:2007ai" class="entry">
+	<td>Parr, T.</td>
+	<td>The Definitive ANTLR Reference: Building Domain-Specific Languages</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>book</td>
+	<td><a href="http://www.pragprog.com/titles/tpantlr/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Passant:2009rw" class="entry">
+	<td>Passant, A., Kopeck&yacute;, J., Corlosquet, S., Berrueta, D., Palmisano, D. &amp; Polleres, A.</td>
+	<td>XSPARQL: Use cases</td>
+	<td>2009</td>
+	<td>http://www.w3.org/Submission/xsparql-language-specification/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/Submission/2009/SUBM-xsparql-use-cases-20090120/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Pemberton2002" class="entry">
+	<td>Pemberton, S.</td>
+	<td>XHTML 1.0 The Extensible HyperText Markup Language</td>
+	<td>2002</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2002/REC-xhtml1-20020801/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Perez2009" class="entry">
+	<td>Perez, J., Arenas, M. &amp; Gutierrez, C.</td>
+	<td>Semantics and Complexity of SPARQL</td>
+	<td>2009</td>
+	<td>ACM Transactions on Database Systems<br/>Vol. 34(3), pp. 1-45&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://doi.acm.org/10.1145/1567274.1567278">DOI</a> <a href="http://portal.acm.org/citation.cfm?id=1567274.1567278">URL</a>&nbsp;</td>
+</tr>
+<tr id="Piatetsky-Shapiro1984" class="entry">
+	<td>Piatetsky-Shapiro, G. &amp; Connell, C.</td>
+	<td>Accurate estimation of the number of tuples satisfying a condition</td>
+	<td>1984</td>
+	<td>SIGMOD Rec<br/>Vol. 14(2), pp. 256-276&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://dx.doi.org/10.1145/971697.602294">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Polleres:2007lq" class="entry">
+	<td>Polleres, A.</td>
+	<td>From SPARQL to rules (and back)</td>
+	<td>2007</td>
+	<td>Proceedings of the 16th international conference on World Wide Web, pp. 787-796&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1145/1242572.1242679">DOI</a> <a href="http://portal.acm.org/citation.cfm?id=1242679">URL</a>&nbsp;</td>
+</tr>
+<tr id="Polleres:2009fu" class="entry">
+	<td>Polleres, A., Krennwallner, T., Lopes, N., Kopecký, J. &amp; Decker, S.</td>
+	<td>XSPARQL Language Specification</td>
+	<td>2009</td>
+	<td>http://www.w3.org/Submission/xsparql-language-specification/&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/Submission/2009/SUBM-xsparql-language-specification-20090120/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Prudhommeaux:2008eu" class="entry">
+	<td>Prud'hommeaux, E. &amp; Seaborne, A.</td>
+	<td>SPARQL Query Language for RDF</td>
+	<td>2008</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2008/REC-rdf-sparql-query-20080115/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Perez2008" class="entry">
+	<td>P&eacute;rez, J., Arenas, M. &amp; Gutierrez, C.</td>
+	<td>nSPARQL: A Navigational Language for RDF</td>
+	<td>2008</td>
+	<td><br/>Vol. 5318International Semantic Web Conference, pp. 66-81&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Perez2006" class="entry">
+	<td>Pérez, J., Arenas, M. &amp; Gutierrez, C.</td>
+	<td>Semantics and Complexity of SPARQL</td>
+	<td>2006</td>
+	<td>5th International Semantic Web Conference&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://www.dcc.uchile.cl/~cgutierr/papers/sparql.pdf">URL</a>&nbsp;</td>
+</tr>
+<tr id="Re:2004gf" class="entry">
+	<td>Re, C., Brinkley, J., Hinshaw, K. &amp; Suciu, D.</td>
+	<td>Distributed XQuery</td>
+	<td>2004</td>
+	<td>Workshop on Information Integration on the Web, pp. 116-121&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Re2006" class="entry">
+	<td>Re, C., Simeon, J. &amp; Fernandez, M.</td>
+	<td>A Complete and Efficient Algebraic Compiler for XQuery</td>
+	<td>2006</td>
+	<td>ICDE '06: Proceedings of the 22nd International Conference on Data Engineering, pp. 14&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1109/ICDE.2006.6">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Schmidt2002" class="entry">
+	<td>Schmidt, A., Waas, F., Kersten, M., Carey, M.J., Manolescu, I. &amp; Busse, R.</td>
+	<td>XMark: A Benchmark for XML Data Management</td>
+	<td>2002</td>
+	<td>VLDB '02: Proceedings of the 28th international conference on Very Large Data Bases, pp. 974-985&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Schmidt:2008nx" class="entry">
+	<td>Schmidt, M., Hornung, T., Lausen, G. &amp; Pinkel, C.</td>
+	<td>SP2Bench: A SPARQL Performance Benchmark</td>
+	<td>2008</td>
+	<td>Proc. ICDE'09&nbsp;</td>
+	<td>conference</td>
+	<td><a href="http://arxiv.org/abs/0806.4627">URL</a>&nbsp;</td>
+</tr>
+<tr id="Schmidt2008" class="entry">
+	<td>Schmidt, M., Meier, M. &amp; Lausen, G.</td>
+	<td>Foundations of SPARQL Query Optimization</td>
+	<td>2010</td>
+	<td><br/>Vol. abs/0812.3788ICDT '10: Proceedings of the 13th International Conference on Database Theory, pp. 4-33&nbsp;</td>
+	<td>inproceedings</td>
+	<td><a href="http://dx.doi.org/10.1145/1804669.1804675">DOI</a> &nbsp;</td>
+</tr>
+<tr id="Walmsley2007" class="entry">
+	<td>Walmsley, P.</td>
+	<td>XQuery</td>
+	<td>2007</td>
+	<td>&nbsp;</td>
+	<td>book</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="Walmsley2004" class="entry">
+	<td>Walmsley, P. &amp; Fallside, D.C.</td>
+	<td>XML Schema Part 0: Primer Second Edition</td>
+	<td>2004</td>
+	<td>&nbsp;</td>
+	<td>techreport</td>
+	<td><a href="http://www.w3.org/TR/2004/REC-xmlschema-0-20041028/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Walsh2003" class="entry">
+	<td>Walsh, N.</td>
+	<td>RDF Twig: Accessing RDF Graphs in XSLT</td>
+	<td>2003</td>
+	<td>&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://rdftwig.sourceforge.net/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Wu:2003hc" class="entry">
+	<td>Wu, Y., Patel, J.M. &amp; Jagadish, H.V.</td>
+	<td>Using histograms to estimate answer sizes for XML queries</td>
+	<td>2003</td>
+	<td>Inf. Syst.<br/>Vol. 28(1-2), pp. 33-59&nbsp;</td>
+	<td>article</td>
+	<td><a href="http://portal.acm.org/citation.cfm?id=643313">URL</a>&nbsp;</td>
+</tr>
+<tr id="Wu:2003kl" class="entry">
+	<td>Wu, Y., Patel, J.M. &amp; Jagadish, H.V.</td>
+	<td>Structural join order selection for XML query optimization</td>
+	<td>2003</td>
+	<td>Data Engineering, 2003. Proceedings. 19th International Conference on, pp. 443-454&nbsp;</td>
+	<td>inproceedings</td>
+	<td>&nbsp;</td>
+</tr>
+<tr id="DBLP" class="entry">
+	<td></td>
+	<td>DBLP Computer Science Bibliography</td>
+	<td></td>
+	<td>http://dblp.uni-trier.de/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://dblp.uni-trier.de/">URL</a>&nbsp;</td>
+</tr>
+<tr id="FOAFonline" class="entry">
+	<td></td>
+	<td>The Friend of a Friend (FOAF) project</td>
+	<td></td>
+	<td>http://www.foaf-project.org/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://www.foaf-project.org/">URL</a>&nbsp;</td>
+</tr>
+<tr id="JAXB" class="entry">
+	<td></td>
+	<td>JAXB Reference Implementation</td>
+	<td></td>
+	<td>https://jaxb.dev.java.net/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="https://jaxb.dev.java.net/">URL</a>&nbsp;</td>
+</tr>
+<tr id="JFlex" class="entry">
+	<td></td>
+	<td>JFlex -- The Fast Scanner Generator for Java</td>
+	<td></td>
+	<td>http://www.jflex.de/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://www.jflex.de/">URL</a>&nbsp;</td>
+</tr>
+<tr id="Joseki" class="entry">
+	<td></td>
+	<td>Joseki -- A SPARQL Server for Jena</td>
+	<td></td>
+	<td>http://www.joseki.org/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://www.joseki.org/">URL</a>&nbsp;</td>
+</tr>
+<tr id="LinkedData" class="entry">
+	<td></td>
+	<td>Linked Data -- Connect Distributed Data across the Web</td>
+	<td></td>
+	<td>http://linkeddata.org/&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://linkeddata.org/">URL</a>&nbsp;</td>
+</tr>
+<tr id="SAXonline" class="entry">
+	<td></td>
+	<td>The SAX Project</td>
+	<td></td>
+	<td>http://www.saxproject.org&nbsp;</td>
+	<td>misc</td>
+	<td><a href="http://www.saxproject.org">URL</a>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+ <small>Created by <a href="http://jabref.sourceforge.net">JabRef</a> on 14/10/2010.</small>
+</p>
+
+</body>
+</html>
+
+<!-- File generated by JabRef; Export Filter written by Mark Schenk -->
