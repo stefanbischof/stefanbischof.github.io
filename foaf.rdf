@@ -8,15 +8,15 @@
   xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
   
   <foaf:PersonalProfileDocument rdf:about="">
-   <foaf:maker rdf:resource="#me"/>
-   <foaf:primaryTopic rdf:resource="#me"/>
+    <foaf:maker rdf:resource="#me"/>
+    <foaf:primaryTopic rdf:resource="#me"/>
   </foaf:PersonalProfileDocument>
 
   <foaf:Person rdf:ID="me">
     <foaf:name>Stefan Bischof</foaf:name>
     <foaf:firstName>Stefan</foaf:firstName>
     <foaf:surname>Bischof</foaf:surname>
-    <foaf:title>Mr</foaf:title>
+    <foaf:title>Dr</foaf:title>
     <foaf:homepage rdf:resource="https://www.stefanbischof.at/"/>
     <owl:differentFrom rdf:resource="https://dblp.org/pers/b/Bischof_0001:Stefan" />
     <owl:differentFrom rdf:resource="https://dblp.org/pers/b/Bischof_0003:Stefan"/>
@@ -27,6 +27,42 @@
         <rdfs:seeAlso rdf:resource="http://www.polleres.net/foaf.rdf"/>
         <foaf:name>Axel Polleres</foaf:name>
         <foaf:homepage rdf:resource="http://www.polleres.net/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>		
+      <foaf:Person rdf:about="http://harth.org/andreas/foaf#ah">
+        <rdfs:seeAlso rdf:resource="http://www.harth.org/andreas/foaf.rdf"/>
+        <foaf:name>Andreas Harth</foaf:name>
+        <foaf:homepage rdf:resource="http://www.harth.org/andreas/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>		
+      <foaf:Person rdf:about="http://sw.deri.org/~haller/foaf.rdf#ah">
+        <foaf:name>Armin Haller</foaf:name>
+        <foaf:homepage rdf:resource="http://www.armin-haller.com/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person>
+        <foaf:name>Stefan Decker</foaf:name>
+        <foaf:homepage rdf:resource="http://www.stefandecker.org/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person>
+        <foaf:name>Manfred Hauswirth</foaf:name>
+        <foaf:homepage rdf:resource="http://www.manfredhauswirth.org/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person>
+        <foaf:name>Thomas Eiter</foaf:name>
+        <foaf:homepage rdf:resource="http://www.kr.tuwien.ac.at/staff/eiter/"/>
       </foaf:Person>
     </foaf:knows>
 
@@ -79,23 +115,20 @@
     </foaf:knows>
   
     <foaf:knows>
-      <foaf:Person rdf:about="http://www.deri.ie/about/team/member/Behrang_Qasemizadeh#me">
+      <foaf:Person>
         <foaf:name>Behrang Qasemizadeh</foaf:name>
-        <rdfs:seeAlso rdf:resource="http://www.deri.ie/fileadmin/scripts/foaf.php?id=402"/>
       </foaf:Person>
     </foaf:knows>
 
     <foaf:knows>
-      <foaf:Person rdf:about="http://www.deri.ie/about/team/member/Antoine_Zimmermann#me">
+      <foaf:Person rdf:about="http://zimmer.aprilfoolsreview.com/antoine#me">
         <foaf:name>Antoine Zimmermann</foaf:name>
-        <rdfs:seeAlso rdf:resource="http://www.deri.ie/fileadmin/scripts/foaf.php?id=392"/>
       </foaf:Person>
     </foaf:knows>
 
     <foaf:knows>
-      <foaf:Person rdf:about="http://www.postsubmeta.net/foaf.rdf#TK">
+      <foaf:Person">
         <foaf:name>Thomas Krennwallner</foaf:name>
-        <rdfs:seeAlso rdf:resource="http://www.postsubmeta.net/foaf.rdf"/>
         <foaf:homepage rdf:resource="http://www.postsubmeta.net/" />
       </foaf:Person>
     </foaf:knows>
@@ -108,20 +141,35 @@
     </foaf:knows>
 
     <foaf:knows>
-      <foaf:Person rdf:about="http://sw.deri.org/~sheila/foaf.rdf#me">
+      <foaf:Person>
         <foaf:name>Sheila Kinsella</foaf:name>
-        <!--rdfs:seeAlso rdf:resource="http://sw.deri.org/~sheila/foaf.rdf"/-->
-        <foaf:homepage rdf:resource="http://sw.deri.org/~sheila/" />
       </foaf:Person>
     </foaf:knows>
 
     <foaf:knows>
-      <foaf:Person rdf:about="http://sw-app.org/mic.xhtml#i">
+      <foaf:Person>
         <foaf:name>Michael Hausenblas</foaf:name>
-        <rdfs:seeAlso rdf:resource="http://sw-app.org/mic.rdf" />
-        <foaf:homepage rdf:resource="http://sw-app.org/" />
       </foaf:Person>
     </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="https://aidanhogan.com/foaf.rdf#me">
+        <foaf:name>Aidan Hogan</foaf:name>
+        <rdfs:seeAlso rdf:resource="https://aidanhogan.com/foaf.rdf"/>
+        <foaf:homepage rdf:resource="http://www.aidanhogan.com/"/>
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:knows>
+      <foaf:Person rdf:about="http://www.umbrich.net/foaf.rdf#me">
+        <foaf:name>J&#252;rgen Umbrich</foaf:name>
+        <foaf:homepage rdf:resource="http://www.umbrich.net/" />
+      </foaf:Person>
+    </foaf:knows>
+
+    <foaf:workplaceHomepage> 
+      <foaf:Document rdf:about="http://www.siemens.at" />
+    </foaf:workplaceHomepage>
 
   </foaf:Person>
   
