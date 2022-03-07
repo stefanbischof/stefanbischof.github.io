@@ -153,9 +153,9 @@
     </foaf:knows>
 
     <foaf:knows>
-      <foaf:Person rdf:about="https://aidanhogan.com/foaf.rdf#me">
+      <foaf:Person rdf:about="http://aidanhogan.com/foaf.rdf#me">
         <foaf:name>Aidan Hogan</foaf:name>
-        <rdfs:seeAlso rdf:resource="https://aidanhogan.com/foaf.rdf"/>
+        <rdfs:seeAlso rdf:resource="http://aidanhogan.com/foaf.rdf"/>
         <foaf:homepage rdf:resource="http://www.aidanhogan.com/"/>
       </foaf:Person>
     </foaf:knows>
