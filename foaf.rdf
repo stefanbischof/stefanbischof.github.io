@@ -127,7 +127,7 @@
     </foaf:knows>
 
     <foaf:knows>
-      <foaf:Person">
+      <foaf:Person>
         <foaf:name>Thomas Krennwallner</foaf:name>
         <foaf:homepage rdf:resource="http://www.postsubmeta.net/" />
       </foaf:Person>
