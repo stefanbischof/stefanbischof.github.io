@@ -39,7 +39,7 @@
     </foaf:knows>
 
     <foaf:knows>		
-      <foaf:Person rdf:about="http://sw.deri.org/~haller/foaf.rdf#ah">
+      <foaf:Person>
         <foaf:name>Armin Haller</foaf:name>
         <foaf:homepage rdf:resource="http://www.armin-haller.com/"/>
       </foaf:Person>
