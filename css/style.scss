@@ -275,4 +275,13 @@ textarea{
     }
 }
 
-
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #222;
+    color: #ddd;
+  }
+  a {
+    color: #ddd;
+    text-shadow:#222 0.1rem 0px 0px, #222 -0.1rem 0px 0px
+  }
+}
