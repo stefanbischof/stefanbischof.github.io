@@ -278,10 +278,11 @@ textarea{
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #222;
-    color: #ddd;
+    color: #ccc;
+    font-weight: 300;
   }
   a {
-    color: #ddd;
+    color: #ccc;
     text-shadow:#222 0.1rem 0px 0px, #222 -0.1rem 0px 0px
   }
 }
