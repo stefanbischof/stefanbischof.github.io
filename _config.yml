@@ -1,8 +1,8 @@
 # Site settings
-title: Stefan Bischof - Semantic Web Researcher
+title: Stefan Bischof - Knowledge Graph Researcher
 email: stefan@stefanbischof.at
 description: > # this means to ignore newlines until "baseurl:"
-  I am a research scientist at Siemens AG Österreich, specifically in the research division Technology working on (Industrial) Knowledge Graphs and semantic modelling.
+  Research scientist at Siemens AG Österreich. External lecturer at FH Krems. interested in (Industrial) Knowledge Graphs and semantic modelling.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "https://www.stefanbischof.at" # the base hostname & protocol for your site
 twitter:
