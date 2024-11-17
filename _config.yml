@@ -26,6 +26,8 @@ social:
 webmaster_verifications:
   google: uCs0oiMeUVzn9UBXLcNZXLddVbmM7oOy408K8tzeFbw
 
+include: [".well-known"]
+
 # Build settings
 markdown: kramdown
 
