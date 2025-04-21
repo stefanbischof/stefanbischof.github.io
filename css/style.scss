@@ -287,22 +287,38 @@ textarea{
   }
 }
 
-.abstract-details {
+summary {
   margin-left: 2em;
-  margin-top: 0.25em;
-  margin-bottom: 1em;
-  font-size: 0.9em;
+  transition: background 0.2s;
+  list-style: none; /* Remove default triangle for custom marker */
+  position: relative;
+  padding-left: 1.5em;
 }
   
-.abstract-details summary {
+summary {
   color: #0066cc;
   cursor: pointer;
   font-weight: normal;
 }
   
-.abstract-details summary:hover {
+summary:hover {
   color: #004499;
   text-decoration: underline;
+}
+
+summary::before {
+  content: "▶";
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    font-size: 1em;
+    color: #225588;
+    transition: transform 0.2s;
+}
+
+details[open] summary::before {
+  content: "▼";
+  transform: rotate(0deg);
 }
   
 .abstract-content {
@@ -310,6 +326,7 @@ textarea{
   padding-left: 0.5em;
   border-left: 2px solid #eee;
   color: #444;
+  font-size: 0.9rem;
   //line-height: 1.4;
 }
   
