@@ -286,3 +286,30 @@ textarea{
     text-shadow:#222 0.1rem 0px 0px, #222 -0.1rem 0px 0px
   }
 }
+
+.abstract-details {
+  margin-left: 2em;
+  margin-top: 0.25em;
+  margin-bottom: 1em;
+  font-size: 0.9em;
+}
+  
+.abstract-details summary {
+  color: #0066cc;
+  cursor: pointer;
+  font-weight: normal;
+}
+  
+.abstract-details summary:hover {
+  color: #004499;
+  text-decoration: underline;
+}
+  
+.abstract-content {
+  //margin-top: 0.5em;
+  padding-left: 0.5em;
+  border-left: 2px solid #eee;
+  color: #444;
+  //line-height: 1.4;
+}
+  
