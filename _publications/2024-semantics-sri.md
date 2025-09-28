@@ -1,3 +1,4 @@
+---
 title: "Semantic Smart Readiness Indicator Framework"
 id: BischofFiltzParreira2024
 authors:

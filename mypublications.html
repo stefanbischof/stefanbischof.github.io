@@ -1,173 +1,56 @@
+
 <h2>Journal Articles</h2>
 
-<p><a id="Iggena2021"></a>Iggena T, Bin Ilyas E, Fischer M, Tönjes R, Elsaleh T, Rezvani R, Pourshahrokhi N, Bischof S, Fernbach A, Xavier Parreira J, Schneider P, Smirnov P, Strohbach M, Truong H, González-Vidal A, Skarmeta AF, Singh P, Beliatis MJ, Presser M, Martinez JA, Gonzalez-Gil P, Krogbæk M, Holmgård Christophersen S. <b>IoTCrawler: Challenges and Solutions for Searching the Internet of Things</b>. <em>Sensors</em>, 2021. 21(5):1559. [&nbsp;<a href="https://doi.org/10.3390/s21051559">DOI</a>&nbsp;]</p>
-
-<p><a id="BHKPS"></a>Stefan Bischof, Andreas Harth, Benedikt K&auml;mpgen, Axel Polleres and Patrik Schneider. <b>Enriching Integrated Statistical Open City Data by Combining Equational Knowledge and Missing Value Imputation</b>. <em>Journal of Web Semantics: Special Issue on Semantic Statistics</em>, 2017. [&nbsp;<a href="https://doi.org/10.1016/j.websem.2017.09.003">DOI</a> | <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3199313">Preprint</a>&nbsp;]</p>
-
-<p><a id="BischofDeckerKrennwallnerEtAl2012a"></a>Stefan Bischof, Stefan Decker, Thomas Krennwallner, Nuno Lopes, and Axel Polleres. <b>Mapping between RDF and XML with XSPARQL</b>. <em>Journal on Data Semantics</em>, 1(3):147-185, 2012. [&nbsp;<a href="https://dx.doi.org/10.1007/s13740-012-0008-7">DOI</a> | <a href="pdf/jds2012-xsparql.pdf">.pdf</a>&nbsp;]</p>
-
-<h2>Conference Articles</h2>
-
-<!-- Dynamische Publikationsliste aus _publications für SRI und künftige Einträge mit schema.org-Markup -->
 {% assign pubs = site.publications | sort: "year" | reverse %}
 {% for pub in pubs %}
-  {% if pub.category == "conference" %}
-  <div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#{{ pub.id | default: pub.basename }}">
-      {% if pub.authors %}
-        {% for author in pub.authors %}
-          <span property="author">{{ author }}</span>{% unless forloop.last %}, {% endunless %}
-        {% endfor %}
-      {% endif %}
-      <strong property="name">{{ pub.title }}</strong>.
-      {% if pub.venue %} <em property="isPartOf">{{ pub.venue }}</em>.{% endif %}
-      {% if pub.year %} <span property="datePublished" content="{{ pub.year }}">{{ pub.year }}</span>.{% endif %}
-      {% if pub.links %}
-        [
-        {% for link in pub.links %}
-          {% if link.label == "DOI" %}
-            <a property="identifier" href="{{ link.url }}">{{ link.label }}</a>{% unless forloop.last %} | {% endunless %}
-          {% else %}
-            <a property="sameAs" href="{{ link.url }}">{{ link.label }}</a>{% unless forloop.last %} | {% endunless %}
-          {% endif %}
-        {% endfor %}
-        ]
-      {% endif %}
-      {% if pub.abstract %}
-        <details class="abstract-details">
-          <summary>Abstract</summary>
-          <div property="abstract" class="abstract-content">{{ pub.abstract }}</div>
-        </details>
-      {% endif %}
-    </div>
+  {% if pub.category == "journal" %}
+    {% include publication.html pub=pub %}
   {% endif %}
 {% endfor %}
 
-<div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#BischofFiltzParreiraSteyskal2024">
-    <span property="author">Stefan Bischof</span>,
-    <span property="author">Erwin Filtz</span>,
-    <span property="author">Josiane Xavier Parreira</span>, and
-    <span property="author">Simon Steyskal</span>.
-    <strong property="name">LLM-based Guided Generation of Ontology Term Definitions</strong>.
-    <span property="isPartOf" typeof="PublicationIssue">
-      <em property="name">ESWC 2024 Industry Track</em>
-    </span>,
-    <span property="datePublished" content="2024">2024</span>.
-    [ <a property="identifier" href="https://doi.org/10.1007/978-3-031-78952-6_13" target="_blank">DOI</a> |
-     <a href="https://2024.eswc-conferences.org/wp-content/uploads/2024/05/77770131.pdf">PDF</a>]
-    <details class="abstract-details">
-      <summary>Abstract</summary>
-      <div property="abstract" class="abstract-content">
-        This paper describes our approach for leveraging LLMs to generate definitions and descriptions for ontology terms. Our approach is grounded in the need for detailed and accurate representation of (domain-specific) Knowledge Graphs, and it aims at speeding up the process of generating such text. We outline our approach, including the problems that we encountered, and the solution we propose to overcome them. Our approach is currently in use in an industrial setting.
-      </div>
-    </details>
-</div>
-  
-<p><a id="BischofSchenner2021"></a>Stefan Bischof and Gottfried Schenner. <b>Rail Topology Ontology: A Rail Infrastructure Base Ontology</b>. <em>ISWC</em> 2021 Resource Track. [&nbsp;<a href="https://arxiv.org/abs/2107.04378">arXiv preprint</a> | <a href="https://videolectures.net/iswc2021_4a_base_ontology/">Video of the talk</a> | <a href="https://doi.org/10.1007/978-3-030-88361-4_35">DOI</a> | ontology: <a href="https://w3id.org/rail/topo">https://w3id.org/rail/topo</a>&nbsp;]</p>
+<h2>Conference Articles</h2>
 
-<p><a id="BischofSchenner2019"></a>Stefan Bischof and Gottfried Schenner. <b>Challenges of Constructing a Railway Knowledge Graph</b>. <em>ESWC</em> 2019 Industry Track. [&nbsp;<a href="https://doi.org/10.1007/978-3-030-32327-1_44">DOI</a> | <a href="https://videolectures.net/eswc2019_bischof_constructing_railway/">Video of the talk</a> | <a href="pdf/bisc_sche_2019.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="puiu2017public"></a>Dan Puiu, Stefan Bischof, Bogdan Serbanescu, Septimiu Nechifor, Josiane Parreira, and Herwig Schreiner. <b>A public transportation journey planner enabled by IoT data analytics</b>. <em>Conference on Innovations in Clouds, Internet and Networks</em> 2017. [&nbsp;<a href="https://dx.doi.org/10.1109/ICIN.2017.7899440">DOI</a> | <a href="pdf/puiu-etal-2017.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="BischofMartinPolleresEtAl2015a"></a>Stefan Bischof, Christoph Martin, Axel Polleres, and Patrik Schneider. <b>Collecting, Integrating, Enriching and Republishing Open City Data as Linked Data</b>. <em>ISWC</em> 2015. [&nbsp;<a href="https://dx.doi.org/10.1007/978-3-319-25010-6_4">DOI</a> | <a href="https://videolectures.net/iswc2015_bischof_linked_data/">Video of the talk</a> | <a href="pdf/bisc-etal-2015ISWC.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="BischofKroetzschPolleresEtAl2015"></a>Stefan Bischof, Markus Kr&ouml;tzsch, Axel Polleres, and Sebastian Rudolph. <b>Schema-Agnostic Query Rewriting for OWL QL</b>. In <em>Workshop on Description Logics</em> 2015. [&nbsp;<a href="https://ceur-ws.org/Vol-1350/paper-12.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="BischofKroetzschPolleresEtAl2014"></a>Stefan Bischof, Markus Kr&ouml;tzsch, Axel Polleres, and Sebastian Rudolph. <b>Schema-Agnostic Query Rewriting in SPARQL 1.1</b>. In <em>ISWC</em> 2014. [&nbsp;<a href="https://dx.doi.org/10.1007/978-3-319-11964-9_37">DOI</a> | <a href="pdf/bisc-etal-2014iswc.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="PolleresBischofSchreiner2014"></a>Axel Polleres, Stefan Bischof, and Herwig Schreiner. <b>City Data Pipeline - A report about experiences from using Open Data to gather indicators of city performance</b>. In <em>European Data Forum</em>, 2014. [&nbsp;<a href="https://videolectures.net/dataforum2014_polleres_open_data/">Video of the talk</a> | <a href="https://www.slideshare.net/EUDataForum/edf2014-talk-of-axel-polleres-full-professor-wu-vienna-university-of-economics-and-business-austria-city-data-pipeline-a-report-about-experiences-from-using-open-data-to-gather-indicators-of-city-performance">Slides</a>&nbsp;]</p>
-
-<p><a id="BischofPolleres2013"></a>Stefan Bischof and Axel Polleres. <b>RDFS with Attribute Equations via SPARQL Rewriting</b>. <em>ESWC</em> 2013. [&nbsp;<a href="https://dx.doi.org/10.1007/978-3-642-38288-8_23">DOI</a> | <a href="http://videolectures.net/eswc2013_bischof_sparql_rewriting/">Video of the talk</a> | <a href="slides/ESWC2013-slides.pdf">Slides</a> | <a href="pdf/bisc-etal-2013ESWC.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="Bischof2012"></a>Stefan Bischof. <b>Optimising XML-RDF Data Integration</b>. <em>Extended Semantic Web Conference</em> 2012. [&nbsp;<a href="https://dx.doi.org/10.1007/978-3-642-30284-8_67">DOI</a> | <a href="pdf/bisc-2012-phd.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="BoranBediniMatheusEtAl2012"></a>Aidan Boran, Ivan Bedini, Christopher&nbsp;J. Matheus, Peter&nbsp;F. Patel-Schneider, and Stefan Bischof. <b>An Empirical Analysis of Semantic Techniques Applied to a Network Management Classification Problem</b>. <em>IEEE/WIC/ACM International Conference on Web Intelligence and Intelligent Agent Technology</em> 2012. [&nbsp;<a href="https://doi.org/10.1109/WI-IAT.2012.177">DOI</a>&nbsp;]</p>
-
-<p><a id="BischofLopesPolleres2011"></a>Stefan Bischof, Nuno Lopes, and Axel Polleres. <b>Improve Efficiency of Mapping Data between XML and RDF with XSPARQL</b>. <em>Web Reasoning and Rule Systems</em> 2011. [&nbsp;<a href="https://dx.doi.org/10.1007/978-3-642-23580-1_17">DOI</a> | <a href="pdf/bisc-etal-2011RR.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="LopesBischofDeckerEtAl2011"></a>Nuno Lopes, Stefan Bischof, Stefan Decker, and Axel Polleres. <b>On the Semantics of Heterogeneous Querying of Relational, XML and RDF Data with XSPARQL</b>. <em>Portuguese Conference on Artificial Intelligence</em> 2011. [&nbsp;<a href="https://aic.ai.wu.ac.at/~polleres/publications/lope-etal-2011EPIA.pdf">http</a>&nbsp;]</p>
-
+{% assign pubs = site.publications | sort: "year" | reverse %}
+{% for pub in pubs %}
+  {% if pub.category == "conference" %}
+    {% include publication.html pub=pub %}
+  {% endif %}
+{% endfor %}
 
 <h2>Workshop and Poster Articles</h2>
 
-<div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#BischofFalknerFiltzSchneiderSteyskalTopa2025">Stefan Bischof, Andreas Falkner, Erwin Filtz, Patrik Schneider, Simon Steyskal and Mihaela Topa. <b>CONTO: An Ontology-based Approach for Interoperable Configuration Knowledge</b>. <em>Posters and Demos Track of SEMANTiCS</em> 2025. [&nbsp;CEUR&nbsp;]
-    <details class="abstract-details">
-      <summary>Abstract</summary>
-      <div property="abstract" class="abstract-content">
-        CONTO (CONfiguration ONTOlogy and TOols) addresses the challenges of vendor lock-in and costly evaluations in product configuration systems through an ontology-based semantic framework that establishes interoperability without reinventing existing solver technologies. Our approach provides dual representations--instance-based Configuration Vocabulary and OWL DL-based formalism--with tooling to transform product models into  programs for various platforms. By decoupling modelling from configuration processing, CONTO creates an abstraction layer that preserves existing investments while enabling integration with emerging AI tools. Our implementation shows practical applications supporting both commercial and open-source configurators.
-      </div>
-    </details>
-</div>
+{% assign pubs = site.publications | sort: "year" | reverse %}
+{% for pub in pubs %}
+  {% if pub.category == "poster" or pub.category == "workshop" %}
+    {% include publication.html pub=pub %}
+  {% endif %}
+{% endfor %}
 
-<div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#DavidBischofDiwoldParreira2025">Robert David, Stefan Bischof, Konrad Diwold and Josiane Xavier Parreira. <b>Symbolic-AI driven Data Repairs for Large Scale Energy Co-Simulations: Combining SHACL repairs and Datalog rules to detect, explain, and correct errors in large scale energy co-simulation setups</b>. <em>Posters and Demos Track of SEMANTiCS</em> 2025. [&nbsp;CEUR&nbsp;]
-    <details class="abstract-details">
-      <summary>Abstract</summary>
-      <div property="abstract" class="abstract-content">
-        The transformation of energy distribution systems is fostering new models, like renewable energy communities, which require complex, simulation-based feasibility assessments. Preparing these simulations is often labor-intensive and error-prone due to heterogeneous actors and location-specific grid topologies. This paper proposes a symbolic AI approach that combines SHACL (repairs) and Datalog (imputation) to semi-automatically detect, explain, and correct inconsistencies for grid and sensor data so it can serve as input for co-simulations. Applied within the DataBri-X project and tested using Siemens BIFROST, the approach demonstrates promising improvements in data quality and preprocessing efficiency. 
-      </div>
-    </details>
-</div>
-
-<div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#BischofFiltzParreiraRoetzerSteyskalStrommer2025">Stefan Bischof, Erwin Filtz, Josiane Xavier Parreira, Florian Rötzer, Simon Steyskal, and Stephan Strommer. <b>On A Semantic Model and Knowledge Graph Based Approach to Enable Transparency, Explainability, and Auditability for High-Pressure Die-Casting</b>. <em>SENTIS Workshop</em> 2025. [&nbsp;CEUR&nbsp;]
-    <details class="abstract-details">
-      <summary>Abstract</summary>
-      <div property="abstract" class="abstract-content">
-       This paper addresses the critical challenge of fragmented data and knowledge in high-pressure die-casting environments, where the lack of integrated information hampers effective troubleshooting and compliance with emerging transparency requirements. 
-We developed a comprehensive semantic model that integrates distributed data sources and expert knowledge into a unified knowledge graph framework, explicitly connecting manufacturing processes, failures, metrics, and countermeasures through formalized semantic relationships. 
-Our implementation shows how the resulting architecture successfully transforms traditionally siloed industrial data into an interconnected knowledge representation that distinguishes between specified expert knowledge and actual operational data, enabling systematic reasoning about cause-effect relationships throughout the manufacturing process. 
-The approach provides significant value by enhancing manufacturing transparency and decision support while aligning with Industry 5.0 principles and emerging regulatory frameworks for explainable industrial systems, ultimately supporting more sustainable and efficient manufacturing processes.
-      </div>
-    </details>
-</div>
-
-<div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#BischofSchenner2025">Stefan Bischof and Gottfried Schenner. <b>On Linking Heterogeneous Railway Knowledge Graphs: Challenges in Integrating ERA and OpenStreetMap Rail Infrastructure Representations</b>. <em>Sem4Tra Workshop</em> 2025. [&nbsp;CEUR | <a href="https://semantic-transportation.github.io/sem4tra-kg-website/papers/Sem4Tra25_paper_1.pdf">PDF</a>&nbsp;]
-    <details class="abstract-details">
-      <summary>Abstract</summary>
-      <div property="abstract" class="abstract-content">
-        In the last years railway infrastructure data has become available via public SPARQL endpoints. The ontologies/vocabularies used to represent the topology part of the railway  data are mainly based either on the Open Street Map (OSM) data model or on the UML-based RailTopoModel.
-In this paper we discuss some of the challenges of integrating railway infrastructure data especially topological data. As an example, we show how to link the data available for the Austrian railway network using Open Street Map data via the QLever SPARQL endpoint and data from the ERA Knowledge Graph.
-      </div>
-    </details>
-</div>
-
-
-<p><a id="Bischofetal2024"></a>Stefan Bischof, Erwin Filtz, Josiane Xavier Parreira, Simon Steyskal, Michael Baumgart, David Gruber, Maximilian Liebetreu, Florian Rötzer and Stephan Strommer <b>Towards SHACL-based Knowledge Graph Transformation of Visual Domain Knowledge</b>. <em>Posters and Demos Track of SEMANTiCS</em> 2024. [&nbsp;<a href="https://ceur-ws.org/Vol-3759/paper18.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="BischofSchenner2020"></a>Stefan Bischof and Gottfried Schenner. <b>Towards a Railway Topology Ontology to Integrate and Query Rail Data Silos</b>. <em>Posters and Demos Track of ISWC</em> 2020. [&nbsp;<a href="https://ceur-ws.org/Vol-2721/paper588.pdf">CEUR</a> | <a href="https://youtu.be/5D8i7IfxaHM">Video of the talk</a>&nbsp;]</p>
-
-<p><a id="BischofSchennerSteyskalTaupe2018"></a>Stefan Bischof, Gottfried Schenner, Simon Steyskal and Richard Taupe. <b>Integrating Semantic Web Technologies and ASP for Product Configuration</b>. <em>Config Workshop</em> 2018. [&nbsp;<a href="https://ceur-ws.org/Vol-2220/10_CONFWS18_paper_9.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="Posada-Sanchez016"></a>M&oacute;nica Posada-S&aacute;nchez, Stefan Bischof, and Axel Polleres. <b>Extracting Geo-Semantics About Cities From OpenStreetMap</b>. <em>Posters and Demos Track of SEMANTiCS</em> 2016. [&nbsp;<a href="https://ceur-ws.org/Vol-1695/paper39.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="BischofMartinPolleresEtAl2015"></a>Stefan Bischof, Christoph Martin, Axel Polleres, and Patrik Schneider. <b>Open City Data Pipeline: Collecting, Integrating, and Predicting Open City Data</b>. <em>Workshop on Knowledge Discovery and Data Mining Meets Linked Open Data co-located with Extended Semantic Web Conference</em> 2015. [&nbsp;<a href="https://ceur-ws.org/Vol-1365/paper3.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="Bischof2015"></a>Stefan Bischof <b>Improving Practical Reasoning on top of SPARQL</b>. <em>Doctoral Consortium of the International Conference on Web Reasoning and Rule Systems</em> 2015. [&nbsp;<a href="pdf/bisc-2015RRDC.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="DellAglioPolleresLopesEtAl2014"></a>Daniele Dell'Aglio, Axel Polleres, Nuno Lopes, and Stefan Bischof. <b>Querying the Web of Data with XSPARQL 1.1</b>. <em>ISWC2014 Developers Workshop</em> 2014. [&nbsp;<a href="https://ceur-ws.org/Vol-1268/paper19.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="SchennerBischofPolleresEtAl2014"></a>Gottfried Schenner, Stefan Bischof, Axel Polleres, and Simon Steyskal. <b>Integrating Distributed Configurations with RDFS and SPARQL</b>. <em>Config Workshop</em> 2014. [&nbsp;<a href="https://ceur-ws.org/Vol-1220/02_confws2014_submission_3.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="BischofKarapantelakisNechiforEtAl2014"></a>Stefan Bischof, Athanasios Karapantelakis, Cosmin-Septimiu Nechifor, Amit Sheth, Alessandra Mileo, and Payam Barnaghi. <b>Semantic Modelling of Smart City Data</b>. <em>W3C Workshop on the Web of Things</em> 2014. [&nbsp;<a href="https://www.w3.org/2014/02/wot/papers/karapantelakis.pdf">.pdf</a>&nbsp;]</p>
-
-<p><a id="BischofPolleresSperl2013"></a>Stefan Bischof, Axel Polleres, and Simon Sperl. <b>City Data Pipeline - A System for Making Open Data Useful for Cities</b>. <em>I-SEMANTICS Posters &amp; Demonstrations Track</em> 2013. [&nbsp;<a href="https://ceur-ws.org/Vol-1026/paper10.pdf">CEUR</a>&nbsp;]</p>
-
-<p><a id="LopesBischofErlingEtAl2010"></a>Nuno Lopes, Stefan Bischof, Orri Erling, Axel Polleres, Alexandre Passant, Diego Berrueta, Antonio Campos, J&eacute;r&ocirc;me Euzenat, Kingsley Idehen, Stefan Decker, St&eacute;phane Corlosquet, Jacek Kopecky, Janne Saarela, Thomas Krennwallner, Davide Palmisano, and Michal Zaremba. <b>RDF and XML: Towards a Unified Query Layer</b>. <em>W3C Workshop on RDF Next Steps</em> 2010. [&nbsp;<a href="https://www.w3.org/2009/12/rdf-ws/papers/ws10.pdf">.pdf</a>&nbsp;]</p>
 
 <h2>Patents</h2>
+{% assign pubs = site.publications | sort: "year" | reverse %}
+{% for pub in pubs %}
+  {% if pub.category == "patent" %}
+    {% include publication.html pub=pub %}
+  {% endif %}
+{% endfor %}
 
-<p><a id="PatB"></a>Josiane Xavier Parreira, Stefan Bischof, Lukas Krammer, Andreas Fernbach. <b>Method for Automatically Computing Automation Capabilities of a Building</b>. [&nbsp;<a href="https://worldwide.espacenet.com/patent/search/family/085781655/publication/US2024330831A1?q=pn%3DUS2024330831A1">Espacenet</a>&nbsp;]</p>
-
-<p><a id="PatC"></a>Stefan Bischof, Lukas Krammer, Daniel Lechner, Josef Wechselauer. <b>Building Automation Device and Method</b>. [&nbsp;<a href="https://worldwide.espacenet.com/patent/search/family/063840608/publication/EP3637204A1?q=pn%3DEP3637204A1">Espacenet</a>&nbsp;]</p>
 
 <h2>Theses</h2>
+{% assign pubs = site.publications | sort: "year" | reverse %}
+{% for pub in pubs %}
+  {% if pub.category == "thesis" %}
+    {% include publication.html pub=pub %}
+  {% endif %}
+{% endfor %}
 
- <p><a id="Bischof2017"></a>Stefan Bischof. <b>Complementary Methods for the Enrichment of Linked Data</b>. PhD thesis, Vienna University of Technology, Austria, 2017. [&nbsp;<a href="https://doi.org/10.34726/hss.2017.45578">DOI</a> <!-- | <a href="pdf/Diss_Bischof_Stefan.pdf">.pdf</a> --> | <a href="slides/Rigorosum_Bischof.pdf">Rigorosum slides</a>&nbsp;]</p> 
-
-<p><a id="Bischof2010"></a>Stefan Bischof. <b>Implementation and Optimisation of Queries in XSPARQL</b>. Master's thesis, Vienna University of Technology, Austria, 2010. [&nbsp;<a href="http://hdl.handle.net/20.500.12708/11574">metadata</a> | <a href="https://repositum.tuwien.at/bitstream/20.500.12708/11574/2/Bischof%20Stefan%20-%202010%20-%20Implementation%20and%20optimisation%20of%20queries%20in%20XSPARQL.pdf">.pdf</a>&nbsp;]</p>
 
 <h2>Other</h2>
-
-<p><a id="epubwu5438"></a>Stefan Bischof, Benedikt K&auml;mpgen, Andreas Harth, Axel Polleres, and Patrik Schneider. <b>Open City Data Pipeline</b>. Working Papers on Information Systems, Information Business and Operations 01/2017, Department f&uuml;r Informationsverarbeitung und Prozessmanagement, WU Vienna University of Economics and Business, Vienna, February 2017. [&nbsp;<a href="https://epub.wu.ac.at/5438/">http</a>&nbsp;]</p>
-
-<p><a id="BischofKroetzschPolleresEtAl2014a"></a>Stefan Bischof, Markus Kr&ouml;tzsch, Axel Polleres, and Sebastian Rudolph. <b>Schema-Agnostic Query Rewriting in SPARQL 1.1: Technical report</b>. 2014. [&nbsp;<a href="pdf/bisc-etal-2015ISWCTR.pdf">.pdf</a>&nbsp;]</p>
+{% assign pubs = site.publications | sort: "year" | reverse %}
+{% for pub in pubs %}
+  {% if pub.category == "other" %}
+    {% include publication.html pub=pub %}
+  {% endif %}
+{% endfor %}
 
 <!--p><a id="BischofDeckerKrennwallnerEtAl2012"></a>Stefan Bischof, Stefan Decker, Thomas Krennwallner, Nuno Lopes, and Axel Polleres. <b>Mapping between RDF and XML with XSPARQL</b>. Technical report, DERI, 2012. [&nbsp;<a href="http://www.deri.ie/fileadmin/documents/DERI-TR-2011-04-04.pdf">.pdf</a>&nbsp;] </p-->

@@ -50,6 +50,8 @@ defaults:
 collections:
   doc:
     output: true
+  publications:
+    output: false
 
 sass:
     style: compressed
