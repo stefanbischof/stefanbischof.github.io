@@ -135,6 +135,19 @@ p, li:first-child, h3, body > header, pre, textarea {
 p, li:last-child, h3, body > header, pre, textarea {
     @include baseline-after(1);
 }
+p[typeof="ScholarlyArticle"],
+div[typeof="ScholarlyArticle"] {
+  @include baseline-before(1);
+  @include baseline-after(1);
+}
+div[typeof="ScholarlyArticle"] details.abstract-details:last-child {
+    margin-bottom: -$baseline;
+}
+
+div[typeof="ScholarlyArticle"] details.abstract-details {
+    margin-bottom: 0;
+    padding-bottom: 0pt;
+}
 /*p > em {
     font-style: normal;
     font-weight: bold;
@@ -296,13 +309,11 @@ summary {
 }
   
 summary {
-  color: #0066cc;
   cursor: pointer;
   font-weight: normal;
 }
   
 summary:hover {
-  color: #004499;
   text-decoration: underline;
 }
 
@@ -310,15 +321,23 @@ summary::before {
   content: "▶";
     position: absolute;
     left: 0;
-    top: 0.15em;
+    top: 0em;
     font-size: 1em;
-    color: #225588;
+    color: $highlight;
     transition: transform 0.2s;
+}
+
+summary::after {
+  content: " [...]";
 }
 
 details[open] summary::before {
   content: "▼";
   transform: rotate(0deg);
+}
+
+details[open] summary::after {
+  content: ":";
 }
   
 .abstract-content {
