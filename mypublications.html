@@ -8,31 +8,39 @@
 
 <h2>Conference Articles</h2>
 
-<div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#BischofFiltzParreira2024"><a id="BischofFiltzParreira2024"></a>
-    <span property="author">Stefan Bischof</span>, 
-    <span property="author">Erwin Filtz</span>, 
-    <span property="author">Josiane Xavier Parreira</span> 
-    <strong property="name">Semantic Smart Readiness Indicator Framework</strong>. 
-    <em>SEMANTiCS</em> 2024. 
-    [ <a property="sameAs" href="https://doi.org/10.3233/SSW240015">DOI</a> | 
-      ontology: <a href="https://w3id.org/sri">https://w3id.org/sri</a> | 
-      <a href="https://zenodo.org/doi/10.5281/zenodo.10047286">Zenodo</a> ]
-    <details class="abstract-details">
-        <summary>Abstract</summary>
-        <div property="abstract" class="abstract-content">
-            <em>Purpose:</em>
-            The Smart Readiness Indicator (SRI) is an energy rating scheme targeted at buildings to evaluate their capacity to integrate and benefit from smart technologies for enhanced energy efficiency and overall performance. Existing tools for SRI assessment and rating do not provide a standard format for data exchange. However, there are several scenarios in which a FAIR, standardised data format is beneficial, such as data exchange between building tools, comparison of different assessments, or computing statistics about buildings.
-
-            <em>Methodology:</em>
-            We propose the Semantic Smart Readiness Indicator framework, consisting of an SRI information model and a SPARQL-based SRI score calculation. We follow the Linked Open Terms ontology engineering method by specifying the use case from which the requirements and competency questions are derived. We reuse existing ontologies and extend them to create the SRI ontology.
-
-            <em>Findings:</em>
-            The model is published according to the FAIR principles. Moreover, it is flexible to accommodate specific SRI requirements, and can be aligned with existing semantic building models to facilitate data linking and exchange. The score calculation, in turn, is composed of multiple SPARQL queries defined over the model.
-
-            <em>Value:</em>
-            In this paper, we describe our proposed framework, the ontology engineering process, and the evaluation of both the model and the SPARQL-based SRI calculation. All the resources are openly available for reuse.
-    </details>
-</div>
+<!-- Dynamische Publikationsliste aus _publications für SRI und künftige Einträge mit schema.org-Markup -->
+{% assign pubs = site.publications | sort: "year" | reverse %}
+{% for pub in pubs %}
+  {% if pub.category == "conference" %}
+  <div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#{{ pub.id | default: pub.basename }}">
+      {% if pub.authors %}
+        {% for author in pub.authors %}
+          <span property="author">{{ author }}</span>{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+      {% endif %}
+      <strong property="name">{{ pub.title }}</strong>.
+      {% if pub.venue %} <em property="isPartOf">{{ pub.venue }}</em>.{% endif %}
+      {% if pub.year %} <span property="datePublished" content="{{ pub.year }}">{{ pub.year }}</span>.{% endif %}
+      {% if pub.links %}
+        [
+        {% for link in pub.links %}
+          {% if link.label == "DOI" %}
+            <a property="identifier" href="{{ link.url }}">{{ link.label }}</a>{% unless forloop.last %} | {% endunless %}
+          {% else %}
+            <a property="sameAs" href="{{ link.url }}">{{ link.label }}</a>{% unless forloop.last %} | {% endunless %}
+          {% endif %}
+        {% endfor %}
+        ]
+      {% endif %}
+      {% if pub.abstract %}
+        <details class="abstract-details">
+          <summary>Abstract</summary>
+          <div property="abstract" class="abstract-content">{{ pub.abstract }}</div>
+        </details>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endfor %}
 
 <div vocab="https://schema.org/" typeof="ScholarlyArticle" resource="#BischofFiltzParreiraSteyskal2024">
     <span property="author">Stefan Bischof</span>,
