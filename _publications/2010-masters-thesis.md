@@ -12,5 +12,4 @@ links:
     url: http://hdl.handle.net/20.500.12708/11574
   - label: PDF
     url: https://repositum.tuwien.at/bitstream/20.500.12708/11574/2/Bischof%20Stefan%20-%202010%20-%20Implementation%20and%20optimisation%20of%20queries%20in%20XSPARQL.pdf
-abstract: ""
 ---

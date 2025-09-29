@@ -12,5 +12,4 @@ links:
     url: https://doi.org/10.34726/hss.2017.45578
   - label: Rigorosum slides
     url: slides/Rigorosum_Bischof.pdf
-abstract: ""
 ---

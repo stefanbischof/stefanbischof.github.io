@@ -13,5 +13,4 @@ venue: Working Papers on Information Systems, Information Business and Operation
 links:
   - label: http
     url: https://epub.wu.ac.at/5438/
-abstract: ""
 ---
