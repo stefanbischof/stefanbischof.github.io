@@ -9,7 +9,7 @@ venue: Sem4Tra Workshop
 category: workshop
 links:
   - label: CEUR
-    url: tba
+    url: https://ceur-ws.org/Vol-4064/Sem4Tra-paper1.pdf
   - label: PDF
     url: https://semantic-transportation.github.io/sem4tra-kg-website/papers/Sem4Tra25_paper_1.pdf
 abstract: |

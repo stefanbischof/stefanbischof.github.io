@@ -13,7 +13,7 @@ venue: Posters and Demos Track of SEMANTiCS
 category: poster
 links:
   - label: CEUR
-    url: tba
+    url: https://ceur-ws.org/Vol-4064/PD-paper13.pdf
 abstract: |
   CONTO (CONfiguration ONTOlogy and TOols) addresses the challenges of vendor lock-in and costly evaluations in product configuration systems through an ontology-based semantic framework that establishes interoperability without reinventing existing solver technologies. Our approach provides dual representations--instance-based Configuration Vocabulary and OWL DL-based formalism--with tooling to transform product models into  programs for various platforms. By decoupling modelling from configuration processing, CONTO creates an abstraction layer that preserves existing investments while enabling integration with emerging AI tools. Our implementation shows practical applications supporting both commercial and open-source configurators.
 ---
