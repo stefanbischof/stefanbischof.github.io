@@ -11,5 +11,5 @@ category: patent
 patent_number: US2024330831A1
 links:
   - label: Espacenet
-    url: https://worldwide.espacenet.com/patent/search/family/085781655/publication/US2024330831A1?q=pn%3DUS2024330831A1
+    url: https://worldwide.espacenet.com/publicationDetails/biblio?FT=D&date=20240926&DB=EPODOC&locale=en_EP&CC=US&NR=2024330831A1&KC=A1
 ---
