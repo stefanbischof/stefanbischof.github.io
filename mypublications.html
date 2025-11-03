@@ -2,9 +2,9 @@
 <h2>Journal Articles</h2>
 
 {% assign pubs = site.publications | sort: "year" | reverse -%}
-{%- for pub in pubs -%}
+{% for pub in pubs -%}
   {%- if pub.category == "journal" -%}
-    {%- include publication.html pub=pub -%}
+    {% include publication.html pub=pub %}
   {%- endif -%}
 {%- endfor %}
 
@@ -12,39 +12,39 @@
 
 {% for pub in pubs -%}
   {%- if pub.category == "conference" -%}
-    {%- include publication.html pub=pub -%}
+    {% include publication.html pub=pub %}
   {%- endif -%}
 {%- endfor %}
 
 <h2>Workshop and Poster Articles</h2>
 
-{%- for pub in pubs -%}
+{% for pub in pubs -%}
   {%- if pub.category == "poster" or pub.category == "workshop" -%}
-    {%- include publication.html pub=pub -%}
+    {% include publication.html pub=pub %}
   {%- endif -%}
 {%- endfor %}
 
 <h2>Patents</h2>
 
-{%- for pub in pubs -%}
+{% for pub in pubs -%}
   {%- if pub.category == "patent" -%}
-    {%- include publication.html pub=pub -%}
+    {% include publication.html pub=pub %}
   {%- endif -%}
 {%- endfor %}
 
 <h2>Theses</h2>
 
-{%- for pub in pubs -%}
+{% for pub in pubs -%}
   {%- if pub.category == "thesis" -%}
-    {%- include publication.html pub=pub -%}
+    {% include publication.html pub=pub %}
   {%- endif -%}
 {%- endfor %}
 
 <h2>Other</h2>
 
-{%- for pub in pubs -%}
+{% for pub in pubs -%}
   {%- if pub.category == "other" -%}
-    {%- include publication.html pub=pub -%}
+    {% include publication.html pub=pub %}
   {%- endif -%}
 {%- endfor %}
 
