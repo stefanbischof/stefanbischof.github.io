@@ -31,7 +31,7 @@ permalink: /publications/
 
 <h2>Patents</h2>
 {% for pub in pubs -%}
-  {%- if pub.category == "patent" %}
+  {%- if pub.category == "patent" -%}
     {% include publication.html pub=pub %}
   {% endif -%}
 {%- endfor %}
