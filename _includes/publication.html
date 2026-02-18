@@ -6,7 +6,7 @@ Verwendung: {%- include publication.html pub=pub -%}
   typeof="{%- if include.pub.category == 'thesis' -%}Thesis{%- elsif include.pub.category == 'patent' -%}CreativeWork{%- else -%}ScholarlyArticle{%- endif -%}"
   resource="#{{- include.pub.id | default: include.pub.basename -}}">{%- if include.pub.authors -%}{%- for author in
   include.pub.authors -%}<span property="author">{{- author -}}</span>{%- unless forloop.last %}, {% endunless -%}{%
-  endfor %}{% endif %} <strong property="name">{{- include.pub.title -}}</strong>. {% if include.pub.venue %} <em
+  endfor %}{% endif %} <strong property="name"><a href="{{ include.pub.url }}">{{- include.pub.title -}}</a></strong>. {% if include.pub.venue %} <em
     property="isPartOf">{{- include.pub.venue -}}</em>. {% endif %}{% if include.pub.year %} <span
     property="datePublished" content="{{- include.pub.year -}}">{{- include.pub.year -}}</span>. {% endif %}{% if
   include.pub.category == "thesis" and include.pub.degree  %} <span>({{- include.pub.degree -}})</span>. {% endif %}{%-
@@ -31,6 +31,7 @@ Verwendung: {%- include publication.html pub=pub -%}
   <a property="sameAs" href="{{- link.url -}}">{{- link.label -}}</a>{%- unless forloop.last %} | {% endunless -%}
   {%- endif -%}
   {%- endfor -%}
+  {%- if include.pub.links %} | {% endif -%}<a href="{{ include.pub.url }}">Details</a>
   &nbsp;]{%- endif -%}
   {%- if include.pub.abstract -%}<details class="abstract-details">
     <summary>Abstract</summary>

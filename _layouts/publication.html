@@ -1,0 +1,81 @@
+---
+layout: default
+---
+
+<article vocab="https://schema.org/" typeof="{%- if page.category == 'thesis' -%}Thesis{%- elsif page.category == 'patent' -%}CreativeWork{%- else -%}ScholarlyArticle{%- endif -%}">
+  <header>
+    <h1 property="name">{{ page.title }}</h1>
+    
+    {% if page.authors %}
+    <p class="authors">
+      {% for author in page.authors %}
+        <span property="author">{{ author }}</span>{% unless forloop.last %}, {% endunless %}
+      {% endfor %}
+    </p>
+    {% endif %}
+    
+    {% if page.venue %}
+    <p class="venue">
+      Published in: <em property="isPartOf">{{ page.venue }}</em>
+    </p>
+    {% endif %}
+    
+    {% if page.year %}
+    <p class="year">
+      <span property="datePublished" content="{{ page.year }}">{{ page.year }}</span>
+    </p>
+    {% endif %}
+    
+    {% if page.category == "thesis" and page.degree %}
+    <p class="degree">{{ page.degree }}</p>
+    {% endif %}
+    
+    {% if page.category == "patent" and page.patent_number %}
+    <p class="patent-number">Patent: {{ page.patent_number }}</p>
+    {% endif %}
+    
+    {% if page.links %}
+    <nav class="publication-links">
+      {% for link in page.links %}
+        {% if link.label == "DOI" %}
+          <a property="identifier" href="{{ link.url }}" aria-label="DOI">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" style="vertical-align:middle;margin-right:0.2em;">
+              <circle cx="8" cy="8" r="7" stroke="#c33" stroke-width="2" fill="none" />
+              <text x="8" y="12" text-anchor="middle" font-size="9" fill="#c33" font-family="sans-serif">D</text>
+            </svg>
+            {{ link.label }}
+          </a>
+        {% elsif link.label == "PDF" %}
+          <a property="sameAs" href="{{ link.url }}" aria-label="PDF">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" style="vertical-align:middle;margin-right:0.2em;">
+              <rect x="2" y="2" width="12" height="12" rx="2" fill="none" stroke="#c33" stroke-width="2" />
+              <text x="8" y="12" text-anchor="middle" font-size="8" fill="#c33" font-family="sans-serif">PDF</text>
+            </svg>
+            {{ link.label }}
+          </a>
+        {% else %}
+          <a property="sameAs" href="{{ link.url }}">{{ link.label }}</a>
+        {% endif %}
+        {% unless forloop.last %} | {% endunless %}
+      {% endfor %}
+    </nav>
+    {% endif %}
+  </header>
+
+  {% if page.abstract %}
+  <section class="abstract">
+    <h2>Abstract</h2>
+    <div property="abstract">{{ page.abstract | markdownify }}</div>
+  </section>
+  {% endif %}
+
+  {% if page.content and page.content != "" %}
+  <section class="content">
+    {{ content }}
+  </section>
+  {% endif %}
+  
+  <nav class="back-link">
+    <a href="/publications/">&larr; Back to all publications</a>
+  </nav>
+</article>
