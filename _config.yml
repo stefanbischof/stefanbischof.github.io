@@ -38,12 +38,19 @@ defaults:
     values:
       layout: "post"
       author: "Stefan Bischof"
+  -
+    scope:
+      path: ""
+      type: "publications"
+    values:
+      layout: "publication"
 
 collections:
   doc:
     output: true
   publications:
-    output: false
+    output: true
+    permalink: /publications/:name/
 
 sass:
     style: compressed
