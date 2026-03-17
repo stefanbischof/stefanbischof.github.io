@@ -10,5 +10,5 @@ year: 2014
 category: other
 links:
   - label: PDF
-    url: pdf/bisc-etal-2015ISWCTR.pdf
+    url: /pdf/bisc-etal-2015ISWCTR.pdf
 ---
