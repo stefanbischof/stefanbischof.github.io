@@ -10,6 +10,8 @@ venue: Vienna University of Technology, Austria
 links:
   - label: DOI
     url: https://doi.org/10.34726/hss.2017.45578
+  - label: PDF
+    url: /pdf/Diss_Bischof_Stefan.pdf
   - label: Rigorosum slides
     url: /slides/Rigorosum_Bischof.pdf
 abstract: |
