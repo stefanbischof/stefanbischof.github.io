@@ -3,6 +3,31 @@
 @import "normalize";
 @import "syntax-highlighting";
 
+/* Source Serif 4 — self-hosted variable font (Adobe, OFL-1.1).
+   These are the OFFICIAL Adobe-published WOFF2s (npm:source-serif),
+   subsetted to Latin + Latin-Extended + Punctuation but with the full
+   GSUB/GPOS feature set intact: kerning, ligatures, oldstyle figures
+   (onum), small caps (smcp/c2sc), slashed zero, fractions, etc.
+   The earlier fontsource subsets had stripped onum and smcp.
+   License: /fonts/SOURCE-SERIF-4-LICENSE.txt
+   Axes: weight 200–900, optical size 8–60.
+*/
+@font-face {
+    font-family: 'Source Serif 4';
+    font-style: normal;
+    font-weight: 200 900;
+    font-display: swap;
+    src: url('/fonts/SourceSerif4Variable-Roman.woff2') format('woff2-variations'),
+         url('/fonts/SourceSerif4Variable-Roman.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Source Serif 4';
+    font-style: italic;
+    font-weight: 200 900;
+    font-display: swap;
+    src: url('/fonts/SourceSerif4Variable-Italic.woff2') format('woff2-variations'),
+         url('/fonts/SourceSerif4Variable-Italic.woff2') format('woff2');
+}
 
 $fontsize: 1rem;
 $baseline: 1.6875rem;
@@ -11,7 +36,7 @@ $big-scale:    4/3;
 $small-scale: 6/5;
 $sansfont: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
-$seriffont: 'Playfair Display', serif;
+$seriffont: 'Source Serif 4', 'Iowan Old Style', Charter, Cambria, Georgia, serif;
 $highlight: #c33;
 @mixin baseline-before($lh) {
     &:before {
@@ -76,36 +101,56 @@ font-size: $fontsize;
 }
 body {
 margin: 0 auto;
-font-family: $sansfont;
+font-family: $seriffont;
+// Use font-variant-* (high-level) only — don't pair with font-feature-settings,
+// which would override and silently drop oldstyle figures.
 font-variant-numeric: oldstyle-nums proportional-nums slashed-zero;
 font-variant-ligatures: common-ligatures  contextual;
 max-width: 80rem;
 
 }
 body > header {
-    font-weight:700;
     margin: 0;
     padding: $baseline 0 $baseline;
     @include font-size($big-scale, 1);
-    font-family: $sansfont;
+    font-family: $seriffont;
+    // Drop the weight from 700 → 500: bold-roman everywhere reads as one
+    // monotone block; semibold keeps the masthead as a "title" without
+    // letting it shout. opsz pushed to 28 for display-cut letterforms
+    // (slightly higher contrast and more refined modulation than the
+    // text-cut the browser would auto-pick at this size).
+    font-weight: 500;
+    font-variation-settings: "opsz" 28;
+    letter-spacing: 0.005em;
     a {
-        color: $highlight;
+        color: inherit;
         text-decoration: none;
         border-width: 0;
-        font-weight: 900;
+        font-weight: inherit;
         background-image: none;
         text-shadow: none;
     }
+    .sep {
+        color: #aaa;
+        font-weight: 400;
+        margin: 0 0.05em;
+    }
+    .tagline {
+        font-style: italic;       // tonal break — name in roman, tagline in italic
+        font-weight: 400;
+    }
     &.big {
         @include font-size($big-scale, 2);
-        padding-top: $baseline*2;
-	
+        padding-top: $baseline;               // was $baseline*2 — less empty top
+        font-variation-settings: "opsz" 36;   // closer to display extreme at this size
+        font-weight: 400;                     // less weight needed at display sizes
+        a { font-weight: 500; }
     }
 }
 h1, h2, h3 {
     padding: 0;
     font-weight: 400;
-    font-family:  $sansfont;
+    font-family:  $seriffont;
 }
 h1, h2, header.big {
     line-height: $baseline*2;
@@ -120,6 +165,8 @@ margin: 0;
 h2 {
  @include font-size($big-scale, 1);
 margin: 0;
+font-style: italic;
+font-weight: 400;
 }
 h3 {
 font-size: 1rem;
@@ -143,9 +190,22 @@ p[typeof="Thesis"],
 div[typeof="Thesis"] {
   @include baseline-before(1);
   @include baseline-after(1);
+  // Bibliography hanging indent — title and continuation lines align,
+  // first line (with author surnames) sticks out to the left.
+  padding-left: 1.75rem;
+  text-indent: -1.75rem;
+}
+// Reset hanging indent inside the disclosed abstract block.
+div[typeof] details.abstract-details,
+div[typeof] .abstract-content,
+div[typeof] summary {
+  text-indent: 0;
 }
 strong {
-    font-weight: bold;
+    // Source Serif 4 at 700 ("bold") reads heavy in a serif body. 600 is the
+    // semi-bold cut — clearly emphasised but not shouting. Variable-font
+    // weight axis lets us pick exactly this notch.
+    font-weight: 600;
 }
 emph, i {
     font-style: italic;
@@ -263,6 +323,33 @@ textarea{
 }
 
 .col4:first-child,.col8:first-child,.col6:first-child { margin-left: 0; }
+
+/* ---------------------------------------------------------------
+   .lead — opening credo. Italic at a size large enough to lead
+   the page. No custom margins: relies on the baseline-pseudo
+   rhythm so it doesn't stack with adjacent margins.
+   --------------------------------------------------------------- */
+.lead {
+    font-style: italic;
+    font-size: 1.5rem;
+    line-height: $baseline * 1.5;
+    color: inherit;
+    max-width: 36rem;
+    text-wrap: balance;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* ---------------------------------------------------------------
+   .impact — quiet sub-headline (the "40+ publications • …" line).
+   Sits beneath the credo as a short factual gloss.
+   --------------------------------------------------------------- */
+.impact {
+    font-size: 0.9rem;
+    color: #777;
+    max-width: 36rem;
+    margin: 0;
+}
 .authors {
     font-family: $sansfont;
     color: #678;
@@ -302,64 +389,123 @@ textarea{
     }
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #222;
-    color: #ccc;
-    font-weight: 300;
-  }
-  a {
-    color: #ccc;
-    text-shadow:#222 0.1rem 0px 0px, #222 -0.1rem 0px 0px
-  }
+// (Dark-mode block moved to the end of this file so its overrides
+//  win the cascade against later light-mode declarations.)
+
+/* ---------------------------------------------------------------
+   Publication link list ( DOI · PDF · Details ) — small caps,
+   middot separators. The .sep span is how the template emits ' · '
+   so it can be styled without bracket noise.
+   --------------------------------------------------------------- */
+.pub-links {
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.05em;
+    margin-left: 0.35em;
+    color: $highlight;
+    a { color: inherit; }
+    .sep {
+        color: #aaa;
+        margin: 0 0.1em;
+        letter-spacing: 0;
+    }
 }
 
+/* ---------------------------------------------------------------
+   Abstract disclosure
+   --------------------------------------------------------------- */
 summary {
-  //margin-left: 2em;
-  transition: background 0.2s;
-  list-style: none; /* Remove default triangle for custom marker */
-  position: relative;
-  padding-left: 1.5em;
+    list-style: none;            /* drop the default triangle */
+    cursor: pointer;
+    position: relative;
+    padding-left: 1.4em;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.05em;
+    color: #444;
+    transition: color 0.15s ease;
+    &::-webkit-details-marker { display: none; }
+    &:hover { color: $highlight; }
 }
-  
-summary {
-  cursor: pointer;
-  font-weight: normal;
-}
-  
-summary:hover {
-  text-decoration: underline;
-}
-
 summary::before {
-  content: "▶";
+    content: "▸";
     position: absolute;
     left: 0;
-    top: 0em;
-    font-size: 1em;
+    top: 0;
+    font-size: 1em;              // body size — was 0.85em which read too small
     color: $highlight;
-    transition: transform 0.2s;
+    display: inline-block;
+    transform-origin: 35% 55%;   // pivot near the geometric centre of the glyph
+    transition: transform 0.2s ease;
+}
+details[open] > summary::before {
+    transform: rotate(90deg);
 }
 
-summary::after {
-  content: " [...]";
-}
-
-details[open] summary::before {
-  content: "▼";
-  transform: rotate(0deg);
-}
-
-details[open] summary::after {
-  content: ":";
-}
-  
 .abstract-content {
-  //margin-top: 0.5em;
-  padding-left: 0.5em;
-  border-left: 2px solid #eee;
-  color: #444;
-  font-size: 0.9rem;
-  //line-height: 1.4;
+    margin: 0.35em 0 0;
+    padding: 0.35em 0 0.35em 0.85em;
+    border-left: 2px solid #ddd;
+    background: rgba(0, 0, 0, 0.025);
+    color: #444;
+    font-size: 0.95em;
+    line-height: $baseline*0.95;
+    text-wrap: pretty;
+    hyphens: auto;
 }
-  
+
+/* =================================================================
+   Dark theme — placed last so its rules win the cascade against
+   any later light-mode declarations of the same selector.
+   Warm "ink on paper" palette: never pure black, never pure white.
+   The accent shifts from Pompeian red (#c33) to a warm terracotta
+   that retains contrast against the dark paper background.
+   Body weight nudges down a touch — text appears heavier on dark,
+   so we compensate (Bringhurst's reverse-contrast trick).
+   ================================================================= */
+@media (prefers-color-scheme: dark) {
+    $dark-bg:       #181410;
+    $dark-bg-soft:  #221d17;
+    $dark-ink:      #e8e1d2;
+    $dark-ink-soft: #a59e8e;
+    $dark-rule:     #3d362b;
+    $dark-accent:   #e08c6e;
+
+    body {
+        background-color: $dark-bg;
+        color: $dark-ink;
+        font-weight: 380;
+    }
+    strong, body > header, body > header a { font-weight: 600; }
+
+    a {
+        color: $dark-ink;
+        background-image: linear-gradient(to top,
+            transparent 0%, $dark-accent 1%, $dark-accent 5%, transparent 8%);
+        text-shadow: $dark-bg 0.1rem 0 0, $dark-bg -0.1rem 0 0;
+    }
+    body > header a { color: inherit; text-shadow: none; }
+
+    hr { border-color: $dark-rule; }
+
+    pre, figure, code, textarea { color: $dark-ink-soft; }
+
+    .authors { color: $dark-ink-soft; }
+
+    .pub-links {
+        color: $dark-accent;
+        .sep { color: $dark-rule; }
+    }
+
+    summary {
+        color: $dark-ink-soft;
+        &:hover { color: $dark-accent; }
+    }
+    summary::before { color: $dark-accent; }
+
+    .abstract-content {
+        color: #d8d1c0;            // close to body ink, just one notch dimmer
+        border-left-color: #5a5142;
+        background: $dark-bg-soft;
+    }
+
+    .impact { color: $dark-ink-soft; }
+}
