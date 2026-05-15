@@ -300,6 +300,36 @@ margin: 0 0 0 1rem;
 }
 .content p:has(+ p)::after { display: none; }
 
+// Paragraph headings (LaTeX \paragraph → <h5 class="para-heading">):
+// displayed inline so they flow with the following paragraph, matching
+// LNCS \paragraph style. The following <p> is also made inline; a block
+// ::after forces a new block context so subsequent content starts fresh.
+// No p+p special-casing needed — h5 is not a <p>, so the indent rule
+// above never fires after a para-heading.
+.content h5.para-heading {
+    display: inline;
+    font-size: inherit;
+    font-weight: 600;
+    font-variant-caps: normal;
+    letter-spacing: normal;
+    line-height: inherit;
+    margin: 0;
+    &::before, &::after { display: none; }
+}
+.content h5.para-heading + p {
+    display: inline;
+    text-indent: 0;
+    &::before { display: none; }
+    // display:block forces the line break; normal $baseline height provides
+    // spacing before whatever follows (lists, headings, figures, next h5).
+    &::after { content: ""; display: block; }
+}
+// Only suppress the height when the next sibling is a plain paragraph —
+// that's the one case where p+p would otherwise produce a visible empty line.
+.content h5.para-heading + p:has(+ p:not(.para-heading))::after {
+    height: 0;
+}
+
 /* ---------------------------------------------------------------
    Publication page row — no gutters between columns; widths are
    defined as exact fractions (1:2:1) that sum to 100%.
@@ -356,11 +386,16 @@ margin: 0 0 0 1rem;
    indent. list-style-position: outside (the default) places the
    marker in the padding area so wrapped lines align with the first
    character of text, not back to the marker.
+   The global baseline rhythm puts an inline-block ::before on
+   li:first-child and ::after on li:last-child. When a list item
+   contains a block element (e.g. footnotes wrap content in <p>),
+   that inline-block lands on its own line creating a blank line.
+   Suppress both here since content list spacing is managed manually.
    --------------------------------------------------------------- */
 .content {
     ul, ol {
         padding-left: 1.5rem;
-        margin: 0;
+        margin: 0 0 $baseline 0;
     }
 
     li {
@@ -369,6 +404,7 @@ margin: 0 0 0 1rem;
         margin: 0;
         padding: 0;
 
+        &::before, &::after { display: none; }
         &::marker { color: #888; }
     }
 
