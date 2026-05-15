@@ -8,5 +8,5 @@
   <link rel="stylesheet" href="{{ "/css/style.css" | prepend: site.baseurl }}" />
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" />
 
-  {% seo title=false %}
+  {% unless page.layout == "publication" %}{% seo title=false %}{% endunless %}
 </head>
