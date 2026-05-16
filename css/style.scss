@@ -89,7 +89,7 @@ $highlight: #c33;
 	margin: 0;
 	&:hover {
 	    background-color: $highlight;
-
+	  
 	}
 }
 
@@ -105,14 +105,7 @@ font-family: $seriffont;
 // Use font-variant-* (high-level) only — don't pair with font-feature-settings,
 // which would override and silently drop oldstyle figures.
 font-variant-numeric: oldstyle-nums proportional-nums slashed-zero;
-font-variant-ligatures: common-ligatures;  // font has liga only; calt/dlig absent
-// ss03: stylistic ampersand. Not controllable via font-variant-*, so
-// font-feature-settings is the only option; safe at body level.
-font-feature-settings: "ss03" 1;
-font-kerning: normal;
-// Let the browser map opsz axis to the computed font-size automatically.
-// Elements that need specific optical sizes override via font-variation-settings.
-font-optical-sizing: auto;
+font-variant-ligatures: common-ligatures  contextual;
 max-width: 80rem;
 
 }
@@ -159,9 +152,6 @@ h1, h2, h3 {
     font-weight: 400;
     font-family:  $seriffont;
     text-wrap: balance;
-    // Abbreviations are already set off by the heading size and weight;
-    // small-caps inside a heading looks out of place.
-    abbr.caps, .caps { font-variant-caps: normal; letter-spacing: normal; }
 }
 h1, h2, header.big {
     line-height: $baseline*2;
@@ -221,23 +211,6 @@ strong {
     // weight axis lets us pick exactly this notch.
     font-weight: 600;
 }
-
-/* ---------------------------------------------------------------
-   Superscripts — use the font's designed sups glyphs (OpenType
-   sups feature) rather than the browser default of scaled +
-   shifted regular numerals. Reset vertical-align and font-size
-   so the two mechanisms don't stack.
-   --------------------------------------------------------------- */
-
-// Footnote references, in-text citations, and cross-references (figures,
-// tables, listings, sections) — red, no underline gradient at small sizes.
-a.footnote-ref,
-a[role="doc-biblioref"],
-a[data-reference-type="ref"] {
-    color: $highlight;
-    background-image: none;
-    text-shadow: none;
-}
 emph, i {
     font-style: italic;
 }
@@ -281,66 +254,49 @@ margin: 0 0 0 1rem;
 }
 
 /* ---------------------------------------------------------------
-   Publication content paragraphs — orphan/widow prevention and
-   first-line indent (book-style: indent instead of spacing between
-   consecutive paragraphs). text-wrap: pretty is Chrome 117+.
+   Publication content paragraphs — orphan prevention and
+   book-style first-line indent for consecutive paragraphs.
+   text-wrap: pretty is a progressive enhancement (Chrome 117+).
    --------------------------------------------------------------- */
 .content p {
     text-wrap: pretty;
 }
 
-// Book-style indent: no gap between consecutive paragraphs, just indent.
-// Paragraphs following a heading retain no indent (traditional rule).
-// display:none removes the pseudo-elements from layout entirely — height:0
-// alone is insufficient because vertical-align:-$baseline still shifts the
-// line box even at zero height.
+// Book-style: consecutive paragraphs get an indent instead of a gap.
+// Suppress both ::before on the incoming p and ::after on the outgoing p
+// so neither side contributes spacing — the indent is the only signal.
 .content p + p {
     text-indent: 1.5em;
     &::before { display: none; }
 }
 .content p:has(+ p)::after { display: none; }
 
-// Paragraph headings (LaTeX \paragraph → <h5 class="para-heading">):
-// displayed inline so they flow with the following paragraph, matching
-// LNCS \paragraph style. The following <p> is also made inline; a block
-// ::after forces a new block context so subsequent content starts fresh.
-// No p+p special-casing needed — h5 is not a <p>, so the indent rule
-// above never fires after a para-heading.
-.content h5.para-heading {
-    display: inline;
-    font-size: inherit;
-    font-weight: 600;
-    font-variant-caps: normal;
-    letter-spacing: normal;
-    line-height: inherit;
-    margin: 0;
-    &::before, &::after { display: none; }
-}
-.content h5.para-heading + p {
-    display: inline;
+// Para-heading paragraphs: <p><strong>Heading.</strong> body text</p>
+// These act as section starters — they need a full baseline gap before them,
+// not a book-style indent. We override the p+p rules with higher specificity
+// (the :has() pseudo-class contributes the specificity of its argument).
+//
+// Restore incoming ::before on the para-heading paragraph itself:
+.content p + p:has(> strong:first-child) {
     text-indent: 0;
-    &::before { display: none; }
-    // display:block forces the line break; normal $baseline height provides
-    // spacing before whatever follows (lists, headings, figures, next h5).
-    &::after { content: ""; display: block; }
+    @include baseline-before(1);
 }
-// Only suppress the height when the next sibling is a plain paragraph —
-// that's the one case where p+p would otherwise produce a visible empty line.
-.content h5.para-heading + p:has(+ p:not(.para-heading))::after {
-    height: 0;
+// Restore outgoing ::after on the paragraph that precedes a para-heading
+// paragraph (the p+p suppression rule removed it, but we want the gap):
+.content p:has(+ p > strong:first-child)::after {
+    content: '';
+    display: inline-block;
+    vertical-align: -$baseline;
+    height: $baseline;
 }
 
 /* ---------------------------------------------------------------
    Publication page row — no gutters between columns; widths are
    defined as exact fractions (1:2:1) that sum to 100%.
-   Only applied at wide viewports; narrow viewports use the
-   general responsive rules (all cols → 100% width).
    --------------------------------------------------------------- */
-@media only screen and (min-width: 60rem) {
-    .pub-row {
-        .col3 { width: 25%; margin-left: 0; }
-        .col6 { width: 50%; margin-left: 0; }
-    }
+.pub-row {
+    .col3 { width: 25%; margin-left: 0; }
+    .col6 { width: 50%; margin-left: 0; }
 }
 
 /* ---------------------------------------------------------------
@@ -386,16 +342,11 @@ margin: 0 0 0 1rem;
    indent. list-style-position: outside (the default) places the
    marker in the padding area so wrapped lines align with the first
    character of text, not back to the marker.
-   The global baseline rhythm puts an inline-block ::before on
-   li:first-child and ::after on li:last-child. When a list item
-   contains a block element (e.g. footnotes wrap content in <p>),
-   that inline-block lands on its own line creating a blank line.
-   Suppress both here since content list spacing is managed manually.
    --------------------------------------------------------------- */
 .content {
     ul, ol {
         padding-left: 1.5rem;
-        margin: 0 0 $baseline 0;
+        margin: 0;
     }
 
     li {
@@ -404,7 +355,6 @@ margin: 0 0 0 1rem;
         margin: 0;
         padding: 0;
 
-        &::before, &::after { display: none; }
         &::marker { color: #888; }
     }
 
@@ -416,7 +366,7 @@ margin: 0 0 0 1rem;
 .bibliography {
     li {
 	list-style-type: none;
-        text-indent: -1rem;
+        text-indent: -1rem;	
     }
     .details {
 	@include button();
@@ -459,7 +409,7 @@ margin: 0 0;
 .row:after, .row:before {
 clear:both;
 content:"";
-display:table;
+display:table; 
 }
 .col, .col2, .col3, .col4, .col6, .col8 {
 float: left;
@@ -572,14 +522,11 @@ figure > figcaption {
 .authors {
     color: #678;
     .first, .last {
-
+	
     }
 }
-@media only screen and (max-width: 60rem) {
-    html { padding: 0 1rem; }
-}
 @media only screen and (max-width: 40rem) {
-    html { font-size: 0.9rem; line-height: $baseline*0.8; padding: 0 0.75rem; }
+    html { font-size: 0.9rem; line-height: $baseline*0.8;}
 }
 @media only screen and (max-width: 60rem) {
     .col, .col2, .col3, .col4, .col6, .col8 {
@@ -622,7 +569,6 @@ figure > figcaption {
    so it can be styled without bracket noise.
    --------------------------------------------------------------- */
 .pub-links {
-    white-space: nowrap;
     font-variant-caps: all-small-caps;
     letter-spacing: 0.05em;
     margin-left: 0.35em;
@@ -708,9 +654,6 @@ details[open] > summary::before {
         text-shadow: $dark-bg 0.1rem 0 0, $dark-bg -0.1rem 0 0;
     }
     body > header a { color: inherit; text-shadow: none; }
-    a.footnote-ref,
-    a[role="doc-biblioref"],
-    a[data-reference-type="ref"] { color: $dark-accent; }
 
     hr { border-color: $dark-rule; }
 
@@ -736,18 +679,4 @@ details[open] > summary::before {
     }
 
     .impact { color: $dark-ink-soft; }
-}
-
-/* ---------------------------------------------------------------
-   Print — orphans/widows only apply in paged media, so this is
-   the only context where they have any effect.
-   --------------------------------------------------------------- */
-@media print {
-    .content p {
-        orphans: 3;
-        widows: 3;
-    }
-    h2, h3 {
-        page-break-after: avoid;
-    }
 }
