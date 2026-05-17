@@ -102,12 +102,33 @@ font-size: $fontsize;
 body {
 margin: 0 auto;
 font-family: $seriffont;
-// Use font-variant-* (high-level) only — don't pair with font-feature-settings,
-// which would override and silently drop oldstyle figures.
+// Use font-variant-* (high-level) for features that have a CSS property.
+// font-feature-settings is safe alongside them as long as the same feature
+// isn't controlled by both — ss03 (fancy ampersand) has no font-variant-*
+// equivalent and doesn't overlap with onum/pnum/zero/liga.
 font-variant-numeric: oldstyle-nums proportional-nums slashed-zero;
-font-variant-ligatures: common-ligatures  contextual;
+font-variant-ligatures: common-ligatures contextual;
+font-feature-settings: "ss03" 1;
+// Explicit optical sizing: tells the browser to set the opsz axis to the
+// computed font size (in points). Without this declaration, any ancestor's
+// font-variation-settings can propagate stale opsz values via inheritance.
+font-optical-sizing: auto;
 max-width: 80rem;
+}
 
+// Footnote superscripts — font-variant-position:super activates the sups
+// OpenType feature (properly-drawn, correctly-weighted superscript glyphs)
+// and lets the font position them via its own metrics. vertical-align:baseline
+// prevents the browser from adding its own additional raise on top of the
+// font's glyph-level positioning. line-height:0 stops the superscript from
+// pushing surrounding lines apart.
+sup {
+    font-variant-position: super;
+    font-size: inherit;
+    vertical-align: baseline;
+    line-height: 0;
+    position: relative;
+    top: 0;
 }
 body > header {
     margin: 0;
@@ -478,6 +499,9 @@ padding-left: 0;
 .caps, abbr.caps {
     font-variant-caps: all-small-caps;
     letter-spacing: 0.04em;
+    // case: shifts surrounding punctuation (hyphens, parens, slashes) to
+    // optical centre of the caps height rather than the baseline.
+    font-feature-settings: "case" 1;
 }
 abbr.caps {
     text-decoration: none;  // browsers add a dotted underline to <abbr> by default
