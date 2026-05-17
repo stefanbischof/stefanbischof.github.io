@@ -29,7 +29,7 @@
          url('/fonts/SourceSerif4Variable-Italic.woff2') format('woff2');
 }
 
-$fontsize: 1rem;
+$fontsize: 1.0625rem;
 $baseline: 1.6875rem;
 $gutter:   10%;
 $big-scale:    4/3;
@@ -180,11 +180,23 @@ p, ul, ol, pre, figure {
 padding: 0;
 margin: 0;
 }
-p, li:first-child, h3, body > header, pre, textarea {
+p, li:first-child, h3, body > header, pre, textarea, figure {
     @include baseline-before(1);
 }
-p, li:last-child, h3, body > header, pre, textarea {
+p, li:last-child, h3, body > header, pre, textarea, figure {
     @include baseline-after(1);
+}
+// Footnote list items: suppress ALL baseline struts so the list marker
+// aligns flush with the first text line. The ID selector (#footnotes)
+// gives specificity 1-0-x, overriding anything in the baseline rules above.
+// Also suppress the <p> child's own struts; the <li> context provides spacing.
+#footnotes {
+    li {
+        &::before, &::after { display: none; }
+        > p {
+            &::before, &::after { display: none; }
+        }
+    }
 }
 p[typeof="ScholarlyArticle"],
 div[typeof="ScholarlyArticle"],
@@ -251,6 +263,7 @@ margin: 0 0 0 1rem;
 .section-number {
     color: #aaa;
     font-variant-numeric: tabular-nums;  // keep numbers fixed-width so heading text aligns
+    margin-right: 0.4em;
 }
 
 /* ---------------------------------------------------------------
@@ -271,32 +284,110 @@ margin: 0 0 0 1rem;
 }
 .content p:has(+ p)::after { display: none; }
 
-// Para-heading paragraphs: <p><strong>Heading.</strong> body text</p>
-// These act as section starters — they need a full baseline gap before them,
-// not a book-style indent. We override the p+p rules with higher specificity
-// (the :has() pseudo-class contributes the specificity of its argument).
-//
-// Restore incoming ::before on the para-heading paragraph itself:
-.content p + p:has(> strong:first-child) {
-    text-indent: 0;
+// Inline paragraph headings (h5.para-heading — LaTeX \paragraph style).
+// Kept as display:block for semantic correctness — screen readers and
+// heading-navigation still see these as h5 headings. Spacing is handled
+// by pairing h5's own ::before with targeted ::after suppressions on whatever
+// precedes it, so only one side contributes the gap (no stacking).
+.content h5.para-heading {
+    display: block;
+    font-size: inherit;
+    font-weight: 600;
+    font-variant-caps: normal;
+    letter-spacing: normal;
+    line-height: inherit;
+    margin: 0;
     @include baseline-before(1);
+    &::after { display: none; }
 }
-// Restore outgoing ::after on the paragraph that precedes a para-heading
-// paragraph (the p+p suppression rule removed it, but we want the gap):
-.content p:has(+ p > strong:first-child)::after {
-    content: '';
-    display: inline-block;
-    vertical-align: -$baseline;
-    height: $baseline;
+// No gap between the heading and its paragraph — space above h5 is enough.
+.content h5.para-heading + p {
+    text-indent: 0;
+    &::before { display: none; }
 }
 
 /* ---------------------------------------------------------------
-   Publication page row — no gutters between columns; widths are
-   defined as exact fractions (1:2:1) that sum to 100%.
+   Publication page row — CSS Grid replaces the float layout so
+   the sidebar columns stretch to the full article height, which
+   is required for `position: sticky` to track the whole scroll.
    --------------------------------------------------------------- */
 .pub-row {
-    .col3 { width: 25%; margin-left: 0; }
-    .col6 { width: 50%; margin-left: 0; }
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    // Float overrides — col children are float:left by default; cancel that
+    // inside the grid container so they behave as normal grid items.
+    > .col3, > .col6 {
+        float: none;
+        width: auto;
+        margin: 0;
+    }
+}
+
+/* ---------------------------------------------------------------
+   Sticky table-of-contents — right sidebar on publication pages.
+   --------------------------------------------------------------- */
+.toc-sidebar {
+    padding-left: 1.5rem;
+
+    // Baseline struts on li:first-child / li:last-child (from the global
+    // rhythm rules) create the same anonymous-block problem as in footnotes —
+    // they push the first item down and add a gap after the last.
+    // Specificity must beat li:first-child::before (0-1-1), so we include
+    // the pseudo-class in each selector to reach 0-1-2.
+    li:first-child::before { display: none; }
+    li:last-child::after   { display: none; }
+
+    nav.toc {
+        position: sticky;
+        top: $baseline;
+        font-size: 0.8125rem;
+        line-height: $baseline;
+        color: rgba(64, 56, 48, 0.6);
+        p.toc-heading {
+            // "Table of Contents" label — small-caps like h3, no rhythm struts
+            // (those are suppressed via .toc-sidebar li rules above).
+            font-variant-caps: small-caps;
+            letter-spacing: 0.06em;
+            font-weight: 400;
+            margin: $baseline 0 ($baseline * 0.5);
+            &::before, &::after { display: none; }
+        }
+        ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        // Set list-style on li directly as well — some browsers apply
+        // UA list-style to li rather than inheriting from ol.
+        li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        a {
+            background-image: none;
+            text-shadow: none;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 0.1em 0;
+            &:hover { color: $highlight; }
+        }
+        // Sub-section list indented and slightly smaller
+        ol ol {
+            padding-left: 1em;
+            font-size: 0.9em;
+        }
+    }
+}
+
+/* ---------------------------------------------------------------
+   Abstract — italic body text, the conventional academic treatment
+   for setting the abstract apart from the numbered sections.
+   The heading (h2 "Abstract") uses the same style as other h2s.
+   --------------------------------------------------------------- */
+section.abstract [property="abstract"] {
+    font-style: italic;
 }
 
 /* ---------------------------------------------------------------
@@ -321,21 +412,26 @@ margin: 0 0 0 1rem;
 }
 
 /* ---------------------------------------------------------------
+   Inline citations — figure refs, listing refs, footnote superscripts,
+   and bibliography citations. These are typically a single digit or
+   short number: the gradient underline treatment looks wrong on them.
+   Render as plain colored text instead.
+   --------------------------------------------------------------- */
+.content a[data-reference-type],
+.content a[role="doc-biblioref"],
+.content a[role="doc-noteref"] {
+    background-image: none;
+    text-shadow: none;
+    color: $highlight;
+}
+
+/* ---------------------------------------------------------------
    Reference list — hanging indent via flexbox so the [N] number
    sits in a fixed column and wrapped text aligns cleanly.
    --------------------------------------------------------------- */
-#refs .csl-entry {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: $baseline * 0.5;
-}
-#refs .csl-left-margin {
-    flex: 0 0 auto;
-    color: #888;
-}
-#refs .csl-right-inline {
-    flex: 1;
-}
+// Reference list — <ol>/<li> baseline rules handle spacing automatically.
+// Slightly wider padding so double-digit markers don't feel cramped.
+#refs { padding-left: 2rem; }
 
 /* ---------------------------------------------------------------
    Publication content lists — native list rendering with hanging
@@ -386,7 +482,7 @@ padding-left: 0;
 abbr.caps {
     text-decoration: none;  // browsers add a dotted underline to <abbr> by default
     border-bottom: none;
-    cursor: inherit;
+    cursor: help;           // signals that a tooltip (title=) is available
 }
 a {
 text-decoration: none;
@@ -409,8 +505,13 @@ margin: 0 0;
 .row:after, .row:before {
 clear:both;
 content:"";
-display:table; 
+display:table;
 }
+// Grid containers must not generate clearfix pseudo-elements — they would
+// become grid items and break column placement. `content: none` prevents
+// generation entirely and overrides `.row::before { content: "" }` above
+// because this rule appears later with equal specificity.
+.pub-row::before, .pub-row::after { content: none; }
 .col, .col2, .col3, .col4, .col6, .col8 {
 float: left;
 display: block;
@@ -466,7 +567,7 @@ textarea{
    inherit the monospaced font and overflow:hidden clipping.
    --------------------------------------------------------------- */
 figure {
-    margin: $baseline 0;
+    margin: 0;
     padding: 0;
     overflow: visible;
     color: inherit;
@@ -487,9 +588,9 @@ figure > img {
 figure > figcaption {
     color: #666;
     font-size: 0.9rem;
-    line-height: 1.4;
+    line-height: $baseline;
     text-align: center;
-    margin: 0.5em auto 0;
+    margin: ($baseline * 0.5) auto 0;
     max-width: 90%;
 }
 
@@ -534,8 +635,9 @@ figure > figcaption {
 	margin: 0;
     }
     .col2 { display: none; }
-    .col3[aria-hidden] { display: none; }  // hide decorative spacer col3, not metadata col3
-    .pub-row .col3:not([aria-hidden]) { width: 100%; }  // metadata goes full-width on mobile
+    .toc-sidebar { display: none; }           // hide TOC sidebar on small screens
+    .pub-row { display: block; }              // revert grid to block for stacking
+    .pub-row .publication-meta { width: 100%; }  // metadata goes full-width
     .col8:last-child, .col6:last-child {
         margin-bottom: 2em
     }
@@ -618,7 +720,7 @@ details[open] > summary::before {
     background: rgba(0, 0, 0, 0.025);
     color: #444;
     font-size: 0.95em;
-    line-height: $baseline*0.95;
+    line-height: $baseline;
     text-wrap: pretty;
     hyphens: auto;
 }
@@ -679,4 +781,10 @@ details[open] > summary::before {
     }
 
     .impact { color: $dark-ink-soft; }
+
+    .content a[data-reference-type],
+    .content a[role="doc-biblioref"],
+    .content a[role="doc-noteref"] {
+        color: $dark-accent;
+    }
 }

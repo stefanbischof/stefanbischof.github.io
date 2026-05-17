@@ -57,7 +57,7 @@ layout: default
 
         <div class="col6">
             {% if page.abstract %}
-            <section class="abstract">
+            <section class="abstract" id="abstract">
                 <h2>Abstract</h2>
                 <div property="abstract">{{ page.abstract | markdownify }}</div>
             </section>
@@ -68,7 +68,7 @@ layout: default
             {% endif %}
         </div>
 
-        <div class="col3" aria-hidden="true"></div>
+        <div class="col3 toc-sidebar">{% if page.toc %}{{ page.toc }}{% endif %}</div>
     </div>
 
     <nav class="back-link">
