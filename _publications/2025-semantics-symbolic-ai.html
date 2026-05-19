@@ -1,0 +1,148 @@
+---
+id: DavidBischofDiwoldParreira2025
+title: "Symbolic-AI driven Data Repairs for Large Scale Energy Co-Simulations: Combining SHACL repairs and Datalog rules to detect, explain, and correct errors in large scale energy co-simulation setups"
+authors:
+  - Robert David
+  - Stefan Bischof
+  - Konrad Diwold
+  - Josiane Xavier Parreira
+year: 2025
+venue: Posters and Demos Track of SEMANTiCS
+category: poster
+links:
+  - label: CEUR
+    url: https://ceur-ws.org/Vol-4064/PD-paper10.pdf
+abstract: |
+  The transformation of energy distribution systems is fostering new models, like renewable energy communities, which require complex, simulation-based feasibility assessments. Preparing these simulations is often labor-intensive and error-prone due to heterogeneous actors and location-specific grid topologies. This paper proposes a symbolic AI approach that combines SHACL (repairs) and Datalog (imputation) to semi-automatically detect, explain, and correct inconsistencies for grid and sensor data so it can serve as input for co-simulations. Applied within the DataBri-X project and tested using Siemens BIFROST, the approach demonstrates promising improvements in data quality and preprocessing efficiency.
+toc: |
+  <nav class="toc" aria-label="Article contents">
+  <p class="toc-heading">Table of Contents</p>
+  <ol>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#introduction"><span class="section-number">1</span>Introduction</a></li>
+  <li><a href="#sec:related_work"><span class="section-number">2</span>Related Work</a></li>
+  <li><a href="#a-methodology-for-co-simulation-data-quality"><span class="section-number">3</span>A Methodology for Co-Simulation Data Quality</a>
+  <ol>
+  <li><a href="#sec:repairing-grid"><span class="section-number">3.1</span>Repairing the Grid Topology</a></li>
+  <li><a href="#time-series-data-repair"><span class="section-number">3.2</span>Time Series Data Repair</a></li>
+  </ol></li>
+  <li><a href="#sec:evaluation"><span class="section-number">4</span>Evaluation</a></li>
+  <li><a href="#conclusions-and-outlook"><span class="section-number">5</span>Conclusions and Outlook</a></li>
+  <li><a href="#references">References</a></li>
+  <li><a href="#footnotes">Notes</a></li>
+  </ol>
+  </nav>
+---
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1"><span class="section-number">1</span> Introduction</h2>
+<p>Energy distribution systems are rapidly changing with the emergence of new technologies, actors, and business models. Smart Grid simulation tools are crucial for analyzing the impact of these changes. Several simulation platforms have been developed, each providing unique features <span class="citation" data-cites="vogt2018survey">[<a href="#ref-vogt2018survey" role="doc-biblioref">1</a>]</span>. These tools require topological data (grid model) and time series inputs (e.g. weather data, load profiles) to run co-simulations.</p>
+<p>Preparing such simulations presents a challenge, because they are difficult to set up due to their complexity and therefore require significant manual effort, making this process not only time-consuming but also error-prone. This underlines the need for data management tools to organize and preprocess simulation data in order to reduce the risk of errors that could require reruns or potentially lead to financial losses due to incorrect simulation results.</p>
+<p>For the co-simulations to work correctly, the grid topology needs to correctly reflect the real-world situation regarding the components that form the energy grid. Sensor data consists of a series of data points, called observations, which were measured at a certain point in time and yield some kind of value. They are associated with a property of what is observed, such as the atmospheric temperature at a specific location or the electric power consumed by a household. Problems with sensor data arise from missing values, invalid measurements, and outliers.</p>
+<p>This paper demonstrates how symbolic <abbr class="caps" title="Artificial Intelligence">AI</abbr> technologies can be leveraged for simulation data to detect errors, highlight them, and correct erroneous or flawed data. We have developed a symbolic <abbr class="caps" title="Artificial Intelligence">AI</abbr> application to detect and fix erroneous or incomplete data by first integrating all data relevant to the simulation by mapping it to <abbr class="caps" title="Resource Description Framework">RDF</abbr> and then applying a combination of <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs and Datalog rules on the connected data to i) delete data items representing sensor measurement errors or inconsistently assembled grid structures, ii) suggest missing structures in the energy grid topology, explaining to users how the grid structure can be consistently completed, and iii) add data items for missing sensor data using missing value imputation. Our application has been implemented and tested with real-world data in conjunction with the co-simulation tool BIFROST <span class="citation" data-cites="mosshammer2019bifrost">[<a href="#ref-mosshammer2019bifrost" role="doc-biblioref">2</a>]</span>, where its benefits for data quality could be observed, thereby showing readiness for future field trials.</p>
+</section>
+<section id="sec:related_work" class="level2" data-number="2">
+<h2 data-number="2"><span class="section-number">2</span> Related Work</h2>
+<p>The approach of replacing missing (or invalid) data values in observations is called <em>imputation</em> <span class="citation" data-cites="donders2006gentle">[<a href="#ref-donders2006gentle" role="doc-biblioref">3</a>]</span>. Bischof et al. <span class="citation" data-cites="bischof2013rdfs">[<a href="#ref-bischof2013rdfs" role="doc-biblioref">4</a>]</span> extend Description Logic to calculate missing values by <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query rewriting. Follow-up work <span class="citation" data-cites="bischof2015collecting">[<a href="#ref-bischof2015collecting" role="doc-biblioref">5</a>]</span> uses statistical analysis of knowledge graph values to predict missing values. Finally, <span class="citation" data-cites="bischof2018enriching">[<a href="#ref-bischof2018enriching" role="doc-biblioref">6</a>]</span> presents a methodology for imputing missing values from existing data in the knowledge graph. <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> provides a framework for defining and validating data requirements. In the smart grid context, <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> has been successfully employed for topology validation <span class="citation" data-cites="nenadic2017validation">[<a href="#ref-nenadic2017validation" role="doc-biblioref">7</a>]</span>.</p>
+</section>
+<section id="a-methodology-for-co-simulation-data-quality" class="level2" data-number="3">
+<h2 data-number="3"><span class="section-number">3</span> A Methodology for Co-Simulation Data Quality</h2>
+<p>To cope with the challenges for BIFROST smart grid co-simulations with respect to data quality, we propose an approach which combines <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> validation and repairs with methods of imputation using Datalog <span class="citation" data-cites="abiteboul1995foundations">[<a href="#ref-abiteboul1995foundations" role="doc-biblioref">8</a>]</span>, specifically the RDFox Datalog engine <span class="citation" data-cites="nenov2015rdfox">[<a href="#ref-nenov2015rdfox" role="doc-biblioref">9</a>]</span>, into a hybrid symbolic <abbr class="caps" title="Artificial Intelligence">AI</abbr> application. We chose these standardized technologies because they can be effectively applied to <abbr class="caps" title="Resource Description Framework">RDF</abbr> data in combination.</p>
+<section id="sec:repairing-grid" class="level3" data-number="3.1">
+<h3 data-number="3.1"><span class="section-number">3.1</span> Repairing the Grid Topology</h3>
+<p>Providing explanations for <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> violations is highly beneficial, as it is important for users to understand the problems in a given topology in order to select the best way to correct it.</p>
+<p>We use the previously published <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repair program <span class="citation" data-cites="10.1007/978-3-031-19433-7_22">[<a href="#ref-10.1007/978-3-031-19433-7_22" role="doc-biblioref">10</a>]</span> for explaining such problems in the grid topology and propose solutions. The proposed repairs show how grid data needs to be added to conform to the constraints. They also propose deletions of invalid parts of the grid structure.</p>
+<p>For the implementation, we first define terms for the simulation infrastructure based on the <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> schema of the BIFROST infrastructure data as an <abbr class="caps" title="Web Ontology Language">OWL</abbr> ontology. We deliberately refrained from using existing ontologies in this context as this would increase the conversion efforts from and to the BIFROST data model and the ontology will not be utilized outside of correcting the topology. Fig. <a href="#fig:ontology" data-reference-type="ref" data-reference="fig:ontology">1</a> shows an overview of the main classes and properties.</p>
+<figure id="fig:ontology" data-latex-placement="t">
+<embed src="/assets/papers/2025-semantics-symbolic-ai/figures/ontology.pdf" style="width:70.0%" />
+<figcaption>Figure 1: Overview of BIFROST Infrastructure Ontology</figcaption>
+</figure>
+<p>For time series data the <abbr class="caps" title="Sensor, Observation, Sample, and Actuator Ontology">SOSA</abbr>/<abbr class="caps" title="Semantic Sensor Network Ontology">SSN</abbr><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> ontology is internally used as a schema for the <abbr class="caps" title="Resource Description Framework">RDF</abbr> graph.</p>
+<p>Several <em><abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> shapes</em> enable the application to find invalid data and explain violations. Qualified shapes ensure correct cardinalities of properties between different types of structures and dynamics, so that they are correctly connected to each other. For example, every instance of <span class="sans-serif">:SOLAR-PANEL</span> must have exactly one dynamic <span class="sans-serif">:ACTIVE-POWER-3P</span> associated via the property <span class="sans-serif">:hasDynamic</span>, as shown in the <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> shape below:</p>
+<pre class="turtle" data-language="turtle"><code>node:SOLAR-PANEL a sh:NodeShape; sh:targetClass :SOLAR-PANEL;
+    sh:property property:hasDynamic_ACTIVE_POWER_3P_1_1 .
+property:hasDynamic_ACTIVE_POWER_3P_1_1 a sh:PropertyShape;
+    sh:path :hasDynamic; sh:qualifiedMinCount 1; sh:qualifiedMaxCount 1; 
+    sh:qualifiedValueShape [ sh:class :ACTIVE-POWER-3P ] .</code></pre>
+<p>If violations are found, the application uses <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs to determine explanations for how to change the data graph to achieve conformance with the constraints.</p>
+<p>The user is shown the explanations and recommendations to help fix violations and ensure consistency of the topology. For example, if a solar panel <span class="sans-serif">ex:sp1 a :SOLAR-PANEL</span> is missing the active power dynamic, the application would recommend to add the following triples, including adding a new node <span class="sans-serif">ex:new1</span> with class member ship in <span class="sans-serif">:ACTIVE-POWER-3P</span> to connect the structure:</p>
+<pre class="turtle" data-language="turtle"><code>ex:sp1 :hasDynamic ex:new1 .   ex:new1 a :ACTIVE-POWER-3P .</code></pre>
+</section>
+<section id="time-series-data-repair" class="level3" data-number="3.2">
+<h3 data-number="3.2"><span class="section-number">3.2</span> Time Series Data Repair</h3>
+<p>We address the problem of missing time series observations as well as invalid and outlier values with a set of Datalog rules to complement the <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs. The application uses a stepwise approach. First, we remove invalid existing data using <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs. Second, we add missing observations using Datalog rules. Third, we estimate missing values. In general, when imputing missing values in time series data, one can choose from different existing strategies.</p>
+<h5 class="para-heading">Step 1: Repairing existing Observation Values.</h5>
+<p>For fixing invalid values (NaN) and outliers (values outside of an interval of 0 to 50) of the property <code>sosa:hasSimpleResult</code>, we use a <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> shape and let the <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs delete the violating values.</p>
+<pre class="turtle" data-language="turtle"><code>node:OBSERVATION_VALUES a sh:NodeShape;
+    sh:targetClass sosa:Observation;
+    sh:property [
+        sh:path sosa:hasSimpleResult; 
+        sh:minInclusive &quot;0&quot;^^xsd:float; sh:maxInclusive &quot;50&quot;^^xsd:float; ] .</code></pre>
+<h5 class="para-heading">Step 2: Add missing Observations.</h5>
+<p>We use Datalog rules to create instances of <code>sosa:Observation</code> for the missing observations with a corresponding timestamp. We perform date/time arithmetics, adding 15 minutes to timestamps of existing observations. If no observation with that following timestamp exists (and the timestamp is not later than a defined maximum), a new observation is created by a rule.</p>
+<h5 class="para-heading">Step 3: Imputing new Observation Values.</h5>
+<p>For adding missing values of observations, we chose linear interpolation as a simple approach and added a Datalog rule, which implements the imputation for a gap of one or more missing values. Basic arithmetic built-in functions, as found in many Datalog engines, are sufficient for the calculation, and the values are guaranteed to be in the valid range. Generally, the method of imputation can be adapted to different use cases by changing the calculation in the Datalog rule. <span class="math display">$$R_{new}(T_m) = R_{lgs} \cdot \left(\frac{T_{nge} - T_m}{T_{nge} - T_{lgs}}\right) + R_{nge} \cdot \left(\frac{T_m - T_{lgs}}{T_{nge} - T_{lgs}}\right)$$</span> The variables are defined as: <span class="math inline"><em>T</em><sub><em>l</em><em>g</em><em>s</em></sub></span> is the time at the last gap start, <span class="math inline"><em>T</em><sub><em>n</em><em>g</em><em>e</em></sub></span> is the time at the next gap end, <span class="math inline"><em>T</em><sub><em>m</em></sub></span> is the time of the missing value, <span class="math inline"><em>R</em><sub><em>l</em><em>g</em><em>s</em></sub></span> is the result value at gap start, <span class="math inline"><em>R</em><sub><em>n</em><em>g</em><em>e</em></sub></span> is the result value at gap end, and <span class="math inline"><em>R</em><sub><em>n</em><em>e</em><em>w</em></sub></span> is the interpolated value. The following RDFox Datalog rule implements this linear interpolation:</p>
+<pre class="rdfox" data-language="rdfox"><code>[?obs, sosa:hasSimpleResult, ?Rnew] :-
+    AGGREGATE(
+        [?obs, a, :Missing], [?obs, sosa:resultTime, ?T],
+        [?gapStart, a, :GapStart], [?gapStart, sosa:resultTime, ?Tgs],
+        FILTER(?Tgs &lt; ?T) ON ?obs
+    BIND MAX(?Tgs) AS ?Tlgs 
+    BIND MAX_ARGMAX(?gapStart, ?Tgs) AS ?lastGapStart 
+    BIND MAX_ARGMAX(?T, ?Tgs) AS ?Tm),
+        [?lastGapStart, sosa:hasSimpleResult, ?Rlgs], [?lastGapStart, :hasGapEnd, ?nextGapEnd],
+        [?nextGapEnd, sosa:hasSimpleResult, ?Rnge], [?nextGapEnd, sosa:resultTime, ?Tnge],
+    BIND(?Rlgs*((?Tnge - ?Tm)/(?Tnge - ?Tlgs)) + ?Rnge*((?Tm - ?Tlgs)/(?Tnge - ?Tlgs)) AS ?Rnew) .</code></pre>
+<p>After this step, the time series data contains observations for every 15 minutes and each observation has a valid value to be used in the co-simulation. The complete Datalog rule set for steps 2 and 3 is available online.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+</section>
+</section>
+<section id="sec:evaluation" class="level2" data-number="4">
+<h2 data-number="4"><span class="section-number">4</span> Evaluation</h2>
+<p>The evaluation was performed with a BIFROST grid topology and real-world time series data.<br />
+<strong>Topology Data:</strong> For the topological data, a low-voltage grid section was prepared for the BIFROST co-simulation framework <span class="citation" data-cites="mosshammer2019bifrost">[<a href="#ref-mosshammer2019bifrost" role="doc-biblioref">2</a>]</span>, which was derived from the smart grid benchmark dataset  <span class="citation" data-cites="meinecke2020simbench">[<a href="#ref-meinecke2020simbench" role="doc-biblioref">11</a>]</span>. It corresponds to a rural settlement with a total of 13 buildings (which include PV and EV-charging). For validation, the topology was altered by disconnecting 4 buildings (load and PV) from the grid. BIFROST itself does not implement checks in this regard, meaning that disconnected loads will not be considered in the load flow.</p>
+<p>In Figure <a href="#fig:combination" data-reference-type="ref" data-reference="fig:combination">2</a> (a) the impact of the loads that were disconnected on the load flow are shown: orange shows a simulation with the buildings being connected, blue the result of a simulation when the 4 loads are disconnected. As can be seen, disconnected loads and generations can have significant impacts on the power flow in a grid. The <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs are able to identify the missing connections and report back four violations, including proposals how to correct them as described in Section <a href="#sec:repairing-grid" data-reference-type="ref" data-reference="sec:repairing-grid">3.1</a>. <strong>Time Series Data:</strong> For the time series data, a standard load profile for a household on a weekday from the the German federal association of the energy and Water industry (<abbr class="caps" title="Bundesverband der Energie- und Wasserwirtschaft">BDEW</abbr>) was used<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. The time series constitutes the load of a building during a workday with a time resolution of 15 minutes (i.e., amounting to a total of 96 data-points).</p>
+<p>BIFROST implements error handling regarding time series and will use the last known value in the simulation until an update occurs. An error was introduced into the time series by deleting the values between 7:00 am and 9:30 am. The resulting evolution of the load original (green), last-known-value (orange) and interpolation (blue) is shown in Figure <a href="#fig:combination" data-reference-type="ref" data-reference="fig:combination">2</a> (b).</p>
+<figure id="fig:combination" data-latex-placement="ht">
+<img src="/assets/papers/2025-semantics-symbolic-ai/figures/combination.png" style="width:100.0%" />
+<figcaption>Figure 2: (a) Evolution of active power at the transformer over half a year. Orange shows the active power (kW) with all load being connected to the network; blue the counterpart with 4 loads not being connected (b) Time Series under different repair strategies (Original - Blue, Last Known Value - Orange, Interpolation Green)</figcaption>
+</figure>
+<p>The last known and valid value leads to a deviation (approx. 60kW) from the ground truth. Linear interpolation, such as that performed by our approach, reduces this difference significantly to 9 kW. The application is also able to detect NaN’s as well as values which are clearly out of range. For the test data, the time series was corrupted by changing the value at 04:00 in the morning to <span class="math inline">115.19</span>.</p>
+<p>The corrupted time series was repaired using the application. The missing time point is added. The invalid value, i.e. outlier, is removed. Then, missing values are imputed, resulting in observations as shown below.</p>
+<pre class="turtle" data-language="turtle"><code>[] a sosa:Observation ;
+    sosa:hasFeatureOfInterest &lt;urn:uuid:1dd4760c-d5ee-5cd7-8ac4-8e08373fde78&gt; ;
+    sosa:hasSimpleResult &quot;15.0475006&quot;^^xsd:float ;
+    sosa:resultTime &quot;1970-01-01T04:00:00&quot;^^xsd:dateTime .</code></pre>
+</section>
+<section id="conclusions-and-outlook" class="level2" data-number="5">
+<h2 data-number="5"><span class="section-number">5</span> Conclusions and Outlook</h2>
+<p>In this paper, we presented a symbolic <abbr class="caps" title="Artificial Intelligence">AI</abbr> application to manage data quality for energy co-simulations using a combined approach of <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> repairs and Datalog rules. We evaluated our approach with the BIFROST co-simulation tool, where our symbolic <abbr class="caps" title="Artificial Intelligence">AI</abbr> application was able to identify, explain, and correct errors. Future work will be to evaluate our approach in real-world scenarios and determine how well it can solve erroneous simulation data in practice.</p>
+<h5 class="para-heading">Acknowledgments..</h5>
+<p>This work is partially supported by the HORIZON Europe programme project <a href="https://databri-x.eu/">DataBri-X</a> (grant agreement 101070069).</p>
+<h5 class="para-heading">Declaration on Generative AI..</h5>
+<p>The author(s) have not employed any Generative <abbr class="caps" title="Artificial Intelligence">AI</abbr> tools.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<ol id="refs" class="references">
+<li id="ref-vogt2018survey">Vogt, M., Marten, F., Braun, M.: A survey and statistical analysis of smart grid co-simulations. Applied energy. 222, 67–78 (2018). https://doi.org/<a href="https://doi.org/10.1016/j.apenergy.2018.03.123">10.1016/j.apenergy.2018.03.123</a>.</li>
+<li id="ref-mosshammer2019bifrost">Mosshammer, R., Diwold, K., Einfalt, A., Schwarz, J., Zehrfeldt, B.: Bifrost: A smart city planning and simulation tool. In: Intelligent human systems integration 2019: Proceedings of the 2nd international conference on intelligent human systems integration (IHSI 2019): Integrating people and intelligent systems, february 7-10, 2019, san diego, california, USA. pp. 217–222. Springer (2019). https://doi.org/<a href="https://doi.org/10.1007/978-3-030-11051-2_33">10.1007/978-3-030-11051-2_33</a>.</li>
+<li id="ref-donders2006gentle">Donders, A.R.T., Van Der Heijden, G.J., Stijnen, T., Moons, K.G.: A gentle introduction to imputation of missing values. Journal of clinical epidemiology. 59, 1087–1091 (2006). https://doi.org/<a href="https://doi.org/10.1016/j.jclinepi.2006.01.014">10.1016/j.jclinepi.2006.01.014</a>.</li>
+<li id="ref-bischof2013rdfs">Bischof, S., Polleres, A.: <span class="nocase">RDFS with attribute equations via <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> rewriting</span>. In: Extended semantic web conference. pp. 335–350. Springer (2013). https://doi.org/<a href="https://doi.org/10.1007/978-3-642-38288-8_23">10.1007/978-3-642-38288-8_23</a>.</li>
+<li id="ref-bischof2015collecting">Bischof, S., Martin, C., Polleres, A., Schneider, P.: <span class="nocase">Collecting, integrating, enriching and republishing open city data as linked data</span>. In: International semantic web conference. pp. 57–75. Springer (2015). https://doi.org/<a href="https://doi.org/10.1007/978-3-319-25010-6_4">10.1007/978-3-319-25010-6_4</a>.</li>
+<li id="ref-bischof2018enriching">Bischof, S., Harth, A., Kämpgen, B., Polleres, A., Schneider, P.: <span class="nocase">Enriching integrated statistical open city data by combining equational knowledge and missing value imputation</span>. Journal of Web Semantics. 48, 22–47 (2018). https://doi.org/<a href="https://doi.org/10.1016/j.websem.2017.09.003">10.1016/j.websem.2017.09.003</a>.</li>
+<li id="ref-nenadic2017validation"><span class="nocase">Nenadić, K.R., Gavrić, M.M., urević, V.I.</span>: Validation of CIM datasets using <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>. In: 2017 25th telecommunication forum (TELFOR). pp. 1–4. IEEE (2017). https://doi.org/<a href="https://doi.org/10.1109/TELFOR.2017.8249433">10.1109/TELFOR.2017.8249433</a>.</li>
+<li id="ref-abiteboul1995foundations">Abiteboul, S., Hull, R., Vianu, V.: Foundations of databases. Addison-Wesley Reading (1995).</li>
+<li id="ref-nenov2015rdfox">Nenov, Y., Piro, R., Motik, B., Horrocks, I., Wu, Z., Banerjee, J.: RDFox: A highly-scalable <abbr class="caps" title="Resource Description Framework">RDF</abbr> store. In: The semantic web-ISWC 2015: 14th international semantic web conference, bethlehem, PA, USA, october 11-15, 2015, proceedings, part II 14. pp. 3–20. Springer (2015). https://doi.org/<a href="https://doi.org/10.1007/978-3-319-25010-6_1">10.1007/978-3-319-25010-6_1</a>.</li>
+<li id="ref-10.1007/978-3-031-19433-7_22">Ahmetaj, S., David, R., Polleres, A., Šimkus, M.: <span>Repairing <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> Constraint Violations Using Answer Set Programming</span>. In: ISWC 2022. pp. 375–391 (2022). https://doi.org/<a href="https://doi.org/10.1007/978-3-031-19433-7\_22">10.1007/978-3-031-19433-7\_22</a>.</li>
+<li id="ref-meinecke2020simbench">Meinecke, S., Sarajlić, D., Drauz, S.R., Klettke, A., Lauven, L.-P., Rehtanz, C., Moser, A., Braun, M.: Simbench—a benchmark dataset of electric power systems to compare innovative solutions based on power flow analysis. Energies. 13, 3290 (2020). https://doi.org/<a href="https://doi.org/10.3390/en13123290">10.3390/en13123290</a>.</li>
+</ol>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<h2 class="unnumbered">Notes</h2>
+<ol>
+<li id="fn1"><p><a href="https://www.w3.org/TR/2017/REC-vocab-ssn-20171019/" class="uri">https://www.w3.org/TR/2017/REC-vocab-ssn-20171019/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://gitlab.com/stefanbischof/sosa-timeseries-repair" class="uri">https://gitlab.com/stefanbischof/sosa-timeseries-repair</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://www.bdew.de/energie/standardlastprofile-strom/" class="uri">https://www.bdew.de/energie/standardlastprofile-strom/</a> (accessed: 26.5.2025)<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+

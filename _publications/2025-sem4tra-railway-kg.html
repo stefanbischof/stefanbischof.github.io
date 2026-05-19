@@ -1,0 +1,336 @@
+---
+id: BischofSchenner2025
+title: "On Linking Heterogeneous Railway Knowledge Graphs: Challenges in Integrating ERA and OpenStreetMap Rail Infrastructure Representations"
+authors:
+  - Stefan Bischof
+  - Gottfried Schenner
+year: 2025
+venue: Sem4Tra Workshop
+category: workshop
+links:
+  - label: CEUR
+    url: https://ceur-ws.org/Vol-4064/Sem4Tra-paper1.pdf
+  - label: PDF
+    url: https://semantic-transportation.github.io/sem4tra-kg-website/papers/Sem4Tra25_paper_1.pdf
+abstract: |
+  In the last years railway infrastructure data has become available via public SPARQL endpoints. The ontologies/vocabularies used to represent the topology part of the railway  data are mainly based either on the Open Street Map (OSM) data model or on the UML-based RailTopoModel. In this paper we discuss some of the challenges of integrating railway infrastructure data especially topological data. As an example, we show how to link the data available for the Austrian railway network using Open Street Map data via the QLever SPARQL endpoint and data from the ERA Knowledge Graph.
+toc: |
+  <nav class="toc" aria-label="Article contents">
+  <p class="toc-heading">Table of Contents</p>
+  <ol>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#introduction"><span class="section-number">1</span>Introduction</a></li>
+  <li><a href="#sec:rel"><span class="section-number">2</span>Related Work</a></li>
+  <li><a href="#sec:prelim"><span class="section-number">3</span>Preliminaries</a></li>
+  <li><a href="#sec:challenges"><span class="section-number">4</span>Challenges for linking the data</a>
+  <ol>
+  <li><a href="#topology-rtm-vs-osm"><span class="section-number">4.1</span>Topology: RTM vs OSM</a></li>
+  <li><a href="#sec:structural_challenges"><span class="section-number">4.2</span>Structural challenges</a></li>
+  <li><a href="#symmetries-and-granularity"><span class="section-number">4.3</span>Symmetries and Granularity</a></li>
+  <li><a href="#sec:linkingsharedentities"><span class="section-number">4.4</span>Linking Shared Entities</a></li>
+  </ol></li>
+  <li><a href="#sec:case"><span class="section-number">5</span>Case study: Passenger stations of Austria</a>
+  <ol>
+  <li><a href="#getting-the-passenger-stations"><span class="section-number">5.1</span>Getting the passenger stations</a></li>
+  <li><a href="#topology"><span class="section-number">5.2</span>Topology</a></li>
+  <li><a href="#aligning-infrastructure-elements"><span class="section-number">5.3</span>Aligning infrastructure elements</a></li>
+  </ol></li>
+  <li><a href="#sec:conclusion"><span class="section-number">6</span>Conclusion</a></li>
+  <li><a href="#references">References</a></li>
+  <li><a href="#footnotes">Notes</a></li>
+  </ol>
+  </nav>
+---
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1"><span class="section-number">1</span> Introduction</h2>
+<p>The digital transformation of railway systems has led to an increasing amount of structured data being available about rail infrastructure and topology. Knowledge graphs (KG) have emerged as a powerful paradigm for representing complex domains like railway systems, offering semantic richness and flexible query capabilities. However, railway data often exists in isolated knowledge repositories that follow different modelling patterns, limiting the potential for comprehensive analysis and decision support.</p>
+<p>In this paper, we present our ongoing work on linking rail topology and infrastructure data between two knowledge graphs with fundamentally different modelling approaches: the European Railway Agency (<abbr class="caps" title="European Union Agency for Railways">ERA</abbr>) knowledge graph and a knowledge graph derived from OpenStreetMap (<abbr class="caps" title="OpenStreetMap">OSM</abbr>) geographical information system data. We selected these knowledge graphs because they are openly available, making them ideal candidates to exemplify integration challenges that commercial railway operators and infrastructure managers commonly face when attempting to integrate data with external sources.</p>
+<p>The <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> knowledge graph represents a centralized, authoritative data source containing high-quality information provided by the main infrastructure managers across <abbr class="caps" title="European Union">EU</abbr> member states. Based on the Reference Implementation for National Inventories (<abbr class="caps" title="Register of Infrastructure">RINF</abbr>), it offers standardized representations of operational points (such as stations) and sections-of-line (connections between stations). Its topology model derives partially from the Rail Topological Model (<abbr class="caps" title="RailTopoModel">RTM</abbr>). While operational points in this knowledge graph have geolocations, they lack fine-granular spatial information about individual infrastructure elements, such as individual tracks, switches or signals.</p>
+<p>In contrast, the OpenStreetMap-based knowledge graph follows a community-driven approach with broader but potentially less consistent coverage. It encompasses not only main railway infrastructure but also private facilities and offers more detailed spatial data about individual tracks, signals, and other railway assets. Additionally, this knowledge graph provides contextual information about surrounding entities such as platforms, station buildings, and various points of interest.</p>
+<p>Linking these complementary knowledge sources is valuable as it allows users to leverage the strengths of both systems: the authoritative nature and standardization of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> knowledge graph alongside the broader coverage and fine-granular details of the <abbr class="caps" title="OpenStreetMap">OSM</abbr> knowledge graph. However, establishing these links presents significant challenges that go beyond simple entity alignment. The different conceptual models, granularity levels, and coverage scopes necessitate more complex correspondence patterns that can bridge semantic and structural gaps between the representations.</p>
+<p>Our work illustrates these integration challenges through concrete examples and proposes approaches to establish meaningful links between the knowledge graphs. The findings are relevant not only for the specific case of combining <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr> data but also for the broader context of integrating railway data with other sources in industrial settings.</p>
+<p>The remainder of this paper is organized as follows: Section <a href="#sec:rel" data-reference-type="ref" data-reference="sec:rel">2</a> reviews related work in semantic railway models and semantic integration of railway infrastructure data. Section <a href="#sec:prelim" data-reference-type="ref" data-reference="sec:prelim">3</a> describes the structure and characteristics of both knowledge graph systems in detail. Section <a href="#sec:challenges" data-reference-type="ref" data-reference="sec:challenges">4</a> discusses the challenges encountered and approaches developed. Section <a href="#sec:case" data-reference-type="ref" data-reference="sec:case">5</a> describes the case study of linking passenger stations in Austria. Finally, Section <a href="#sec:conclusion" data-reference-type="ref" data-reference="sec:conclusion">6</a> concludes with implications for practice and directions for future research.</p>
+</section>
+<section id="sec:rel" class="level2" data-number="2">
+<h2 data-number="2"><span class="section-number">2</span> Related Work</h2>
+<p>Camarazo et al. review several existing ontologies of railway infrastructure, analyse the challenges of alignments, and propose an ontology alignment method <span class="citation" data-cites="delir_haghighi_railway_2025">[<a href="#ref-delir_haghighi_railway_2025" role="doc-biblioref">1</a>]</span>. In our work we focus on linking instance data in knowledge graphs instead.</p>
+<p>Verstichel et al. describe and compare different approaches on how to integrate rail infrastructure data at the data level <span class="citation" data-cites="verstichel_efficient_2011">[<a href="#ref-verstichel_efficient_2011" role="doc-biblioref">2</a>]</span>. In particular <abbr class="caps" title="Unified Modelling Language">UML</abbr> and ontology-based approaches are compared, showing the advantages of ontology-based data integration. They acknowledge the main problem of scenarios based on multiple ontologies: creating mappings between ontologies is a tedious, complex, and error-prone task. One scenario which would partially address this problem are local ontologies which are built on top of shared ontologies. These can be either upper ontologies such as <abbr class="caps" title="Basic Formal Ontology">BFO</abbr> <span class="citation" data-cites="BFO">[<a href="#ref-BFO" role="doc-biblioref">3</a>]</span> or vertically defined ontologies such as the Rail Topology Ontology <span class="citation" data-cites="hotho_rail_2021">[<a href="#ref-hotho_rail_2021" role="doc-biblioref">4</a>]</span>.</p>
+<p>Agreeing on such a common, shared ontology as a basis for different ontologies for railway infrastructure is a complex task in practice. So far, the different ontologies in this area are formally independent although conceptually, however some converge to <abbr class="caps" title="RailTopoModel">RTM</abbr> concepts such as the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG ontology or the railML ontology, which is currently under development.</p>
+<p>Rahmig and Richter show how to extract rail topology data from <abbr class="caps" title="OpenStreetMap">OSM</abbr> and combine it with data from rail measurement campaigns <span class="citation" data-cites="rahmig201414">[<a href="#ref-rahmig201414" role="doc-biblioref">5</a>]</span>. The integrated data is then exported as railML <abbr class="caps" title="Extensible Markup Language">XML</abbr> file. The data has to be further enriched by data from additional sources to obtain 3D data to enable railway simulations. While this tool chain combines railway geodata from different sources, the data pipeline which implements the data integration is custom software for a single use case and cannot be applied to other use cases.</p>
+</section>
+<section id="sec:prelim" class="level2" data-number="3">
+<h2 data-number="3"><span class="section-number">3</span> Preliminaries</h2>
+<p>Traditional graph representations, with nodes representing switches and edges representing tracks, prove inadequate for expressing the complex realities of railway infrastructure topologies. Such simplistic models fail to capture essential characteristics required for meaningful operational analysis, such as track directionality, physical clearance constraints, valid path combinations through junctions, and track-specific attributes like electrification systems or speed restrictions. Most critically, simple graphs cannot properly represent navigability—the precise constraints determining which physical paths rolling stock can traverse based on factors like train length, weight, or gauge compatibility.</p>
+<p>Several more sophisticated models have emerged to address these limitations, including <abbr class="caps" title="RailTopoModel">RTM</abbr>, which forms the foundation for the European IRS 30100 standard <span class="citation" data-cites="uic_railtopomodel_2016">[<a href="#ref-uic_railtopomodel_2016" role="doc-biblioref">6</a>]</span>; railML (Railway Markup Language), which implements <abbr class="caps" title="RailTopoModel">RTM</abbr> and provides <abbr class="caps" title="Extensible Markup Language">XML</abbr> schemas for railway data exchange <span class="citation" data-cites="a_nash_railml_2004">[<a href="#ref-a_nash_railml_2004" role="doc-biblioref">7</a>]</span>; <abbr class="caps" title="Register of Infrastructure">RINF</abbr> (Register of Infrastructure) and the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> Knowledge Graph <span class="citation" data-cites="hotho_leveraging_2021">[<a href="#ref-hotho_leveraging_2021" role="doc-biblioref">8</a>]</span>, which standardizes infrastructure parameters across European networks<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. These models employ concepts such as <code>netElements</code> and <code>netRelations</code> to model topological connections, distinguish between operational and physical views of infrastructure, and incorporate detailed spatial and functional attributes necessary for comprehensive railway topology representation.</p>
+<p>The first KG we use in our case study is the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> Knowledge Graph <span class="citation" data-cites="hotho_leveraging_2021">[<a href="#ref-hotho_leveraging_2021" role="doc-biblioref">8</a>]</span>. <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> adopted integrates its base registries in a comprehensive KG system. This approach enabled new capabilities, such as route compatibility checks, which were previously unsupported because the data was distributed over different registries (<abbr class="caps" title="Register of Infrastructure">RINF</abbr> and ERATV). The key contributions of the initial <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG included the development of an official railway ontology, a reusable Knowledge Graph of European railway infrastructure, a flexible and cost-efficient system architecture, and an open-source <abbr class="caps" title="Resource Description Framework">RDF</abbr>-native web application. The <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> Ontology partially uses <abbr class="caps" title="RailTopoModel">RTM</abbr> for representing the railway topology.</p>
+<p>Geographic Information Systems (<abbr class="caps" title="Geographic Information System">GIS</abbr>) can also model railway topology and infrastructure data. Even though <abbr class="caps" title="Geographic Information System">GIS</abbr> are more focused towards spatial modelling, <abbr class="caps" title="Geographic Information System">GIS</abbr> also model railway infrastructure to provide for example routing services. In particular we use OpenRailwayMap<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, which is part of Open Street Map (<abbr class="caps" title="OpenStreetMap">OSM</abbr>), for our case study. <abbr class="caps" title="OpenStreetMap">OSM</abbr> is a public, collaborative effort to map geographic data. The OpenStreetMap (<abbr class="caps" title="OpenStreetMap">OSM</abbr>) data model employs a topological structure composed of three primitive elements: <em>nodes</em> (point features with geographical coordinates), <em>ways</em> (ordered sequences of nodes representing linear features or area boundaries), and <em>relations</em> (groups of nodes, ways, or other relations describing complex geographical relationships). Each element can be annotated with an unlimited number of key-value pairs called <em>tags</em>, which store semantic information about geographic features. This flexible schema-free approach allows contributors to map diverse features without rigid predefined categories, while community-developed tagging conventions ensure data consistency.</p>
+<p>OpenRailwayMap builds upon this foundation as a specialized project focusing on railway infrastructure, utilizing the same core data model but implementing domain-specific tagging schemes to represent detailed railway-specific attributes such as electrification systems, signalling equipment, maximum speeds, and track gauges. Even though <abbr class="caps" title="OpenStreetMap">OSM</abbr> lacks a semantic representation, several works have provided such semantic representations. In our case study we use <abbr class="caps" title="OpenStreetMap">OSM</abbr> via QLever <span class="citation" data-cites="bast_efficient_2021">[<a href="#ref-bast_efficient_2021" role="doc-biblioref">9</a>]</span>. While there exist other <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> endpoints, such as https://sophox.org/ or http://linkedgeodata.org/, the QLever <abbr class="caps" title="OpenStreetMap">OSM</abbr> KG provides custom functionality to find all nodes in a geographical area.</p>
+</section>
+<section id="sec:challenges" class="level2" data-number="4">
+<h2 data-number="4"><span class="section-number">4</span> Challenges for linking the data</h2>
+<p>Even though both, the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG and <abbr class="caps" title="OpenStreetMap">OSM</abbr> via QLever, represent the European railway infrastructure in <abbr class="caps" title="Resource Description Framework">RDF</abbr>, combining the two datasets and linking their entities is not trivial.</p>
+<section id="topology-rtm-vs-osm" class="level3" data-number="4.1">
+<h3 data-number="4.1"><span class="section-number">4.1</span> Topology: RTM vs OSM</h3>
+<figure id="fig:rtm_vs_osm">
+<img src="/assets/papers/2025-sem4tra-railway-kg/figures/rtm_vs_osm.svg" alt="figures/rtm_vs_osm" />
+<figcaption>Figure 1: Modelling railway topology in <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr>.</figcaption>
+</figure>
+<p>Figure <a href="#fig:rtm_vs_osm" data-reference-type="ref" data-reference="fig:rtm_vs_osm">1</a> shows the fundamentally different ways how the <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr> model the railway infrastructure. In the case of <abbr class="caps" title="RailTopoModel">RTM</abbr>, <code>NetElement</code>s represent a segment of a rail (linear <code>NetElement</code>) or a point in the rail network (non-linear <code>NetElement</code>). Linear <code>NetElement</code>s have a start (<code>0</code>) and end (<code>1</code>) position. <code>NetRelation</code>s connect the ends of exactly two <code>NetElement</code>s (<code>hasElementA</code>, <code>hasElementB</code>). The positions (<code>positionOnA</code>/<code>positionOnB</code>) determine, which end (<code>0</code>/<code>1</code>) of one <code>NetElement</code> is connected to which end the other <code>NetElement</code> by the <code>NetRelation</code>. Finally, the navigability expresses the possible ways a train can pass the <code>NetRelation</code>, e.g., from <code>A</code> to <code>B</code>, from <code>B</code> to <code>A</code>, in <code>both</code> or in no direction. The navigability of <code>none</code> is used to express that a train can not directly got from the left and right branch of a railway switch.</p>
+<p>In the case of <abbr class="caps" title="OpenStreetMap">OSM</abbr> data on the other hand the railway network in its most basic form is modelled by OSMWays and OSMNodes. OSMWays contain a list of ordered OSMNodes. The order determines the order in which a train would pass the OSMNodes of the OSMWay in one direction. The OSMNodes have Geo data (latitude/longitude). Both OSMWays and OSMNodes can have optional tags indicating the function of the elements, e.g., a OSMWay representing a rail will have the tag <code>railway:rail</code>, whereas a OSMNode representing a signal has the tag <code>railway:signal</code>.</p>
+</section>
+<section id="sec:structural_challenges" class="level3" data-number="4.2">
+<h3 data-number="4.2"><span class="section-number">4.2</span> Structural challenges</h3>
+<figure id="fig:rtm_vs_osm_example_switch">
+<img src="/assets/papers/2025-sem4tra-railway-kg/figures/rtm_vs_osm_example_switch.svg" alt="figures/rtm_vs_osm_example_switch" />
+<figcaption>Figure 2: Modelling railway topology in <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr>.</figcaption>
+</figure>
+<p>Figure <a href="#fig:rtm_vs_osm_example_switch" data-reference-type="ref" data-reference="fig:rtm_vs_osm_example_switch">2</a> shows how the same switch is modelled in the different formalisms. This illustrates the challenges the arise, because <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr> are using a fundamentally different way to represent the railway topology.</p>
+<p>In the <abbr class="caps" title="RailTopoModel">RTM</abbr> case a switch can be identified by the navigability of the <code>NetRelation</code>s. The <abbr class="caps" title="OpenStreetMap">OSM</abbr>-switch is identified by the tag <code>railway:switch</code>. If the tag is absent, switches can be identified by finding OSMNodes with three neighbouring nodes. Still the problem remains, which neighbouring node is the tip and which are the branches of the switch. This can only be done by reasoning about the geo data and the angle of the outgoing edges. Clearly one cannot expect the <abbr class="caps" title="OpenStreetMap">OSM</abbr> data to have the same level of detail as the <abbr class="caps" title="RailTopoModel">RTM</abbr> model which was specifically created to represent railway infrastructure data.</p>
+<p>As can be seen in the figure a simple entity matching approach does not work, as there are no corresponding entities. The only candidate for a 1-1 matching would be the end (position <code>1</code>) of the <code>NetElement</code> <code>ne_1</code> as it corresponds to the OSMNode <code>n12</code>. The same applies to the start (position <code>0</code>) of <code>NetElement</code> <code>ne_2</code> and <code>ne_3</code> respective.</p>
+<section id="aggregation-level" class="level4" data-number="4.2.1">
+<h4 data-number="4.2.1"><span class="section-number">4.2.1</span> Aggregation level</h4>
+<figure id="fig:rtm_aggregation_level">
+<img src="/assets/papers/2025-sem4tra-railway-kg/figures/RTM_aggregation.png" />
+<figcaption>Figure 3: <abbr class="caps" title="RailTopoModel">RTM</abbr> Aggregation Level, illustration from <a href="https://en.wikipedia.org/wiki/RailTopoModel" class="uri">https://en.wikipedia.org/wiki/RailTopoModel</a></figcaption>
+</figure>
+<p>A special feature of the <abbr class="caps" title="RailTopoModel">RTM</abbr> is that is allows modelling the topology in different aggregation levels (Figure <a href="#fig:rtm_aggregation_level" data-reference-type="ref" data-reference="fig:rtm_aggregation_level">3</a>) within the same formalism. Only on the <em>micro</em> level the topology inside the operational points is known. The <em>meso</em> level focus on the operational points and their connecting tracks. This corresponds to the level of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> knowledge graph. On the <em>macro</em> level the connecting tracks are aggregated in the information about the railway lines. In contrast in <abbr class="caps" title="OpenStreetMap">OSM</abbr> everything is modelled on the same level. Sometimes special OSMRelations are used to aggregate all the topology elements of an operational point. But this is by no means required.</p>
+</section>
+</section>
+<section id="symmetries-and-granularity" class="level3" data-number="4.3">
+<h3 data-number="4.3"><span class="section-number">4.3</span> Symmetries and Granularity</h3>
+<p>Another challenge arise because of the possibility to model the same instance data in various ways. Figure <a href="#fig:rtm_vs_osm_example_track" data-reference-type="ref" data-reference="fig:rtm_vs_osm_example_track">4</a> shows how the same segment of a railway network could be represented in various ways even in the same formalism. The cases a) and b) are symmetric cases. Case c) splits the second <code>NetElement</code> into two <code>NetElement</code>s. In case d) there is only one implied <code>NetElement</code>, i.e., the track segment between the two connected OSMNodes.</p>
+<figure id="fig:rtm_vs_osm_example_track">
+<img src="/assets/papers/2025-sem4tra-railway-kg/figures/rtm_vs_osm_example_track.svg" alt="figures/rtm_vs_osm_example_track" />
+<figcaption>Figure 4: Symmetries and granularity</figcaption>
+</figure>
+</section>
+<section id="sec:linkingsharedentities" class="level3" data-number="4.4">
+<h3 data-number="4.4"><span class="section-number">4.4</span> Linking Shared Entities</h3>
+<p>The easiest way to link common entities is via a common identifier, e.g., if a property or a combination of properties of one entity can be directly mapped to a property of the other entity in a specific context e.g. the <code>ref</code> attribute of OSMNodes with tag <code>railway:switch</code> correspond to <code>rdfs:label</code> of <code>railML:SwitchIS</code> entities in a given operational point. If identifiers are not available it might still be possible to use geospatial coordinates to align the entities. Depending on the type of entities the geospatial might not be exactly the same in the different data sources. Another option for infrastructure elements within the railway topology is to use topological information e.g. a switch could be identified by being the ”second left-traversed switch from the beginning of the operational point in direction X”. A more sophisticated approach is to represent the topologies as a graph and to use graph algorithms (isomorphism, graph edit distance or similar) find a mapping between the topology graphs.</p>
+</section>
+</section>
+<section id="sec:case" class="level2" data-number="5">
+<h2 data-number="5"><span class="section-number">5</span> Case study: Passenger stations of Austria</h2>
+<p>As a case study we attempt to integrate the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> and the <abbr class="caps" title="OpenStreetMap">OSM</abbr> data for all passenger stops and their connections in Austria.</p>
+<p>We use these prefixes in the following <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> queries:</p>
+<pre class="sparql" data-language="SPARQL"><code>PREFIX country: &lt;http://publications.europa.eu/resource/authority/country/&gt;
+PREFIX era: &lt;http://data.europa.eu/949/&gt;
+PREFIX ex: &lt;https://www.example.org/&gt;
+PREFIX geo: &lt;http://www.opengis.net/ont/geosparql#&gt;
+PREFIX loc: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;
+PREFIX ogc: &lt;http://www.opengis.net/rdf#&gt;
+PREFIX osm: &lt;https://www.openstreetmap.org/&gt;
+PREFIX osmkey: &lt;https://www.openstreetmap.org/wiki/Key:&gt;
+PREFIX osmnode: &lt;https://www.openstreetmap.org/node/&gt;
+PREFIX osmrel: &lt;https://www.openstreetmap.org/relation/&gt;
+PREFIX osmway: &lt;https://www.openstreetmap.org/way/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</code></pre>
+<section id="getting-the-passenger-stations" class="level3" data-number="5.1">
+<h3 data-number="5.1"><span class="section-number">5.1</span> Getting the passenger stations</h3>
+<p>The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query in Listing <a href="#lst:era_operational_points" data-reference-type="ref">1</a> gets all operational points of Austria and their geo data (in the current dataset 1799 entries). It contains the (small) stations and passenger stops (1496 entries) but also other operational points like (domestic) border points, private sidings, etc. We need these (intermediate) points because we want to also reason about the topological connections of the operational points.</p>
+<figure id="lst:era_operational_points" class="listing" style="text-align:left">
+<figcaption>Listing 1: <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> operational points</figcaption>
+<pre class="sparql" data-language="SPARQL"><code>SELECT * WHERE {
+  ?op a era:OperationalPoint .
+  ?op era:opName ?opName .
+  ?op era:inCountry country:AUT .
+  ?op era:opType ?opType .
+  ?opType skos:prefLabel ?opTypeLabel .
+  FILTER (LANG(?opTypeLabel) = &quot;en&quot;)
+  ?op era:uopid ?uopid .
+  ?op loc:location ?loc .
+  ?loc loc:lat ?o1 .
+  ?loc loc:long ?o2 .
+} </code></pre>
+</figure>
+<p>With QLever we can query all the OSMNodes within a certain region. The following queries OSMNodes representing railway station, stops and halts in Austria (<code>osmrel:16239</code>). This query finds 3848 OSMNodes, which are significant more than in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> case, due to the fact that every halt position within a station is represented by a different OSMNode. If we group the halt positions belonging to the same station we still get 1698 OSMNodes in contrast to the 1496 <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> entries, because the result also contains privately operated railway lines, cog railway lines etc. not represented in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG.</p>
+<figure id="lst:osm_stations" class="listing" style="text-align:left">
+<figcaption>Listing 2: <abbr class="caps" title="OpenStreetMap">OSM</abbr> Station</figcaption>
+<pre class="sparql" data-language="SPARQL"><code>SELECT ?osm_id ?name ?type ?ref ?geometry WHERE {
+  osmrel:16239 ogc:sfContains ?osm_id .
+  ?osm_id osmkey:railway ?type .
+  OPTIONAL {
+  ?osm_id osmkey:railway:ref ?ref .
+  }
+  ?osm_id osmkey:name ?name .
+  ?osm_id rdf:type osm:node .
+  # filtering out subway nodes
+  FILTER NOT EXISTS { 
+    ?osm_id osmkey:subway &quot;yes&quot; } .
+  FILTER (?type = &quot;station&quot; || ?type = &quot;stop&quot; || ?type = &quot;halt&quot;)
+  ?osm_id geo:hasGeometry/geo:asWKT ?geometry .
+}</code></pre>
+</figure>
+<p>How can we align the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> operational points with the corresponding OSMNodes? As a first attempt one can look for common identifiers. Some OSMNodes with tag <code>railway:station</code> also contain a entry <code>railway:ref</code>. The value of this ref is the same as the <code>uopid</code> without the <code>AT</code> prefix, e.g., in Feldkirch the <code>uopid</code> is <code>ATFk</code> and the <code>railway:ref</code> is <code>Fk</code>. Unfortunately this is not always the case (about 40% of the OSMNodes in the result have a <code>railway:ref</code>) and even worse, sometimes the OSMNode for the railway station is not contained in any other relation i.e. it is isolated from the railway network. Train stops and halts on the <abbr class="caps" title="OpenStreetMap">OSM</abbr>-level on the other hand do not have a railway ref. After some trial and error as a pragmatic solution we decided to use the distance of the Geo coordinates and assign the OSMNodes to the nearest operational point within a certain range (200 m). The found alignments (green in Figure <a href="#fig:operational_points_era_osm" data-reference-type="ref" data-reference="fig:operational_points_era_osm">5</a>) are a good approximation of the desired result. Of course, one could go on and further refine the queries, e.g., by incorporating route information, but as stated earlier, this is not the goal of this paper. The main goal is to show that finding alignments is an iterative process of finding the right queries, choosing the alignment strategy, and testing, especially if one is not an expert in the involved ontologies. Some of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> OPs cannot be aligned with OSMNodes and vice versa for various reasons. One example is defunct railway stations that are no longer stops for passenger trains and therefore no longer tagged as halt/stop in <abbr class="caps" title="OpenStreetMap">OSM</abbr>. Finding alignments is a dynamic process that needs to be repeated periodically because of changes in the data sources.</p>
+<figure id="fig:operational_points_era_osm">
+<img src="/assets/papers/2025-sem4tra-railway-kg/figures/operational_points_era_osm.png" />
+<figcaption>Figure 5: Automatic operational point alignment Austria</figcaption>
+</figure>
+</section>
+<section id="topology" class="level3" data-number="5.2">
+<h3 data-number="5.2"><span class="section-number">5.2</span> Topology</h3>
+<p>As a next step we want to align the topological connections between the operational points. In the case of the operational points the topological connections between direct neighbours are available as <code>SectionOfLine</code> entities. In the case of <abbr class="caps" title="OpenStreetMap">OSM</abbr> we can derive a similar information by the OSMRelations corresponding to train routes (Listing <a href="#lst:nextPassengerStop" data-reference-type="ref">3</a>). In the QLever ontology all contained <code>osm_node</code>s in a relation are ordered with a <code>member_pos</code> property. The next passenger stop for a given node is then the next passenger stop with a higher <code>member_pos</code> (not necessary sequential as there are also other type of nodes and ways contained in the same relation).</p>
+<figure id="lst:nextPassengerStop" class="listing" style="text-align:left">
+<figcaption>Listing 3: next passenger stops in <abbr class="caps" title="OpenStreetMap">OSM</abbr></figcaption>
+<pre class="sparql" data-language="SPARQL"><code>CONSTRUCT {
+  ?osm_id1 ex:nextPassengerStop ?osm_id2 .
+  ?osm_id1 osmkey:name ?name1 .
+  ?osm_id2 osmkey:name ?name2 .
+}
+WHERE {
+  {
+    SELECT ?rel ?m1 ?osm_id1 ?osm_pos1 (MIN(?osm_pos2) AS ?min_pos2) WHERE {
+      BIND (&lt;https://www.openstreetmap.org/relation/1658658&gt; AS ?rel)
+      ?rel osmrel:member ?m1 .
+      ?m1 osmrel:member_id ?osm_id1 ;
+          osmrel:member_pos ?osm_pos1 .
+      ?osm_id1 a osm:node .
+      ?osm_id1 osmkey:railway ?function1 .
+      FILTER (?function1 != &quot;platform&quot;)
+      
+      ?rel osmrel:member ?m2 .
+      ?m2 osmrel:member_id ?osm_id2 ;
+          osmrel:member_pos ?osm_pos2 .
+      ?osm_id2 a osm:node .
+      ?osm_id2 osmkey:railway ?function2 .
+      FILTER (?function2 != &quot;platform&quot;)
+      
+      FILTER (?osm_pos2 &gt; ?osm_pos1)
+    }
+    GROUP BY ?rel ?m1 ?osm_id1 ?osm_pos1
+  }
+  ?rel osmrel:member ?m2 .
+  ?m2 osmrel:member_id ?osm_id2 ;
+      osmrel:member_pos ?min_pos2 .
+  ?osm_id1 osmkey:name ?name1 .
+  ?osm_id2 osmkey:name ?name2 .
+}</code></pre>
+</figure>
+</section>
+<section id="aligning-infrastructure-elements" class="level3" data-number="5.3">
+<h3 data-number="5.3"><span class="section-number">5.3</span> Aligning infrastructure elements</h3>
+<p>To illustrate how to check the consistency of infrastructure elements with the integrated data, we compare the queries for getting the sections of lines with tunnels and railway switches using <abbr class="caps" title="OpenStreetMap">OSM</abbr> and the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG.</p>
+<section id="tunnels" class="level4" data-number="5.3.1">
+<h4 data-number="5.3.1"><span class="section-number">5.3.1</span> Tunnels</h4>
+<p>For <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> the query looks like this: (Listing <a href="#lst:sol_with_tunnels_era" data-reference-type="ref">4</a>)</p>
+<figure id="lst:sol_with_tunnels_era" class="listing" style="text-align:left">
+<figcaption>Listing 4: Section of lines with tunnels</figcaption>
+<pre class="sparql" data-language="SPARQL"><code>SELECT * WHERE {
+  ?sol era:inCountry country:AUT .
+  ?line a era:NationalRailwayLine .
+  ?line rdfs:label &quot;20601&quot; .
+  ?sol era:lineNationalId ?line .
+  ?sol rdfs:label ?sol_label .
+  
+  ?tunnel a era:Tunnel .
+  ?tunnel era:netElement ?ne .
+  ?tunnel rdfs:label ?tunnel_name .
+  ?ne era:hasImplementation ?track_uri .
+  ?track era:canonicalURI ?track_uri .
+  ?sol era:track ?track .
+}</code></pre>
+</figure>
+<p>In the <abbr class="caps" title="OpenStreetMap">OSM</abbr> variant we use the previously derived information <code>nextStopPosition</code>. A tunnel is found for a set of neighbouring nodes, if there is a OSMWay with the tag <code>tunnel="yes"</code> between the nodes. In contrast to the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG variant this query finds also tunnels within operational points. Due to the meso scope of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG these tunnels are not represented in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG.</p>
+<figure id="lst:sol_with_tunnels_osm" class="listing" style="text-align:left">
+<figcaption>Listing 5: Section of lines with tunnels</figcaption>
+<pre class="sparql" data-language="SPARQL"><code>SELECT ?osm_id1 ?osm_id2 ?tunnel WHERE {
+  BIND (&lt;https://www.openstreetmap.org/relation/1658658&gt; AS ?rel)
+  ?osm_id1 ex:nextStopPosition ?osm_id2 .
+  
+  ?rel osmrel:member ?mrelway1 .
+  ?mrelway1 osmrel:member_id ?osm_way1 .
+  ?mrelway1 osmrel:member_pos ?way1_pos .
+  ?osm_way1 osmway:member ?mway1 .
+  ?mway1 osmway:member_id ?osm_id1 .
+  
+  ?rel osmrel:member ?mrelway2 .
+  ?mrelway2 osmrel:member_id ?osm_way2 .
+  ?mrelway2 osmrel:member_pos ?way2_pos .
+  ?osm_way2 osmway:member ?mway2 .
+  ?mway2 osmway:member_id ?osm_id2 .
+  {
+    SELECT ?tunnel ?tunnel_name ?tunnel_pos {
+      BIND (&lt;https://www.openstreetmap.org/relation/1658658&gt; AS ?rel)
+      ?rel osmrel:member ?mtunnel .
+      ?mtunnel osmrel:member_id ?tunnel .
+      ?mtunnel osmrel:member_pos ?tunnel_pos .
+      ?tunnel a osm:way .
+      ?tunnel osmkey:tunnel &quot;yes&quot; .
+    }
+  }
+  FILTER (?tunnel_pos &gt; ?way1_pos)
+  FILTER (?tunnel_pos &lt; ?way2_pos)
+}</code></pre>
+</figure>
+<p>The label of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> tunnels and the tunnel:name tag of <abbr class="caps" title="OpenStreetMap">OSM</abbr> are similar but the seldom match exactly. So to align the tunnels it is safer to use geo coordinates or topological information e.g. the <em>i</em>th tunnel after operational point X.</p>
+</section>
+<section id="railway-switches" class="level4" data-number="5.3.2">
+<h4 data-number="5.3.2"><span class="section-number">5.3.2</span> Railway switches</h4>
+<p>Railway switches are one of the most important elements of the railway network as they define the topology. They are not contained in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG so for this example we assume to have the information as micro-level instance data of a RailML ontology or a similar ontology that uses the <abbr class="caps" title="RailTopoModel">RTM</abbr> for the topological information. In RailML railway switches are explicitly modelled as the infrastructure element <code>SwitchIS</code><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. RailML switches have additional properties that link the branches (Left, Right) of the switch to the corresponding <code>NetRelations</code> on the <abbr class="caps" title="RailTopoModel">RTM</abbr> level.</p>
+<p>In <abbr class="caps" title="OpenStreetMap">OSM</abbr>, detecting switches is more challenging. The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query shown in Listing <a href="#lst:switches_with_osm_ref" data-reference-type="ref">6</a> demonstrates how to retrieve all OSMNodes within a railway area that may correspond to infrastructure elements. Switches in <abbr class="caps" title="OpenStreetMap">OSM</abbr> are optionally tagged with <code>railway=switch</code> and may include a corresponding <code>ref</code> tag. Notably, OSMNodes representing switches are typically part of either two or three <abbr class="caps" title="OpenStreetMap">OSM</abbr> ways tagged with <code>railway=rail</code>, depending on whether they are located at the start/end of a rail segment or between segments. This structural information can be leveraged to identify switches in <abbr class="caps" title="OpenStreetMap">OSM</abbr>, even when explicit switch tags are absent.</p>
+<figure id="lst:switches_with_osm_ref" class="listing" style="text-align:left">
+<figcaption>Listing 6: Switches with osm ref</figcaption>
+<pre class="sparql" data-language="SPARQL"><code>SELECT DISTINCT ?osm_node ?way_count ?function ?ref WHERE {
+  {
+    SELECT ?osm_node (COUNT(?way) AS ?way_count) WHERE {
+      ?feldkirch osmkey:name &quot;Feldkirch&quot; .
+      ?feldkirch osmkey:railway &quot;station&quot; .
+      ?feldkirch osmkey:railway:ref &quot;Fk&quot; .
+      ?railway_area ogc:sfContains ?feldkirch .
+      ?railway_area osmkey:landuse &quot;railway&quot; .
+      ?railway_area ogc:sfContains ?osm_node .
+      ?way osmway:member ?mway .
+      ?way osmkey:railway &quot;rail&quot; .
+      ?mway osmway:member_id ?osm_node .
+    }
+    GROUP BY ?osm_node
+  }
+  OPTIONAL {
+    ?osm_node osmkey:railway ?function .
+  }
+  OPTIONAL {
+    ?osm_node osmkey:ref ?ref .
+  }
+}</code></pre>
+</figure>
+<p>Aligning the identified <abbr class="caps" title="OpenStreetMap">OSM</abbr> switches with the <abbr class="caps" title="RailTopoModel">RTM</abbr>-based switches presents a greater challenge. To establish a one-to-one alignment, it is essential to ensure that the same context is used in both <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr>. In <abbr class="caps" title="RailTopoModel">RTM</abbr>, infrastructure elements are explicitly linked to their corresponding operational points. In contrast, <abbr class="caps" title="OpenStreetMap">OSM</abbr> does not provide this information directly; it must be inferred—such as in the query shown in Listing <a href="#lst:switches_with_osm_ref" data-reference-type="ref">6</a>–by identifying all nodes contained within a relation tagged with <code>landuse="railway"</code>.</p>
+</section>
+</section>
+</section>
+<section id="sec:conclusion" class="level2" data-number="6">
+<h2 data-number="6"><span class="section-number">6</span> Conclusion</h2>
+<p>The purpose of this paper is to share our experience that identifying instance alignments in the railway domain can be a challenging task, particularly when the ontologies differ significantly in their modelling philosophies. One-to-one alignments are often not feasible, as certain concepts may be absent in one of the formalisms. Surprisingly, even when ontologies share the same underlying model for topology (e.g., <abbr class="caps" title="RailTopoModel">RTM</abbr>), alignment remains difficult due to the various ways in which data can be represented—such as differences in symmetry, granularity, or alternative location information (e.g., metric vs. GPS coordinates). This challenge persists even when the same ontology is used.</p>
+<p>In our experience, alignments can be effectively achieved with a human-in-the-loop approach, where domain experts leverage a combination of geographical, topological, and railway-specific knowledge to determine corresponding infrastructure elements. However, manual alignment is a tedious and time-consuming process, especially when it must be repeated periodically due to changes in the railway infrastructure—although the railway network tends to be relatively stable.</p>
+<p>Motivated by these challenges, our research aims to develop improved semi-automatic methods for integrating railway data from heterogeneous sources. We are working on an approach on combining topological and geographical reasoning with alignment techniques such as graph-based and constraint-based mapping algorithms.</p>
+</section>
+<section id="declaration-on-generative-ai" class="level2 unnumbered">
+<h2 class="unnumbered">Declaration on Generative AI</h2>
+<p>During the preparation of this work, the authors used Sonnet 4.0 in order to: paraphrase and reword, improve writing style, and grammar and check spelling. After using these tool, the authors reviewed and edited the content as needed and take full responsibility for the publication’s content.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<ol id="refs" class="references">
+<li id="ref-delir_haghighi_railway_2025">Camarazo, D., Roxin, A., Lalou, M.: Railway <span>Systems</span>’ <span>Ontologies</span>: <span>A</span> <span>Literature</span> <span>Review</span> and an <span>Alignment</span> <span>Proposal</span>. In: Information <span>Integration</span> and <span>Web</span> <span>Intelligence</span>. pp. 311–319 (2025). https://doi.org/<a href="https://doi.org/10.1007/978-3-031-78090-5_27">10.1007/978-3-031-78090-5_27</a>.</li>
+<li id="ref-verstichel_efficient_2011">Verstichel, S., Ongenae, F., Loeve, L., Vermeulen, F., Dings, P., Dhoedt, B., Dhaene, T., De Turck, F.: Efficient data integration in the railway domain through an ontology-based methodology. Transportation Research Part C: Emerging Technologies. 19, 617–643 (2011). https://doi.org/<a href="https://doi.org/10.1016/j.trc.2010.10.003">10.1016/j.trc.2010.10.003</a>.</li>
+<li id="ref-BFO">Arp, R., Smith, B., Spear, A.D.: Building ontologies with basic formal ontology. MIT Press (2015).</li>
+<li id="ref-hotho_rail_2021">Bischof, S., Schenner, G.: Rail <span>Topology</span> <span>Ontology</span>: <span>A</span> <span>Rail</span> <span>Infrastructure</span> <span>Base</span> <span>Ontology</span>. In: <span>ISWC</span> 2021. pp. 597–612 (2021). https://doi.org/<a href="https://doi.org/10.1007/978-3-030-88361-4_35">10.1007/978-3-030-88361-4_35</a>.</li>
+<li id="ref-rahmig201414">Rahmig, C., Richter, A.: A railway simulation landscape creation tool chain considering OpenStreetMap geo data. In: SUMO2014 – modeling mobility with open data. pp. 167–175 (2014).</li>
+<li id="ref-uic_railtopomodel_2016">UIC: <span>RailTopoModel</span> – <span>Railway</span> infrastructure topological model. International Union of Railway (UIC) (2016).</li>
+<li id="ref-a_nash_railml_2004">A. Nash, D. Huerlimann, J. Schuette, V. P. Krauss: <span>RailML</span> – <span>A</span> <span>Standard</span> <span>Data</span> <span>Interface</span> <span>For</span> <span>Railroad</span> <span>Applications</span>. WIT Transactions on The Built Environment. 74, 233–240 (2004). https://doi.org/<a href="https://doi.org/10.2495/CR040241">10.2495/CR040241</a>.</li>
+<li id="ref-hotho_leveraging_2021">Rojas, J.A., Aguado, M., Vasilopoulou, P., Velitchkov, I., Van Assche, D., Colpaert, P., Verborgh, R.: Leveraging <span>Semantic</span> <span>Technologies</span> for <span>Digital</span> <span>Interoperability</span> in the <span>European</span> <span>Railway</span> <span>Domain</span>. In: <span>ISWC</span> 2021. pp. 648–664 (2021). https://doi.org/<a href="https://doi.org/10.1007/978-3-030-88361-4_38">10.1007/978-3-030-88361-4_38</a>.</li>
+<li id="ref-bast_efficient_2021">Bast, H., Brosi, P., Kalmbach, J., Lehmann, A.: An <span>Efficient</span> <span><abbr class="caps" title="Resource Description Framework">RDF</abbr></span> <span>Converter</span> and <span><abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr></span> <span>Endpoint</span> for the <span>Complete</span> <span>OpenStreetMap</span> <span>Data</span>. In: Proceedings of the 29th <span>International</span> <span>Conference</span> on <span>Advances</span> in <span>Geographic</span> <span>Information</span> <span>Systems</span>. pp. 536–539 (2021). https://doi.org/<a href="https://doi.org/10.1145/3474717.3484256">10.1145/3474717.3484256</a>.</li>
+</ol>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<h2 class="unnumbered">Notes</h2>
+<ol>
+<li id="fn1"><p><a href="https://www.era.europa.eu/domains/registers/rinf_en" class="uri">https://www.era.europa.eu/domains/registers/rinf_en</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.openrailwaymap.org/" class="uri">https://www.openrailwaymap.org/</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>http://ontology.railml.org/railml3#SwitchIS<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
