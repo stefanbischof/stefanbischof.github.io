@@ -609,6 +609,16 @@ figure img {
     margin: 0 auto;
 }
 
+/* MathML — pandoc --mathml output */
+/* Block math is wrapped in <div class="math-block"> by html-build.py  */
+/* so no CSS on <math> itself is needed; inline math uses browser defaults */
+.math-block {
+    display: block;
+    margin: $baseline auto;
+    overflow-x: auto;
+    text-align: center;
+}
+
 figure > figcaption {
     color: #666;
     font-size: 0.9rem;
