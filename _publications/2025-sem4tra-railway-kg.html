@@ -114,57 +114,51 @@ toc: |
 <h2 data-number="5"><span class="section-number">5</span> Case study: Passenger stations of Austria</h2>
 <p>As a case study we attempt to integrate the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> and the <abbr class="caps" title="OpenStreetMap">OSM</abbr> data for all passenger stops and their connections in Austria.</p>
 <p>We use these prefixes in the following <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> queries:</p>
-<pre class="sparql" data-language="SPARQL"><code>PREFIX country: &lt;http://publications.europa.eu/resource/authority/country/&gt;
-PREFIX era: &lt;http://data.europa.eu/949/&gt;
-PREFIX ex: &lt;https://www.example.org/&gt;
-PREFIX geo: &lt;http://www.opengis.net/ont/geosparql#&gt;
-PREFIX loc: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;
-PREFIX ogc: &lt;http://www.opengis.net/rdf#&gt;
-PREFIX osm: &lt;https://www.openstreetmap.org/&gt;
-PREFIX osmkey: &lt;https://www.openstreetmap.org/wiki/Key:&gt;
-PREFIX osmnode: &lt;https://www.openstreetmap.org/node/&gt;
-PREFIX osmrel: &lt;https://www.openstreetmap.org/relation/&gt;
-PREFIX osmway: &lt;https://www.openstreetmap.org/way/&gt;
-PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
-PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</code></pre>
+<div class="sourceCode" id="cb1" data-language="SPARQL"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">country:</span> <span class="dt">&lt;http://publications.europa.eu/resource/authority/country/&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">era:</span> <span class="dt">&lt;http://data.europa.eu/949/&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">ex:</span> <span class="dt">&lt;https://www.example.org/&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">geo:</span> <span class="dt">&lt;http://www.opengis.net/ont/geosparql#&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">loc:</span> <span class="dt">&lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">ogc:</span> <span class="dt">&lt;http://www.opengis.net/rdf#&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">osm:</span> <span class="dt">&lt;https://www.openstreetmap.org/&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">osmkey:</span> <span class="dt">&lt;https://www.openstreetmap.org/wiki/Key:&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">osmnode:</span> <span class="dt">&lt;https://www.openstreetmap.org/node/&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">osmrel:</span> <span class="dt">&lt;https://www.openstreetmap.org/relation/&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">osmway:</span> <span class="dt">&lt;https://www.openstreetmap.org/way/&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">owl:</span> <span class="dt">&lt;http://www.w3.org/2002/07/owl#&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">rdf:</span> <span class="dt">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">rdfs:</span> <span class="dt">&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">skos:</span> <span class="dt">&lt;http://www.w3.org/2004/02/skos/core#&gt;</span></span></code></pre></div>
 <section id="getting-the-passenger-stations" class="level3" data-number="5.1">
 <h3 data-number="5.1"><span class="section-number">5.1</span> Getting the passenger stations</h3>
-<p>The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query in Listing <a href="#lst:era_operational_points" data-reference-type="ref">1</a> gets all operational points of Austria and their geo data (in the current dataset 1799 entries). It contains the (small) stations and passenger stops (1496 entries) but also other operational points like (domestic) border points, private sidings, etc. We need these (intermediate) points because we want to also reason about the topological connections of the operational points.</p>
-<figure id="lst:era_operational_points" class="listing" style="text-align:left">
-<figcaption>Listing 1: <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> operational points</figcaption>
-<pre class="sparql" data-language="SPARQL"><code>SELECT * WHERE {
-  ?op a era:OperationalPoint .
-  ?op era:opName ?opName .
-  ?op era:inCountry country:AUT .
-  ?op era:opType ?opType .
-  ?opType skos:prefLabel ?opTypeLabel .
-  FILTER (LANG(?opTypeLabel) = &quot;en&quot;)
-  ?op era:uopid ?uopid .
-  ?op loc:location ?loc .
-  ?loc loc:lat ?o1 .
-  ?loc loc:long ?o2 .
-} </code></pre>
-</figure>
+<p>The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query in Listing <a href="#lst:era_operational_points" data-reference-type="ref">lst:era_operational_points</a> gets all operational points of Austria and their geo data (in the current dataset 1799 entries). It contains the (small) stations and passenger stops (1496 entries) but also other operational points like (domestic) border points, private sidings, etc. We need these (intermediate) points because we want to also reason about the topological connections of the operational points.</p>
+<div class="sourceCode" id="lst:era_operational_points" data-language="SPARQL" data-caption="ERA operational points" data-label="lst:era_operational_points"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:era_operational_points-1"><a href="#lst:era_operational_points-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">WHERE</span> {</span>
+<span id="lst:era_operational_points-2"><a href="#lst:era_operational_points-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">?op</span> <span class="kw">a</span> <span class="fu">era:OperationalPoint</span> .</span>
+<span id="lst:era_operational_points-3"><a href="#lst:era_operational_points-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">?op</span> <span class="fu">era:opName</span> <span class="va">?opName</span> .</span>
+<span id="lst:era_operational_points-4"><a href="#lst:era_operational_points-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">?op</span> <span class="fu">era:inCountry</span> <span class="fu">country:AUT</span> .</span>
+<span id="lst:era_operational_points-5"><a href="#lst:era_operational_points-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">?op</span> <span class="fu">era:opType</span> <span class="va">?opType</span> .</span>
+<span id="lst:era_operational_points-6"><a href="#lst:era_operational_points-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">?opType</span> <span class="fu">skos:prefLabel</span> <span class="va">?opTypeLabel</span> .</span>
+<span id="lst:era_operational_points-7"><a href="#lst:era_operational_points-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FILTER</span> (<span class="bu">LANG</span>(<span class="va">?opTypeLabel</span>) <span class="op">=</span> <span class="st">&quot;en&quot;</span>)</span>
+<span id="lst:era_operational_points-8"><a href="#lst:era_operational_points-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">?op</span> <span class="fu">era:uopid</span> <span class="va">?uopid</span> .</span>
+<span id="lst:era_operational_points-9"><a href="#lst:era_operational_points-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">?op</span> <span class="fu">loc:location</span> <span class="va">?loc</span> .</span>
+<span id="lst:era_operational_points-10"><a href="#lst:era_operational_points-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">?loc</span> <span class="fu">loc:lat</span> <span class="va">?o1</span> .</span>
+<span id="lst:era_operational_points-11"><a href="#lst:era_operational_points-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">?loc</span> <span class="fu">loc:long</span> <span class="va">?o2</span> .</span>
+<span id="lst:era_operational_points-12"><a href="#lst:era_operational_points-12" aria-hidden="true" tabindex="-1"></a>} </span></code></pre></div>
 <p>With QLever we can query all the OSMNodes within a certain region. The following queries OSMNodes representing railway station, stops and halts in Austria (<code>osmrel:16239</code>). This query finds 3848 OSMNodes, which are significant more than in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> case, due to the fact that every halt position within a station is represented by a different OSMNode. If we group the halt positions belonging to the same station we still get 1698 OSMNodes in contrast to the 1496 <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> entries, because the result also contains privately operated railway lines, cog railway lines etc. not represented in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG.</p>
-<figure id="lst:osm_stations" class="listing" style="text-align:left">
-<figcaption>Listing 2: <abbr class="caps" title="OpenStreetMap">OSM</abbr> Station</figcaption>
-<pre class="sparql" data-language="SPARQL"><code>SELECT ?osm_id ?name ?type ?ref ?geometry WHERE {
-  osmrel:16239 ogc:sfContains ?osm_id .
-  ?osm_id osmkey:railway ?type .
-  OPTIONAL {
-  ?osm_id osmkey:railway:ref ?ref .
-  }
-  ?osm_id osmkey:name ?name .
-  ?osm_id rdf:type osm:node .
-  # filtering out subway nodes
-  FILTER NOT EXISTS { 
-    ?osm_id osmkey:subway &quot;yes&quot; } .
-  FILTER (?type = &quot;station&quot; || ?type = &quot;stop&quot; || ?type = &quot;halt&quot;)
-  ?osm_id geo:hasGeometry/geo:asWKT ?geometry .
-}</code></pre>
-</figure>
+<div class="sourceCode" id="lst:osm_stations" data-language="SPARQL" data-caption="OSM Station" data-label="lst:osm_stations"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:osm_stations-1"><a href="#lst:osm_stations-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="va">?osm_id</span> <span class="va">?name</span> <span class="va">?type</span> <span class="va">?ref</span> <span class="va">?geometry</span> <span class="kw">WHERE</span> {</span>
+<span id="lst:osm_stations-2"><a href="#lst:osm_stations-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmrel:16239</span> <span class="fu">ogc:sfContains</span> <span class="va">?osm_id</span> .</span>
+<span id="lst:osm_stations-3"><a href="#lst:osm_stations-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id</span> <span class="fu">osmkey:railway</span> <span class="va">?type</span> .</span>
+<span id="lst:osm_stations-4"><a href="#lst:osm_stations-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">OPTIONAL</span> {</span>
+<span id="lst:osm_stations-5"><a href="#lst:osm_stations-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id</span> <span class="fu">osmkey:railway:ref</span> <span class="va">?ref</span> .</span>
+<span id="lst:osm_stations-6"><a href="#lst:osm_stations-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="lst:osm_stations-7"><a href="#lst:osm_stations-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id</span> <span class="fu">osmkey:name</span> <span class="va">?name</span> .</span>
+<span id="lst:osm_stations-8"><a href="#lst:osm_stations-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id</span> <span class="fu">rdf:type</span> <span class="fu">osm:node</span> .</span>
+<span id="lst:osm_stations-9"><a href="#lst:osm_stations-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filtering out subway nodes</span></span>
+<span id="lst:osm_stations-10"><a href="#lst:osm_stations-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FILTER</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> { </span>
+<span id="lst:osm_stations-11"><a href="#lst:osm_stations-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">?osm_id</span> <span class="fu">osmkey:subway</span> <span class="st">&quot;yes&quot;</span> } .</span>
+<span id="lst:osm_stations-12"><a href="#lst:osm_stations-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FILTER</span> (<span class="va">?type</span> <span class="op">=</span> <span class="st">&quot;station&quot;</span> <span class="op">||</span> <span class="va">?type</span> <span class="op">=</span> <span class="st">&quot;stop&quot;</span> <span class="op">||</span> <span class="va">?type</span> <span class="op">=</span> <span class="st">&quot;halt&quot;</span>)</span>
+<span id="lst:osm_stations-13"><a href="#lst:osm_stations-13" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id</span> <span class="fu">geo:hasGeometry</span><span class="op">/</span><span class="fu">geo:asWKT</span> <span class="va">?geometry</span> .</span>
+<span id="lst:osm_stations-14"><a href="#lst:osm_stations-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>How can we align the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> operational points with the corresponding OSMNodes? As a first attempt one can look for common identifiers. Some OSMNodes with tag <code>railway:station</code> also contain a entry <code>railway:ref</code>. The value of this ref is the same as the <code>uopid</code> without the <code>AT</code> prefix, e.g., in Feldkirch the <code>uopid</code> is <code>ATFk</code> and the <code>railway:ref</code> is <code>Fk</code>. Unfortunately this is not always the case (about 40% of the OSMNodes in the result have a <code>railway:ref</code>) and even worse, sometimes the OSMNode for the railway station is not contained in any other relation i.e. it is isolated from the railway network. Train stops and halts on the <abbr class="caps" title="OpenStreetMap">OSM</abbr>-level on the other hand do not have a railway ref. After some trial and error as a pragmatic solution we decided to use the distance of the Geo coordinates and assign the OSMNodes to the nearest operational point within a certain range (200 m). The found alignments (green in Figure <a href="#fig:operational_points_era_osm" data-reference-type="ref" data-reference="fig:operational_points_era_osm">5</a>) are a good approximation of the desired result. Of course, one could go on and further refine the queries, e.g., by incorporating route information, but as stated earlier, this is not the goal of this paper. The main goal is to show that finding alignments is an iterative process of finding the right queries, choosing the alignment strategy, and testing, especially if one is not an expert in the involved ontologies. Some of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> OPs cannot be aligned with OSMNodes and vice versa for various reasons. One example is defunct railway stations that are no longer stops for passenger trains and therefore no longer tagged as halt/stop in <abbr class="caps" title="OpenStreetMap">OSM</abbr>. Finding alignments is a dynamic process that needs to be repeated periodically because of changes in the data sources.</p>
 <figure id="fig:operational_points_era_osm">
 <img src="/assets/papers/2025-sem4tra-railway-kg/figures/operational_points_era_osm.png" />
@@ -173,131 +167,119 @@ PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;</code></pre>
 </section>
 <section id="topology" class="level3" data-number="5.2">
 <h3 data-number="5.2"><span class="section-number">5.2</span> Topology</h3>
-<p>As a next step we want to align the topological connections between the operational points. In the case of the operational points the topological connections between direct neighbours are available as <code>SectionOfLine</code> entities. In the case of <abbr class="caps" title="OpenStreetMap">OSM</abbr> we can derive a similar information by the OSMRelations corresponding to train routes (Listing <a href="#lst:nextPassengerStop" data-reference-type="ref">3</a>). In the QLever ontology all contained <code>osm_node</code>s in a relation are ordered with a <code>member_pos</code> property. The next passenger stop for a given node is then the next passenger stop with a higher <code>member_pos</code> (not necessary sequential as there are also other type of nodes and ways contained in the same relation).</p>
-<figure id="lst:nextPassengerStop" class="listing" style="text-align:left">
-<figcaption>Listing 3: next passenger stops in <abbr class="caps" title="OpenStreetMap">OSM</abbr></figcaption>
-<pre class="sparql" data-language="SPARQL"><code>CONSTRUCT {
-  ?osm_id1 ex:nextPassengerStop ?osm_id2 .
-  ?osm_id1 osmkey:name ?name1 .
-  ?osm_id2 osmkey:name ?name2 .
-}
-WHERE {
-  {
-    SELECT ?rel ?m1 ?osm_id1 ?osm_pos1 (MIN(?osm_pos2) AS ?min_pos2) WHERE {
-      BIND (&lt;https://www.openstreetmap.org/relation/1658658&gt; AS ?rel)
-      ?rel osmrel:member ?m1 .
-      ?m1 osmrel:member_id ?osm_id1 ;
-          osmrel:member_pos ?osm_pos1 .
-      ?osm_id1 a osm:node .
-      ?osm_id1 osmkey:railway ?function1 .
-      FILTER (?function1 != &quot;platform&quot;)
-      
-      ?rel osmrel:member ?m2 .
-      ?m2 osmrel:member_id ?osm_id2 ;
-          osmrel:member_pos ?osm_pos2 .
-      ?osm_id2 a osm:node .
-      ?osm_id2 osmkey:railway ?function2 .
-      FILTER (?function2 != &quot;platform&quot;)
-      
-      FILTER (?osm_pos2 &gt; ?osm_pos1)
-    }
-    GROUP BY ?rel ?m1 ?osm_id1 ?osm_pos1
-  }
-  ?rel osmrel:member ?m2 .
-  ?m2 osmrel:member_id ?osm_id2 ;
-      osmrel:member_pos ?min_pos2 .
-  ?osm_id1 osmkey:name ?name1 .
-  ?osm_id2 osmkey:name ?name2 .
-}</code></pre>
-</figure>
+<p>As a next step we want to align the topological connections between the operational points. In the case of the operational points the topological connections between direct neighbours are available as <code>SectionOfLine</code> entities. In the case of <abbr class="caps" title="OpenStreetMap">OSM</abbr> we can derive a similar information by the OSMRelations corresponding to train routes (Listing <a href="#lst:nextPassengerStop" data-reference-type="ref">lst:nextPassengerStop</a>). In the QLever ontology all contained <code>osm_node</code>s in a relation are ordered with a <code>member_pos</code> property. The next passenger stop for a given node is then the next passenger stop with a higher <code>member_pos</code> (not necessary sequential as there are also other type of nodes and ways contained in the same relation).</p>
+<div class="sourceCode" id="lst:nextPassengerStop" data-language="SPARQL" data-caption="next passenger stops in OSM" data-label="lst:nextPassengerStop"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:nextPassengerStop-1"><a href="#lst:nextPassengerStop-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CONSTRUCT</span> {</span>
+<span id="lst:nextPassengerStop-2"><a href="#lst:nextPassengerStop-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id1</span> <span class="fu">ex:nextPassengerStop</span> <span class="va">?osm_id2</span> .</span>
+<span id="lst:nextPassengerStop-3"><a href="#lst:nextPassengerStop-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id1</span> <span class="fu">osmkey:name</span> <span class="va">?name1</span> .</span>
+<span id="lst:nextPassengerStop-4"><a href="#lst:nextPassengerStop-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id2</span> <span class="fu">osmkey:name</span> <span class="va">?name2</span> .</span>
+<span id="lst:nextPassengerStop-5"><a href="#lst:nextPassengerStop-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="lst:nextPassengerStop-6"><a href="#lst:nextPassengerStop-6" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> {</span>
+<span id="lst:nextPassengerStop-7"><a href="#lst:nextPassengerStop-7" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="lst:nextPassengerStop-8"><a href="#lst:nextPassengerStop-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="va">?rel</span> <span class="va">?m1</span> <span class="va">?osm_id1</span> <span class="va">?osm_pos1</span> (<span class="bu">MIN</span>(<span class="va">?osm_pos2</span>) <span class="kw">AS</span> <span class="va">?min_pos2</span>) <span class="kw">WHERE</span> {</span>
+<span id="lst:nextPassengerStop-9"><a href="#lst:nextPassengerStop-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">BIND</span> (<span class="dt">&lt;https://www.openstreetmap.org/relation/1658658&gt;</span> <span class="kw">AS</span> <span class="va">?rel</span>)</span>
+<span id="lst:nextPassengerStop-10"><a href="#lst:nextPassengerStop-10" aria-hidden="true" tabindex="-1"></a>      <span class="va">?rel</span> <span class="fu">osmrel:member</span> <span class="va">?m1</span> .</span>
+<span id="lst:nextPassengerStop-11"><a href="#lst:nextPassengerStop-11" aria-hidden="true" tabindex="-1"></a>      <span class="va">?m1</span> <span class="fu">osmrel:member_id</span> <span class="va">?osm_id1</span> ;</span>
+<span id="lst:nextPassengerStop-12"><a href="#lst:nextPassengerStop-12" aria-hidden="true" tabindex="-1"></a>          <span class="fu">osmrel:member_pos</span> <span class="va">?osm_pos1</span> .</span>
+<span id="lst:nextPassengerStop-13"><a href="#lst:nextPassengerStop-13" aria-hidden="true" tabindex="-1"></a>      <span class="va">?osm_id1</span> <span class="kw">a</span> <span class="fu">osm:node</span> .</span>
+<span id="lst:nextPassengerStop-14"><a href="#lst:nextPassengerStop-14" aria-hidden="true" tabindex="-1"></a>      <span class="va">?osm_id1</span> <span class="fu">osmkey:railway</span> <span class="va">?function1</span> .</span>
+<span id="lst:nextPassengerStop-15"><a href="#lst:nextPassengerStop-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FILTER</span> (<span class="va">?function1</span> <span class="op">!=</span> <span class="st">&quot;platform&quot;</span>)</span>
+<span id="lst:nextPassengerStop-16"><a href="#lst:nextPassengerStop-16" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="lst:nextPassengerStop-17"><a href="#lst:nextPassengerStop-17" aria-hidden="true" tabindex="-1"></a>      <span class="va">?rel</span> <span class="fu">osmrel:member</span> <span class="va">?m2</span> .</span>
+<span id="lst:nextPassengerStop-18"><a href="#lst:nextPassengerStop-18" aria-hidden="true" tabindex="-1"></a>      <span class="va">?m2</span> <span class="fu">osmrel:member_id</span> <span class="va">?osm_id2</span> ;</span>
+<span id="lst:nextPassengerStop-19"><a href="#lst:nextPassengerStop-19" aria-hidden="true" tabindex="-1"></a>          <span class="fu">osmrel:member_pos</span> <span class="va">?osm_pos2</span> .</span>
+<span id="lst:nextPassengerStop-20"><a href="#lst:nextPassengerStop-20" aria-hidden="true" tabindex="-1"></a>      <span class="va">?osm_id2</span> <span class="kw">a</span> <span class="fu">osm:node</span> .</span>
+<span id="lst:nextPassengerStop-21"><a href="#lst:nextPassengerStop-21" aria-hidden="true" tabindex="-1"></a>      <span class="va">?osm_id2</span> <span class="fu">osmkey:railway</span> <span class="va">?function2</span> .</span>
+<span id="lst:nextPassengerStop-22"><a href="#lst:nextPassengerStop-22" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FILTER</span> (<span class="va">?function2</span> <span class="op">!=</span> <span class="st">&quot;platform&quot;</span>)</span>
+<span id="lst:nextPassengerStop-23"><a href="#lst:nextPassengerStop-23" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="lst:nextPassengerStop-24"><a href="#lst:nextPassengerStop-24" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FILTER</span> (<span class="va">?osm_pos2</span> <span class="op">&gt;</span> <span class="va">?osm_pos1</span>)</span>
+<span id="lst:nextPassengerStop-25"><a href="#lst:nextPassengerStop-25" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="lst:nextPassengerStop-26"><a href="#lst:nextPassengerStop-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="va">?rel</span> <span class="va">?m1</span> <span class="va">?osm_id1</span> <span class="va">?osm_pos1</span></span>
+<span id="lst:nextPassengerStop-27"><a href="#lst:nextPassengerStop-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="lst:nextPassengerStop-28"><a href="#lst:nextPassengerStop-28" aria-hidden="true" tabindex="-1"></a>  <span class="va">?rel</span> <span class="fu">osmrel:member</span> <span class="va">?m2</span> .</span>
+<span id="lst:nextPassengerStop-29"><a href="#lst:nextPassengerStop-29" aria-hidden="true" tabindex="-1"></a>  <span class="va">?m2</span> <span class="fu">osmrel:member_id</span> <span class="va">?osm_id2</span> ;</span>
+<span id="lst:nextPassengerStop-30"><a href="#lst:nextPassengerStop-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">osmrel:member_pos</span> <span class="va">?min_pos2</span> .</span>
+<span id="lst:nextPassengerStop-31"><a href="#lst:nextPassengerStop-31" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id1</span> <span class="fu">osmkey:name</span> <span class="va">?name1</span> .</span>
+<span id="lst:nextPassengerStop-32"><a href="#lst:nextPassengerStop-32" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id2</span> <span class="fu">osmkey:name</span> <span class="va">?name2</span> .</span>
+<span id="lst:nextPassengerStop-33"><a href="#lst:nextPassengerStop-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </section>
 <section id="aligning-infrastructure-elements" class="level3" data-number="5.3">
 <h3 data-number="5.3"><span class="section-number">5.3</span> Aligning infrastructure elements</h3>
 <p>To illustrate how to check the consistency of infrastructure elements with the integrated data, we compare the queries for getting the sections of lines with tunnels and railway switches using <abbr class="caps" title="OpenStreetMap">OSM</abbr> and the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG.</p>
 <section id="tunnels" class="level4" data-number="5.3.1">
 <h4 data-number="5.3.1"><span class="section-number">5.3.1</span> Tunnels</h4>
-<p>For <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> the query looks like this: (Listing <a href="#lst:sol_with_tunnels_era" data-reference-type="ref">4</a>)</p>
-<figure id="lst:sol_with_tunnels_era" class="listing" style="text-align:left">
-<figcaption>Listing 4: Section of lines with tunnels</figcaption>
-<pre class="sparql" data-language="SPARQL"><code>SELECT * WHERE {
-  ?sol era:inCountry country:AUT .
-  ?line a era:NationalRailwayLine .
-  ?line rdfs:label &quot;20601&quot; .
-  ?sol era:lineNationalId ?line .
-  ?sol rdfs:label ?sol_label .
-  
-  ?tunnel a era:Tunnel .
-  ?tunnel era:netElement ?ne .
-  ?tunnel rdfs:label ?tunnel_name .
-  ?ne era:hasImplementation ?track_uri .
-  ?track era:canonicalURI ?track_uri .
-  ?sol era:track ?track .
-}</code></pre>
-</figure>
+<p>For <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> the query looks like this: (Listing <a href="#lst:sol_with_tunnels_era" data-reference-type="ref">lst:sol_with_tunnels_era</a>)</p>
+<div class="sourceCode" id="lst:sol_with_tunnels_era" data-language="SPARQL" data-caption="Section of lines with tunnels" data-label="lst:sol_with_tunnels_era"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:sol_with_tunnels_era-1"><a href="#lst:sol_with_tunnels_era-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">WHERE</span> {</span>
+<span id="lst:sol_with_tunnels_era-2"><a href="#lst:sol_with_tunnels_era-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">?sol</span> <span class="fu">era:inCountry</span> <span class="fu">country:AUT</span> .</span>
+<span id="lst:sol_with_tunnels_era-3"><a href="#lst:sol_with_tunnels_era-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">?line</span> <span class="kw">a</span> <span class="fu">era:NationalRailwayLine</span> .</span>
+<span id="lst:sol_with_tunnels_era-4"><a href="#lst:sol_with_tunnels_era-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">?line</span> <span class="fu">rdfs:label</span> <span class="st">&quot;20601&quot;</span> .</span>
+<span id="lst:sol_with_tunnels_era-5"><a href="#lst:sol_with_tunnels_era-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">?sol</span> <span class="fu">era:lineNationalId</span> <span class="va">?line</span> .</span>
+<span id="lst:sol_with_tunnels_era-6"><a href="#lst:sol_with_tunnels_era-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">?sol</span> <span class="fu">rdfs:label</span> <span class="va">?sol_label</span> .</span>
+<span id="lst:sol_with_tunnels_era-7"><a href="#lst:sol_with_tunnels_era-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="lst:sol_with_tunnels_era-8"><a href="#lst:sol_with_tunnels_era-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">?tunnel</span> <span class="kw">a</span> <span class="fu">era:Tunnel</span> .</span>
+<span id="lst:sol_with_tunnels_era-9"><a href="#lst:sol_with_tunnels_era-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">?tunnel</span> <span class="fu">era:netElement</span> <span class="va">?ne</span> .</span>
+<span id="lst:sol_with_tunnels_era-10"><a href="#lst:sol_with_tunnels_era-10" aria-hidden="true" tabindex="-1"></a>  <span class="va">?tunnel</span> <span class="fu">rdfs:label</span> <span class="va">?tunnel_name</span> .</span>
+<span id="lst:sol_with_tunnels_era-11"><a href="#lst:sol_with_tunnels_era-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">?ne</span> <span class="fu">era:hasImplementation</span> <span class="va">?track_uri</span> .</span>
+<span id="lst:sol_with_tunnels_era-12"><a href="#lst:sol_with_tunnels_era-12" aria-hidden="true" tabindex="-1"></a>  <span class="va">?track</span> <span class="fu">era:canonicalURI</span> <span class="va">?track_uri</span> .</span>
+<span id="lst:sol_with_tunnels_era-13"><a href="#lst:sol_with_tunnels_era-13" aria-hidden="true" tabindex="-1"></a>  <span class="va">?sol</span> <span class="fu">era:track</span> <span class="va">?track</span> .</span>
+<span id="lst:sol_with_tunnels_era-14"><a href="#lst:sol_with_tunnels_era-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>In the <abbr class="caps" title="OpenStreetMap">OSM</abbr> variant we use the previously derived information <code>nextStopPosition</code>. A tunnel is found for a set of neighbouring nodes, if there is a OSMWay with the tag <code>tunnel="yes"</code> between the nodes. In contrast to the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG variant this query finds also tunnels within operational points. Due to the meso scope of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG these tunnels are not represented in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG.</p>
-<figure id="lst:sol_with_tunnels_osm" class="listing" style="text-align:left">
-<figcaption>Listing 5: Section of lines with tunnels</figcaption>
-<pre class="sparql" data-language="SPARQL"><code>SELECT ?osm_id1 ?osm_id2 ?tunnel WHERE {
-  BIND (&lt;https://www.openstreetmap.org/relation/1658658&gt; AS ?rel)
-  ?osm_id1 ex:nextStopPosition ?osm_id2 .
-  
-  ?rel osmrel:member ?mrelway1 .
-  ?mrelway1 osmrel:member_id ?osm_way1 .
-  ?mrelway1 osmrel:member_pos ?way1_pos .
-  ?osm_way1 osmway:member ?mway1 .
-  ?mway1 osmway:member_id ?osm_id1 .
-  
-  ?rel osmrel:member ?mrelway2 .
-  ?mrelway2 osmrel:member_id ?osm_way2 .
-  ?mrelway2 osmrel:member_pos ?way2_pos .
-  ?osm_way2 osmway:member ?mway2 .
-  ?mway2 osmway:member_id ?osm_id2 .
-  {
-    SELECT ?tunnel ?tunnel_name ?tunnel_pos {
-      BIND (&lt;https://www.openstreetmap.org/relation/1658658&gt; AS ?rel)
-      ?rel osmrel:member ?mtunnel .
-      ?mtunnel osmrel:member_id ?tunnel .
-      ?mtunnel osmrel:member_pos ?tunnel_pos .
-      ?tunnel a osm:way .
-      ?tunnel osmkey:tunnel &quot;yes&quot; .
-    }
-  }
-  FILTER (?tunnel_pos &gt; ?way1_pos)
-  FILTER (?tunnel_pos &lt; ?way2_pos)
-}</code></pre>
-</figure>
+<div class="sourceCode" id="lst:sol_with_tunnels_osm" data-language="SPARQL" data-caption="Section of lines with tunnels" data-label="lst:sol_with_tunnels_osm"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:sol_with_tunnels_osm-1"><a href="#lst:sol_with_tunnels_osm-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="va">?osm_id1</span> <span class="va">?osm_id2</span> <span class="va">?tunnel</span> <span class="kw">WHERE</span> {</span>
+<span id="lst:sol_with_tunnels_osm-2"><a href="#lst:sol_with_tunnels_osm-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">BIND</span> (<span class="dt">&lt;https://www.openstreetmap.org/relation/1658658&gt;</span> <span class="kw">AS</span> <span class="va">?rel</span>)</span>
+<span id="lst:sol_with_tunnels_osm-3"><a href="#lst:sol_with_tunnels_osm-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_id1</span> <span class="fu">ex:nextStopPosition</span> <span class="va">?osm_id2</span> .</span>
+<span id="lst:sol_with_tunnels_osm-4"><a href="#lst:sol_with_tunnels_osm-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="lst:sol_with_tunnels_osm-5"><a href="#lst:sol_with_tunnels_osm-5" aria-hidden="true" tabindex="-1"></a>  <span class="va">?rel</span> <span class="fu">osmrel:member</span> <span class="va">?mrelway1</span> .</span>
+<span id="lst:sol_with_tunnels_osm-6"><a href="#lst:sol_with_tunnels_osm-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">?mrelway1</span> <span class="fu">osmrel:member_id</span> <span class="va">?osm_way1</span> .</span>
+<span id="lst:sol_with_tunnels_osm-7"><a href="#lst:sol_with_tunnels_osm-7" aria-hidden="true" tabindex="-1"></a>  <span class="va">?mrelway1</span> <span class="fu">osmrel:member_pos</span> <span class="va">?way1_pos</span> .</span>
+<span id="lst:sol_with_tunnels_osm-8"><a href="#lst:sol_with_tunnels_osm-8" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_way1</span> <span class="fu">osmway:member</span> <span class="va">?mway1</span> .</span>
+<span id="lst:sol_with_tunnels_osm-9"><a href="#lst:sol_with_tunnels_osm-9" aria-hidden="true" tabindex="-1"></a>  <span class="va">?mway1</span> <span class="fu">osmway:member_id</span> <span class="va">?osm_id1</span> .</span>
+<span id="lst:sol_with_tunnels_osm-10"><a href="#lst:sol_with_tunnels_osm-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="lst:sol_with_tunnels_osm-11"><a href="#lst:sol_with_tunnels_osm-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">?rel</span> <span class="fu">osmrel:member</span> <span class="va">?mrelway2</span> .</span>
+<span id="lst:sol_with_tunnels_osm-12"><a href="#lst:sol_with_tunnels_osm-12" aria-hidden="true" tabindex="-1"></a>  <span class="va">?mrelway2</span> <span class="fu">osmrel:member_id</span> <span class="va">?osm_way2</span> .</span>
+<span id="lst:sol_with_tunnels_osm-13"><a href="#lst:sol_with_tunnels_osm-13" aria-hidden="true" tabindex="-1"></a>  <span class="va">?mrelway2</span> <span class="fu">osmrel:member_pos</span> <span class="va">?way2_pos</span> .</span>
+<span id="lst:sol_with_tunnels_osm-14"><a href="#lst:sol_with_tunnels_osm-14" aria-hidden="true" tabindex="-1"></a>  <span class="va">?osm_way2</span> <span class="fu">osmway:member</span> <span class="va">?mway2</span> .</span>
+<span id="lst:sol_with_tunnels_osm-15"><a href="#lst:sol_with_tunnels_osm-15" aria-hidden="true" tabindex="-1"></a>  <span class="va">?mway2</span> <span class="fu">osmway:member_id</span> <span class="va">?osm_id2</span> .</span>
+<span id="lst:sol_with_tunnels_osm-16"><a href="#lst:sol_with_tunnels_osm-16" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="lst:sol_with_tunnels_osm-17"><a href="#lst:sol_with_tunnels_osm-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="va">?tunnel</span> <span class="va">?tunnel_name</span> <span class="va">?tunnel_pos</span> {</span>
+<span id="lst:sol_with_tunnels_osm-18"><a href="#lst:sol_with_tunnels_osm-18" aria-hidden="true" tabindex="-1"></a>      <span class="kw">BIND</span> (<span class="dt">&lt;https://www.openstreetmap.org/relation/1658658&gt;</span> <span class="kw">AS</span> <span class="va">?rel</span>)</span>
+<span id="lst:sol_with_tunnels_osm-19"><a href="#lst:sol_with_tunnels_osm-19" aria-hidden="true" tabindex="-1"></a>      <span class="va">?rel</span> <span class="fu">osmrel:member</span> <span class="va">?mtunnel</span> .</span>
+<span id="lst:sol_with_tunnels_osm-20"><a href="#lst:sol_with_tunnels_osm-20" aria-hidden="true" tabindex="-1"></a>      <span class="va">?mtunnel</span> <span class="fu">osmrel:member_id</span> <span class="va">?tunnel</span> .</span>
+<span id="lst:sol_with_tunnels_osm-21"><a href="#lst:sol_with_tunnels_osm-21" aria-hidden="true" tabindex="-1"></a>      <span class="va">?mtunnel</span> <span class="fu">osmrel:member_pos</span> <span class="va">?tunnel_pos</span> .</span>
+<span id="lst:sol_with_tunnels_osm-22"><a href="#lst:sol_with_tunnels_osm-22" aria-hidden="true" tabindex="-1"></a>      <span class="va">?tunnel</span> <span class="kw">a</span> <span class="fu">osm:way</span> .</span>
+<span id="lst:sol_with_tunnels_osm-23"><a href="#lst:sol_with_tunnels_osm-23" aria-hidden="true" tabindex="-1"></a>      <span class="va">?tunnel</span> <span class="fu">osmkey:tunnel</span> <span class="st">&quot;yes&quot;</span> .</span>
+<span id="lst:sol_with_tunnels_osm-24"><a href="#lst:sol_with_tunnels_osm-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="lst:sol_with_tunnels_osm-25"><a href="#lst:sol_with_tunnels_osm-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="lst:sol_with_tunnels_osm-26"><a href="#lst:sol_with_tunnels_osm-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FILTER</span> (<span class="va">?tunnel_pos</span> <span class="op">&gt;</span> <span class="va">?way1_pos</span>)</span>
+<span id="lst:sol_with_tunnels_osm-27"><a href="#lst:sol_with_tunnels_osm-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FILTER</span> (<span class="va">?tunnel_pos</span> <span class="op">&lt;</span> <span class="va">?way2_pos</span>)</span>
+<span id="lst:sol_with_tunnels_osm-28"><a href="#lst:sol_with_tunnels_osm-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>The label of the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> tunnels and the tunnel:name tag of <abbr class="caps" title="OpenStreetMap">OSM</abbr> are similar but the seldom match exactly. So to align the tunnels it is safer to use geo coordinates or topological information e.g. the <em>i</em>th tunnel after operational point X.</p>
 </section>
 <section id="railway-switches" class="level4" data-number="5.3.2">
 <h4 data-number="5.3.2"><span class="section-number">5.3.2</span> Railway switches</h4>
 <p>Railway switches are one of the most important elements of the railway network as they define the topology. They are not contained in the <abbr class="caps" title="European Union Agency for Railways">ERA</abbr> KG so for this example we assume to have the information as micro-level instance data of a RailML ontology or a similar ontology that uses the <abbr class="caps" title="RailTopoModel">RTM</abbr> for the topological information. In RailML railway switches are explicitly modelled as the infrastructure element <code>SwitchIS</code><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. RailML switches have additional properties that link the branches (Left, Right) of the switch to the corresponding <code>NetRelations</code> on the <abbr class="caps" title="RailTopoModel">RTM</abbr> level.</p>
-<p>In <abbr class="caps" title="OpenStreetMap">OSM</abbr>, detecting switches is more challenging. The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query shown in Listing <a href="#lst:switches_with_osm_ref" data-reference-type="ref">6</a> demonstrates how to retrieve all OSMNodes within a railway area that may correspond to infrastructure elements. Switches in <abbr class="caps" title="OpenStreetMap">OSM</abbr> are optionally tagged with <code>railway=switch</code> and may include a corresponding <code>ref</code> tag. Notably, OSMNodes representing switches are typically part of either two or three <abbr class="caps" title="OpenStreetMap">OSM</abbr> ways tagged with <code>railway=rail</code>, depending on whether they are located at the start/end of a rail segment or between segments. This structural information can be leveraged to identify switches in <abbr class="caps" title="OpenStreetMap">OSM</abbr>, even when explicit switch tags are absent.</p>
-<figure id="lst:switches_with_osm_ref" class="listing" style="text-align:left">
-<figcaption>Listing 6: Switches with osm ref</figcaption>
-<pre class="sparql" data-language="SPARQL"><code>SELECT DISTINCT ?osm_node ?way_count ?function ?ref WHERE {
-  {
-    SELECT ?osm_node (COUNT(?way) AS ?way_count) WHERE {
-      ?feldkirch osmkey:name &quot;Feldkirch&quot; .
-      ?feldkirch osmkey:railway &quot;station&quot; .
-      ?feldkirch osmkey:railway:ref &quot;Fk&quot; .
-      ?railway_area ogc:sfContains ?feldkirch .
-      ?railway_area osmkey:landuse &quot;railway&quot; .
-      ?railway_area ogc:sfContains ?osm_node .
-      ?way osmway:member ?mway .
-      ?way osmkey:railway &quot;rail&quot; .
-      ?mway osmway:member_id ?osm_node .
-    }
-    GROUP BY ?osm_node
-  }
-  OPTIONAL {
-    ?osm_node osmkey:railway ?function .
-  }
-  OPTIONAL {
-    ?osm_node osmkey:ref ?ref .
-  }
-}</code></pre>
-</figure>
-<p>Aligning the identified <abbr class="caps" title="OpenStreetMap">OSM</abbr> switches with the <abbr class="caps" title="RailTopoModel">RTM</abbr>-based switches presents a greater challenge. To establish a one-to-one alignment, it is essential to ensure that the same context is used in both <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr>. In <abbr class="caps" title="RailTopoModel">RTM</abbr>, infrastructure elements are explicitly linked to their corresponding operational points. In contrast, <abbr class="caps" title="OpenStreetMap">OSM</abbr> does not provide this information directly; it must be inferred—such as in the query shown in Listing <a href="#lst:switches_with_osm_ref" data-reference-type="ref">6</a>–by identifying all nodes contained within a relation tagged with <code>landuse="railway"</code>.</p>
+<p>In <abbr class="caps" title="OpenStreetMap">OSM</abbr>, detecting switches is more challenging. The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query shown in Listing <a href="#lst:switches_with_osm_ref" data-reference-type="ref">lst:switches_with_osm_ref</a> demonstrates how to retrieve all OSMNodes within a railway area that may correspond to infrastructure elements. Switches in <abbr class="caps" title="OpenStreetMap">OSM</abbr> are optionally tagged with <code>railway=switch</code> and may include a corresponding <code>ref</code> tag. Notably, OSMNodes representing switches are typically part of either two or three <abbr class="caps" title="OpenStreetMap">OSM</abbr> ways tagged with <code>railway=rail</code>, depending on whether they are located at the start/end of a rail segment or between segments. This structural information can be leveraged to identify switches in <abbr class="caps" title="OpenStreetMap">OSM</abbr>, even when explicit switch tags are absent.</p>
+<div class="sourceCode" id="lst:switches_with_osm_ref" data-language="SPARQL" data-caption="Switches with osm ref" data-label="lst:switches_with_osm_ref"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:switches_with_osm_ref-1"><a href="#lst:switches_with_osm_ref-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> <span class="va">?osm_node</span> <span class="va">?way_count</span> <span class="va">?function</span> <span class="va">?ref</span> <span class="kw">WHERE</span> {</span>
+<span id="lst:switches_with_osm_ref-2"><a href="#lst:switches_with_osm_ref-2" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="lst:switches_with_osm_ref-3"><a href="#lst:switches_with_osm_ref-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> <span class="va">?osm_node</span> (<span class="bu">COUNT</span>(<span class="va">?way</span>) <span class="kw">AS</span> <span class="va">?way_count</span>) <span class="kw">WHERE</span> {</span>
+<span id="lst:switches_with_osm_ref-4"><a href="#lst:switches_with_osm_ref-4" aria-hidden="true" tabindex="-1"></a>      <span class="va">?feldkirch</span> <span class="fu">osmkey:name</span> <span class="st">&quot;Feldkirch&quot;</span> .</span>
+<span id="lst:switches_with_osm_ref-5"><a href="#lst:switches_with_osm_ref-5" aria-hidden="true" tabindex="-1"></a>      <span class="va">?feldkirch</span> <span class="fu">osmkey:railway</span> <span class="st">&quot;station&quot;</span> .</span>
+<span id="lst:switches_with_osm_ref-6"><a href="#lst:switches_with_osm_ref-6" aria-hidden="true" tabindex="-1"></a>      <span class="va">?feldkirch</span> <span class="fu">osmkey:railway:ref</span> <span class="st">&quot;Fk&quot;</span> .</span>
+<span id="lst:switches_with_osm_ref-7"><a href="#lst:switches_with_osm_ref-7" aria-hidden="true" tabindex="-1"></a>      <span class="va">?railway_area</span> <span class="fu">ogc:sfContains</span> <span class="va">?feldkirch</span> .</span>
+<span id="lst:switches_with_osm_ref-8"><a href="#lst:switches_with_osm_ref-8" aria-hidden="true" tabindex="-1"></a>      <span class="va">?railway_area</span> <span class="fu">osmkey:landuse</span> <span class="st">&quot;railway&quot;</span> .</span>
+<span id="lst:switches_with_osm_ref-9"><a href="#lst:switches_with_osm_ref-9" aria-hidden="true" tabindex="-1"></a>      <span class="va">?railway_area</span> <span class="fu">ogc:sfContains</span> <span class="va">?osm_node</span> .</span>
+<span id="lst:switches_with_osm_ref-10"><a href="#lst:switches_with_osm_ref-10" aria-hidden="true" tabindex="-1"></a>      <span class="va">?way</span> <span class="fu">osmway:member</span> <span class="va">?mway</span> .</span>
+<span id="lst:switches_with_osm_ref-11"><a href="#lst:switches_with_osm_ref-11" aria-hidden="true" tabindex="-1"></a>      <span class="va">?way</span> <span class="fu">osmkey:railway</span> <span class="st">&quot;rail&quot;</span> .</span>
+<span id="lst:switches_with_osm_ref-12"><a href="#lst:switches_with_osm_ref-12" aria-hidden="true" tabindex="-1"></a>      <span class="va">?mway</span> <span class="fu">osmway:member_id</span> <span class="va">?osm_node</span> .</span>
+<span id="lst:switches_with_osm_ref-13"><a href="#lst:switches_with_osm_ref-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="lst:switches_with_osm_ref-14"><a href="#lst:switches_with_osm_ref-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="va">?osm_node</span></span>
+<span id="lst:switches_with_osm_ref-15"><a href="#lst:switches_with_osm_ref-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="lst:switches_with_osm_ref-16"><a href="#lst:switches_with_osm_ref-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">OPTIONAL</span> {</span>
+<span id="lst:switches_with_osm_ref-17"><a href="#lst:switches_with_osm_ref-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">?osm_node</span> <span class="fu">osmkey:railway</span> <span class="va">?function</span> .</span>
+<span id="lst:switches_with_osm_ref-18"><a href="#lst:switches_with_osm_ref-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="lst:switches_with_osm_ref-19"><a href="#lst:switches_with_osm_ref-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">OPTIONAL</span> {</span>
+<span id="lst:switches_with_osm_ref-20"><a href="#lst:switches_with_osm_ref-20" aria-hidden="true" tabindex="-1"></a>    <span class="va">?osm_node</span> <span class="fu">osmkey:ref</span> <span class="va">?ref</span> .</span>
+<span id="lst:switches_with_osm_ref-21"><a href="#lst:switches_with_osm_ref-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="lst:switches_with_osm_ref-22"><a href="#lst:switches_with_osm_ref-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Aligning the identified <abbr class="caps" title="OpenStreetMap">OSM</abbr> switches with the <abbr class="caps" title="RailTopoModel">RTM</abbr>-based switches presents a greater challenge. To establish a one-to-one alignment, it is essential to ensure that the same context is used in both <abbr class="caps" title="RailTopoModel">RTM</abbr> and <abbr class="caps" title="OpenStreetMap">OSM</abbr>. In <abbr class="caps" title="RailTopoModel">RTM</abbr>, infrastructure elements are explicitly linked to their corresponding operational points. In contrast, <abbr class="caps" title="OpenStreetMap">OSM</abbr> does not provide this information directly; it must be inferred—such as in the query shown in Listing <a href="#lst:switches_with_osm_ref" data-reference-type="ref">lst:switches_with_osm_ref</a>–by identifying all nodes contained within a relation tagged with <code>landuse="railway"</code>.</p>
 </section>
 </section>
 </section>

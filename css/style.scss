@@ -619,6 +619,50 @@ figure img {
     text-align: center;
 }
 
+/* ---------------------------------------------------------------
+   Pandoc syntax highlighting — pygments style
+   Token class → defStyleNum mapping (KDE XML → pandoc CSS):
+     dsImport     → .im   @prefix / @base / PREFIX / BASE
+     dsFunction   → .fu   prefixed names  ex:foo  :local
+     dsDataType   → .dt   IRI references  <...>
+     dsKeyword    → .kw   a  true  false
+     dsString     → .st   string literals
+     dsSpecialChar→ .sc   string/IRI escapes  ^^
+     dsAttribute  → .at   language tags  @en
+     dsFloat      → .fl   float/double literals
+     dsDecVal     → .dv   integer literals
+     dsVariable   → .va   blank nodes  _:x  [  ]
+     dsComment    → .co   comments  # ...
+   --------------------------------------------------------------- */
+div.sourceCode {
+    background: #f9f6f1;
+    border-left: 3px solid #ddd;
+    padding: ($baseline * 0.5) 1rem;
+    margin: $baseline 0;
+    overflow-x: auto;
+}
+div.sourceCode pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+
+/* light-mode token colours (standard pandoc pygments palette) */
+code span.im { color: #008000; font-weight: bold; } /* Directive    */
+code span.fu { color: #06287e;                    } /* PrefixedName */
+code span.dt { color: #902000;                    } /* IRI          */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword      */
+code span.st { color: #4070a0;                    } /* String       */
+code span.sc { color: #4070a0;                    } /* StrEscape/^^ */
+code span.at { color: #7d9029;                    } /* LangTag      */
+code span.fl { color: #40a070;                    } /* Float        */
+code span.dv { color: #40a070;                    } /* Integer      */
+code span.va { color: #19177c;                    } /* BlankNode    */
+code span.co { color: #60a0b0; font-style: italic;} /* Comment      */
+code span.bu { color: #008000;                    } /* Builtin      */
+code span.op { color: #666666;                    } /* Operator     */
+
 figure > figcaption {
     color: #666;
     font-size: 0.9rem;
@@ -794,6 +838,26 @@ details[open] > summary::before {
     hr { border-color: $dark-rule; }
 
     pre, figure, code, textarea { color: $dark-ink-soft; }
+
+    div.sourceCode {
+        background: $dark-bg-soft;
+        border-left-color: $dark-rule;
+    }
+
+    /* dark-mode token colours — warm-shifted from the light values */
+    code span.im { color: #88d888; font-weight: bold; } /* Directive    */
+    code span.fu { color: #88aae0;                    } /* PrefixedName */
+    code span.dt { color: #f0905a;                    } /* IRI          */
+    code span.kw { color: #a8e888; font-weight: bold; } /* Keyword      */
+    code span.st { color: #88b4d8;                    } /* String       */
+    code span.sc { color: #88b4d8;                    } /* StrEscape/^^ */
+    code span.at { color: #c8e060;                    } /* LangTag      */
+    code span.fl { color: #78d8a8;                    } /* Float        */
+    code span.dv { color: #78d8a8;                    } /* Integer      */
+    code span.va { color: #b096e0;                    } /* BlankNode    */
+    code span.co { color: #8a9eae; font-style: italic;} /* Comment      */
+    code span.bu { color: #88d888;                    } /* Builtin      */
+    code span.op { color: #9a9080;                    } /* Operator     */
 
     .authors { color: $dark-ink-soft; }
 

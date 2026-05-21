@@ -130,34 +130,31 @@ toc: |
 </section>
 <section id="auditability-features-for-industrial-compliance" class="level3" data-number="4.3">
 <h3 data-number="4.3"><span class="section-number">4.3</span> Auditability Features for Industrial Compliance</h3>
-<figure id="lst:process-metric-assessment" class="listing" style="text-align:left">
-<figcaption>Listing 1: Audit trail example</figcaption>
-<pre class="TTL" data-language="TTL"><code># Process execution instance
-ex:process-123 a dga:ProcessExecution ;
-  dga:hasParticipant ex:material-123 .
-
-# Observable property for this process
-ex:observable-123 a dga:ObservableProperty ;
-  dga:observedProperty &lt;https://w3id.org/dgassist/signal/energy&gt; .
-
-# Metric assessment based on the observable property
-ex:metric-123 a dga:MetricAssessment ;
-  dga:calculatedFor ex:process-123 ;
-  dga:basedOn ex:observable-123 ;
-  dga:value &quot;4.82&quot;^^xsd:decimal .
-
-# Failure occurrence instance
-ex:failure-456 a dga:FailureOccurrence ;
-    dga:suggestedBy ex:metric-456 ;
-    dga:appearedOn ex:material-123 .
-
-# Countermeasure execution linked to failure
-ex:countermeasure-789 a dga:CountermeasureExecution ;
-    dga:mitigated ex:failure-456 ;
-    dga:hasFirstStep ex:step-1 .</code></pre>
-</figure>
+<div class="sourceCode" id="lst:process-metric-assessment" data-language="TTL" data-caption="Audit trail example" data-label="lst:process-metric-assessment"><pre class="sourceCode TTL"><code class="sourceCode ttl"><span id="lst:process-metric-assessment-1"><a href="#lst:process-metric-assessment-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Process execution instance</span></span>
+<span id="lst:process-metric-assessment-2"><a href="#lst:process-metric-assessment-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:process-123</span> <span class="kw">a</span> <span class="fu">dga:ProcessExecution</span> ;</span>
+<span id="lst:process-metric-assessment-3"><a href="#lst:process-metric-assessment-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dga:hasParticipant</span> <span class="fu">ex:material-123</span> .</span>
+<span id="lst:process-metric-assessment-4"><a href="#lst:process-metric-assessment-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:process-metric-assessment-5"><a href="#lst:process-metric-assessment-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Observable property for this process</span></span>
+<span id="lst:process-metric-assessment-6"><a href="#lst:process-metric-assessment-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:observable-123</span> <span class="kw">a</span> <span class="fu">dga:ObservableProperty</span> ;</span>
+<span id="lst:process-metric-assessment-7"><a href="#lst:process-metric-assessment-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dga:observedProperty</span> <span class="dt">&lt;https://w3id.org/dgassist/signal/energy&gt;</span> .</span>
+<span id="lst:process-metric-assessment-8"><a href="#lst:process-metric-assessment-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:process-metric-assessment-9"><a href="#lst:process-metric-assessment-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Metric assessment based on the observable property</span></span>
+<span id="lst:process-metric-assessment-10"><a href="#lst:process-metric-assessment-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:metric-123</span> <span class="kw">a</span> <span class="fu">dga:MetricAssessment</span> ;</span>
+<span id="lst:process-metric-assessment-11"><a href="#lst:process-metric-assessment-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dga:calculatedFor</span> <span class="fu">ex:process-123</span> ;</span>
+<span id="lst:process-metric-assessment-12"><a href="#lst:process-metric-assessment-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dga:basedOn</span> <span class="fu">ex:observable-123</span> ;</span>
+<span id="lst:process-metric-assessment-13"><a href="#lst:process-metric-assessment-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dga:value</span> <span class="st">&quot;4.82&quot;</span><span class="sc">^^</span><span class="fu">xsd:decimal</span> .</span>
+<span id="lst:process-metric-assessment-14"><a href="#lst:process-metric-assessment-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:process-metric-assessment-15"><a href="#lst:process-metric-assessment-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Failure occurrence instance</span></span>
+<span id="lst:process-metric-assessment-16"><a href="#lst:process-metric-assessment-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:failure-456</span> <span class="kw">a</span> <span class="fu">dga:FailureOccurrence</span> ;</span>
+<span id="lst:process-metric-assessment-17"><a href="#lst:process-metric-assessment-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dga:suggestedBy</span> <span class="fu">ex:metric-456</span> ;</span>
+<span id="lst:process-metric-assessment-18"><a href="#lst:process-metric-assessment-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dga:appearedOn</span> <span class="fu">ex:material-123</span> .</span>
+<span id="lst:process-metric-assessment-19"><a href="#lst:process-metric-assessment-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:process-metric-assessment-20"><a href="#lst:process-metric-assessment-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Countermeasure execution linked to failure</span></span>
+<span id="lst:process-metric-assessment-21"><a href="#lst:process-metric-assessment-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:countermeasure-789</span> <span class="kw">a</span> <span class="fu">dga:CountermeasureExecution</span> ;</span>
+<span id="lst:process-metric-assessment-22"><a href="#lst:process-metric-assessment-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dga:mitigated</span> <span class="fu">ex:failure-456</span> ;</span>
+<span id="lst:process-metric-assessment-23"><a href="#lst:process-metric-assessment-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dga:hasFirstStep</span> <span class="fu">ex:step-1</span> .</span></code></pre></div>
 <p>Instance data can be used to audit the die-casting process by leveraging the semantic model that distinguishes between specified process elements and their actual executions (cf. Figure <a href="#fig:semantic-model" data-reference-type="ref" data-reference="fig:semantic-model">2</a>).</p>
-<p>Instance data captured during production provides quantifiable metrics for auditing through the <code>MetricAssessment</code> concept. Specifically, process performance can be evaluated by analyzing <code>MetricAssessment</code> instances related to <code>ProcessExecution</code> entities. Signal analysis is enabled by linking <code>Signal</code> measurements with production outcomes through <code>ObservableProperty</code> instances. Furthermore, quality tracking is achieved by monitoring <code>FailureOccurrence</code> instances and their relationship to <code>MetricAssessment</code> values. Listing <a href="#lst:process-metric-assessment" data-reference-type="ref">1</a> demonstrates how metric assessments can be represented in a concrete porosity defect scenario.</p>
+<p>Instance data captured during production provides quantifiable metrics for auditing through the <code>MetricAssessment</code> concept. Specifically, process performance can be evaluated by analyzing <code>MetricAssessment</code> instances related to <code>ProcessExecution</code> entities. Signal analysis is enabled by linking <code>Signal</code> measurements with production outcomes through <code>ObservableProperty</code> instances. Furthermore, quality tracking is achieved by monitoring <code>FailureOccurrence</code> instances and their relationship to <code>MetricAssessment</code> values. Listing <a href="#lst:process-metric-assessment" data-reference-type="ref">lst:process-metric-assessment</a> demonstrates how metric assessments can be represented in a concrete porosity defect scenario.</p>
 <p>The model supports comprehensive failure analysis by explicitly linking <code>FailureOccurrence</code> instances to the underlying <code>MetricAssessment</code> data that suggested them, enabling systematic identification of failures. Root cause analysis is facilitated through the use of <code>IshikawaItem</code> concepts, which categorise and analyse failures within the semantic model. Furthermore, <code>CountermeasureExecution</code> instances indicate applied countermeasures for specific <code>FailureOccurrence</code> events, allowing for detailed tracking and evaluation of countermeasures over time.</p>
 <h5 class="para-heading">Auditability Mechanisms Built on Explainability.</h5>
 <p>Our explainability framework enables explanations based on user roles and expertise levels with the manufacturing knowledge graph. This adaptation ensures that explanations are both accessible and actionable for different stakeholders: <em>Operator-oriented explanations</em> focus on actionable insights and immediate corrective measures, highlighting machine settings that can be directly adjusted and their expected effects on quality outcomes. <em>Engineering-oriented explanations</em> provide deeper technical detail, enabling a wide range of standardised and ad-hoc analyses, including statistical analysis or historical patterns.</p>
