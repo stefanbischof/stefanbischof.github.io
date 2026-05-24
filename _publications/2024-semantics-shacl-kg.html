@@ -1,0 +1,152 @@
+---
+id: Bischofetal2024
+title: "Towards SHACL-based Knowledge Graph Transformation of Visual Domain Knowledge"
+authors:
+  - Stefan Bischof
+  - Erwin Filtz
+  - Josiane Xavier Parreira
+  - Simon Steyskal
+  - Michael Baumgart
+  - David Gruber
+  - Maximilian Liebetreu
+  - Florian Rötzer
+  - Stephan Strommer
+year: 2024
+venue: Posters and Demos Track of SEMANTiCS
+category: poster
+links:
+  - label: CEUR
+    url: https://ceur-ws.org/Vol-3759/paper18.pdf
+abstract: |
+  Effective knowledge representation plays a pivotal role in harnessing the full potential of domain-specific information. Through tools like Infinity Maps, domain knowledge can be easily captured in a visual manner. However, translating these visually intuitive representations to formal, machine-processable formats often necessitates expert knowledge, thereby creating a significant barrier between domain experts and knowledge engineers. While domain experts possess deep understanding of their respective domains, they often lack the formalisation skills required to transform this knowledge into machine-readable formats. Conversely, knowledge engineers can design and implement sophisticated knowledge graphs, but may not have access to the domain-specific expertise necessary for effective knowledge representation. To address this challenge, we propose a novel approach that leverages SHACL (Shape Constraint Language) rules to transform visual domain knowledge expressed as Infinity Maps into knowledge graphs. Our method enables domain experts to define their knowledge structures using familiar Infinity Map representations, which are then transformed into standardised knowledge graphs compliant with the SHACL standard.
+toc: |
+  <nav class="toc" aria-label="Article contents">
+  <p class="toc-heading">Table of Contents</p>
+  <ol>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#introduction-and-motivation"><span class="section-number">1</span>Introduction and Motivation</a></li>
+  <li><a href="#from-domain-knowledge-to-knowledge-graph"><span class="section-number">2</span>From Domain Knowledge to Knowledge Graph</a></li>
+  <li><a href="#sec:SHACL"><span class="section-number">3</span>SHACL-based Transformation Framework</a></li>
+  <li><a href="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#references">References</a></li>
+  <li><a href="#footnotes">Notes</a></li>
+  </ol>
+  </nav>
+---
+
+<section id="introduction-and-motivation" class="level2" data-number="1">
+<h2 data-number="1"><span class="section-number">1</span> Introduction and Motivation</h2>
+<p>The setup and optimisation of industrial production processes, such as, for example, high-pressure die casting, heavily rely on the expert knowledge and experience of a few individuals within a company. Consequently, domain knowledge often remains personal property rather than a shared company asset, creating a dependency on specific personnel. Despite companies’ quality management standards, this valuable knowledge is frequently undocumented and undigitised, making it inaccessible to the broader workforce. This lack of effective knowledge management and transfer hinders resource-efficient, green production of advanced products, such as complex die-casting parts, especially in times of skilled labour shortages. It has therefore become a pressing issue for industries to find a low-threshold, minimal-effort way for experts to digitise and share their knowledge, making it machine-readable, accessible and usable also for non-domain experts. A toolchain that achieves this goal should include a highly accessible tool for experts to document their domain knowledge. Examples of such tools are <a href="#https://www.conceptboard.com/">Conceptboard</a> <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, <a href="#https://www.microsoft.com/en-us/microsoft-365/microsoft-whiteboard/digital-whiteboard-app">Microsoft Whiteboard</a> <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, and <a href="#https://infinitymaps.io/">Infinity Maps</a> <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<p>In the present paper, we will use Infinity Maps due to their rich <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> exporting capabilities. Additionally, a technology and/or database that is able to store knowledge in a structured form is of utter importance. In our case, the output of the toolchain is a knowledge graph (<abbr class="caps" title="Knowledge Graph">KG</abbr>) in <abbr class="caps" title="Resource Description Framework">RDF</abbr> format. The envisaged toolchain is outlined in Fig. <a href="#fig:transform-domain-to-kg" data-reference-type="ref" data-reference="fig:transform-domain-to-kg">1</a>.</p>
+<h5 class="para-heading">Contribution..</h5>
+<p>We design a transformation pipeline from Infinity Maps to a structured <abbr class="caps" title="Resource Description Framework">RDF</abbr> graph, based on the <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> standard<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Features include:</p>
+<div class="enumerate*">
+<p>The authors of an Infinity Map are free to dump a mixture of structured and unstructured knowledge and data into each Map.</p>
+<p>Authors do not require any technical understanding of the <abbr class="caps" title="Knowledge Graph">KG</abbr> that will be produced.</p>
+<p>By employing <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>, authors of an Infinity Map receive automated assistance in structuring the domain knowledge for computational processing.</p>
+<p>Using <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>, the generated <abbr class="caps" title="Knowledge Graph">KG</abbr> is guaranteed to conform to the requirements of any ontologies applied to the graph.</p>
+</div>
+</section>
+<section id="from-domain-knowledge-to-knowledge-graph" class="level2" data-number="2">
+<h2 data-number="2"><span class="section-number">2</span> From Domain Knowledge to Knowledge Graph</h2>
+<h5 class="para-heading">Step 1: Visual modelling by schema..</h5>
+<p>The first step in our pipeline is to organise and gain an overview of all available expert and domain knowledge, which comes in various formats like PNG, PDF, CSV files, emails, and interviews. Infinity Maps excels in visualising and organising this unstructured information. It allows the creation and connection of cards into tree-like hierarchies, a feature we use extensively to efficiently manage and structure our knowledge base. Once an overview on all available knowledge sources has been attained, Infinity Maps can also be used to combine and organise what information was learned from these sources. To this end, we designed a loose schema based on the gathered information and visually modelled this domain knowledge accordingly.</p>
+<div class="remark">
+<p><strong>Remark 1</strong>.  <em>The availability of visual tools for structured <abbr class="caps" title="Knowledge Graph">KG</abbr> creation is limited. This is unsurprising: <abbr class="caps" title="Knowledge Graph">KG</abbr>s are a comparatively novel concept, and while they have had a lot of success in recent years, most success stories originate from fields and applications that create such <abbr class="caps" title="Knowledge Graph">KG</abbr>s automatically from other forms of structured databases, with the main challenge being leveraging the information contained within (triple prediction for recommender systems, etc.) <span class="citation" data-cites="2022-acm-kg-review 2021-ieee-liu-recommender-review 2019-acm-noy-companies-use-cases">[<a href="#ref-2022-acm-kg-review" role="doc-biblioref">1</a>–<a href="#ref-2019-acm-noy-companies-use-cases" role="doc-biblioref">3</a>]</span>. However, in industrial production domains, the degree of digitisation is often surprisingly low, with knowledge being available in hand-written form, separate documents, literature, and the minds of experts and operators drawing from said literature and their own experience. Structuring this knowledge in any form, but particularly in an explainable way and one that can be easily and efficiently queried, is a vital step towards leveraging all available knowledge to optimise processes and products.</em></p>
+</div>
+<h5 class="para-heading">Step 2: Visual modelling by ontology..</h5>
+<p>In the later stages of visual modelling, we developed an ontology for the envisaged <abbr class="caps" title="Knowledge Graph">KG</abbr>, thereby clarifying the modelling guidelines. We utilised tags and tree-like hierarchies within Infinity Maps to denote relationships between entities and label cards accordingly. These tags and hierarchical logic subsequently guides the transformation process from Infinity Maps to the <abbr class="caps" title="Knowledge Graph">KG</abbr>.</p>
+<p>A significant drawback of Infinity Maps is the absence of dynamic links between cards. Although each card has a unique <abbr class="caps" title="Uniform Resource Locator">URL</abbr> and can be referenced via hyperlinks, these links are static text and can easily break during the Map authoring process. To maintain simplicity for human readability, we opted to cross-reference tagged cards by ensuring that each combination of card label and tag remains unique throughout the entire Infinity Maps project.</p>
+<p>Due to this limitation in dynamic linking, we anticipate the appearance of duplicate entities and errors in triplets when converting from Infinity Maps to a <abbr class="caps" title="Knowledge Graph">KG</abbr>. This necessitates additional constraints and rules for a successful transformation.</p>
+<h5 class="para-heading">Step 3: Transformation by constraints..</h5>
+<p>Infinity Maps allows exporting each Map to <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> format. We transform these <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> structures to a <abbr class="caps" title="Knowledge Graph">KG</abbr> using Python code and shapes implemented in <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>. This procedure is described in much more detail in Section <a href="#sec:SHACL" data-reference-type="ref" data-reference="sec:SHACL">3</a>.</p>
+<h5 class="para-heading">Closing the loop..</h5>
+<p>From the <abbr class="caps" title="Knowledge Graph">KG</abbr>, new domain knowledge can be gained by experts. Any new knowledge can be added to the Infinity Maps and the <abbr class="caps" title="Knowledge Graph">KG</abbr> itself, thereby closing the loop. An overview of the entire pipeline is given in Fig. <a href="#fig:transform-domain-to-kg" data-reference-type="ref" data-reference="fig:transform-domain-to-kg">1</a>.</p>
+<figure id="fig:transform-domain-to-kg">
+<img src="/assets/papers/2024-semantics-shacl-kg/Knowledge_Transformation_Graph.svg" alt="Knowledge_Transformation_Graph" style="width:90.0%" />
+<figcaption>Figure 1: Transformation of domain knowledge to knowledge graph using visual modelling with Infinity Maps and <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>.</figcaption>
+</figure>
+</section>
+<section id="sec:SHACL" class="level2" data-number="3">
+<h2 data-number="3"><span class="section-number">3</span> SHACL-based Transformation Framework</h2>
+<p>The Shapes Constraint Language (<abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>), is a W3C recommendation designed for validating <abbr class="caps" title="Resource Description Framework">RDF</abbr> graphs against a set of <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> shapes, i.e. the constraints the to-be-validated <abbr class="caps" title="Resource Description Framework">RDF</abbr> graph has to adhere to. Such constraints can include (but are not limited to), e.g., checking existence of particular properties, data types, value ranges, and relationships between nodes<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. Using <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>, one can ensure that the data conforms to the expected structure and semantics, enabling reliable data integration and interoperability.</p>
+<p>Additionally, we utilise <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> Rules<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> to facilitate the transformation of raw data (i.e., the Infinity Maps <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> exports) into a structured, and semantically enriched representation that aligns with predefined ontologies and the domain understanding as provided by the domain experts.</p>
+<h5 class="para-heading">3.1 Handling Infinity Maps Data.</h5>
+<figure id="fig:im-json">
+<img src="/assets/papers/2024-semantics-shacl-kg/json_small.svg" alt="json_small" style="width:80.0%" />
+<figcaption>Figure 2: Excerpt of an Infinity Maps <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> export.</figcaption>
+</figure>
+<figure data-latex-placement="h">
+<div class="sourceCode" id="lst:sample" data-label="lst:sample" data-language="TTL" data-caption="KPI that has a Quantity as dependency."><pre class="sourceCode TTL"><code class="sourceCode ttl"><span id="lst:sample-1"><a href="#lst:sample-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:FH9d47H93gf</span> <span class="kw">a</span> <span class="fu">dg:KPI</span>, <span class="fu">im:Node</span> ;</span>
+<span id="lst:sample-2"><a href="#lst:sample-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rdfs:label</span> <span class="st">&quot;Schließkraft Err&quot;</span> ;</span>
+<span id="lst:sample-3"><a href="#lst:sample-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:child</span> <span class="fu">ex:LnrDTfHTHqF</span> ;</span>
+<span id="lst:sample-4"><a href="#lst:sample-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:id</span> <span class="st">&quot;FH9d47H93gf&quot;</span> ;</span>
+<span id="lst:sample-5"><a href="#lst:sample-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:parent</span> <span class="fu">ex:99dqJd2rjLb</span> ;</span>
+<span id="lst:sample-6"><a href="#lst:sample-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:tag</span> <span class="fu">ex:Jj3qLGjGhGp</span> ;</span>
+<span id="lst:sample-7"><a href="#lst:sample-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:title</span> <span class="st">&quot;Schließkraft Fehler&quot;</span> .</span>
+<span id="lst:sample-8"><a href="#lst:sample-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:sample-9"><a href="#lst:sample-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:LnrDTfHTHqF</span> <span class="kw">a</span> <span class="fu">im:Node</span> ;</span>
+<span id="lst:sample-10"><a href="#lst:sample-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rdfs:label</span> <span class="st">&quot;Abhängigkeiten&quot;</span> ;</span>
+<span id="lst:sample-11"><a href="#lst:sample-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:child</span> <span class="fu">ex:P2jBpjh8RjM</span>, <span class="fu">ex:Qbd7rnb</span> ;</span>
+<span id="lst:sample-12"><a href="#lst:sample-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:id</span> <span class="st">&quot;LnrDTfHTHqF&quot;</span> ;</span>
+<span id="lst:sample-13"><a href="#lst:sample-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:parent</span> <span class="fu">ex:FH9d47H93gf</span> ;</span>
+<span id="lst:sample-14"><a href="#lst:sample-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:title</span> <span class="st">&quot;Abhängigkeiten&quot;</span> .</span>
+<span id="lst:sample-15"><a href="#lst:sample-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:sample-16"><a href="#lst:sample-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:P2jBpjh8RjM</span> <span class="kw">a</span> <span class="fu">dg:Quantity</span>, <span class="fu">im:Node</span> ;</span>
+<span id="lst:sample-17"><a href="#lst:sample-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rdfs:label</span> <span class="st">&quot;Schließkraft Err (Gießen)&quot;</span> ;</span>
+<span id="lst:sample-18"><a href="#lst:sample-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:id</span> <span class="st">&quot;P2jBpjh8RjM&quot;</span> ;</span>
+<span id="lst:sample-19"><a href="#lst:sample-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:parent</span> <span class="fu">ex:LnrDTfHTHqF</span> ;</span>
+<span id="lst:sample-20"><a href="#lst:sample-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:tag</span> <span class="fu">ex:BLJD8RqhTrd</span> ;</span>
+<span id="lst:sample-21"><a href="#lst:sample-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">im:title</span> <span class="st">&quot;Schließkraft Err (Gießen)&quot;</span> .</span></code></pre></div>
+</figure>
+<p>As shown in Fig. <a href="#fig:im-json" data-reference-type="ref" data-reference="fig:im-json">2</a>, an Infinity Maps <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> export follows a very basic structure. At its core, each Infinity Map is represented as a <abbr class="caps" title="JavaScript Object Notation">JSON</abbr> object with three main elements: <em>nodes</em>, <em>edges</em>, and <em>tags</em>. Where <em>nodes</em> represent all nodes in the Map, <em>edges</em> all edges between nodes, and <em>tags</em> are all tags used in the Map. As depicted in Listing <a href="#lst:sample" data-reference-type="ref">lst:sample</a>, each node has a unique identifier, a title, and optionally a reference to its parent node, and a list of references to any of its child nodes. Each edge has a source and target node, and a name. Each tag has a unique identifier and a title<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
+<h5 class="para-heading">3.2 Enrichment with Domain-Specific SHACL Rules.</h5>
+<p>Based on modeling guidelines specified by the process/domain experts, we define <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> rules that capture the unique semantics and requirements of the domain. For example, one of the guidelines states that relations are represented by chaining at least two parent-child relationships between a starting entity and one or more target entities, where a relation contains exactly one node in its path that defines the type of the relation. The <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> rule in Listing <a href="#lst:prompt" data-reference-type="ref">lst:prompt</a> captures this by searching for paths starting from a set of focus nodes of type <code class="sourceCode sparql"><span class="fu">dg:Quantity</span></code>, traversing through one or more <code class="sourceCode sparql"><span class="fu">im:child</span></code> relationships to intermediate nodes <code class="sourceCode sparql"><span class="va">?p</span></code>, and finally reaching target entities <code class="sourceCode sparql"><span class="va">?mid</span></code>. Using the <code class="sourceCode sparql"><span class="kw">VALUES</span></code> clause, we define the properties to be used based on the labels of the intermediate nodes. For example, for the example triples in Listing <a href="#lst:sample" data-reference-type="ref">lst:sample</a>, the following triple would be generated: <code class="sourceCode sparql"><span class="fu">ex:FH9d47H93gf</span> <span class="fu">dg:has_dependency</span> <span class="fu">ex:P2jBpjh8RjM</span> .</code></p>
+<div class="sourceCode" id="lst:prompt" data-label="lst:prompt" data-language="SPARQL" data-caption="SHACL Rule for creating relations based on guidelines provided by domain experts."><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="lst:prompt-1"><a href="#lst:prompt-1" aria-hidden="true" tabindex="-1"></a><span class="fu">enr:QuantityRule</span> <span class="kw">a</span> <span class="fu">sh:SPARQLRule</span> ;</span>
+<span id="lst:prompt-2"><a href="#lst:prompt-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sh:construct</span> <span class="st">&quot;&quot;&quot;</span></span>
+<span id="lst:prompt-3"><a href="#lst:prompt-3" aria-hidden="true" tabindex="-1"></a><span class="st">        CONSTRUCT {</span></span>
+<span id="lst:prompt-4"><a href="#lst:prompt-4" aria-hidden="true" tabindex="-1"></a><span class="st">            $this ?rel ?mid .</span></span>
+<span id="lst:prompt-5"><a href="#lst:prompt-5" aria-hidden="true" tabindex="-1"></a><span class="st">        } WHERE  {</span></span>
+<span id="lst:prompt-6"><a href="#lst:prompt-6" aria-hidden="true" tabindex="-1"></a><span class="st">            $this im:child ?typ .</span></span>
+<span id="lst:prompt-7"><a href="#lst:prompt-7" aria-hidden="true" tabindex="-1"></a><span class="st">            ?typ rdfs:label ?l ; im:child* ?p .</span></span>
+<span id="lst:prompt-8"><a href="#lst:prompt-8" aria-hidden="true" tabindex="-1"></a><span class="st">            ?p im:child ?mid .</span></span>
+<span id="lst:prompt-9"><a href="#lst:prompt-9" aria-hidden="true" tabindex="-1"></a><span class="st">            ?mid im:tag ?tag ; a ?target .</span></span>
+<span id="lst:prompt-10"><a href="#lst:prompt-10" aria-hidden="true" tabindex="-1"></a><span class="st">            VALUES (?l ?rel ?target) {</span></span>
+<span id="lst:prompt-11"><a href="#lst:prompt-11" aria-hidden="true" tabindex="-1"></a><span class="st">                ( &quot;Abhängigkeiten&quot; dg:has_dependency dg:Quantity)</span></span>
+<span id="lst:prompt-12"><a href="#lst:prompt-12" aria-hidden="true" tabindex="-1"></a><span class="st">                ( &quot;Messung&quot; dg:has_measurement dg:Signal)</span></span>
+<span id="lst:prompt-13"><a href="#lst:prompt-13" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
+<span id="lst:prompt-14"><a href="#lst:prompt-14" aria-hidden="true" tabindex="-1"></a><span class="st">        }&quot;&quot;&quot;</span> ;</span>
+<span id="lst:prompt-15"><a href="#lst:prompt-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sh:condition</span> <span class="va">[</span> <span class="co"># evaluate rule only if focus node is a dg:Quantity</span></span>
+<span id="lst:prompt-16"><a href="#lst:prompt-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sh:property</span> <span class="va">[</span></span>
+<span id="lst:prompt-17"><a href="#lst:prompt-17" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sh:path</span> <span class="fu">rdf:type</span> ;</span>
+<span id="lst:prompt-18"><a href="#lst:prompt-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sh:hasValue</span> <span class="fu">dg:Quantity</span> ;</span>
+<span id="lst:prompt-19"><a href="#lst:prompt-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">]</span> ;</span>
+<span id="lst:prompt-20"><a href="#lst:prompt-20" aria-hidden="true" tabindex="-1"></a>    <span class="va">]</span> ; <span class="fu">sh:prefixes</span> <span class="dt">&lt;http://siemens.com/dgassist/enrichment&gt;</span> .</span></code></pre></div>
+<h5 class="para-heading">Conclusion and Future Work.</h5>
+<p>In this paper, we presented a novel approach that enables domain experts to model their knowledge using an easy and intuitive visual representation, which is then exported as <abbr class="caps" title="JavaScript Object Notation">JSON</abbr>, and afterwards transformed into a semantically enriched <abbr class="caps" title="Knowledge Graph">KG</abbr> representation using <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>. Future work will focus on integration of additional <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> rules as well as evaluation of the transformation process on different real-world use cases.</p>
+<section id="acknowledgements" class="level2 unnumbered">
+<h2 class="unnumbered">Acknowledgements</h2>
+<p>This work was conducted within the Austrian research project <abbr class="caps" title="DG Assist">DG</abbr> Assist (FFG project number: FO999899053). This project is funded by the Federal Ministry for Climate Protection, Environment, Energy, Mobility, Innovation and Technology, BMK, and is carried out as part of the Production of the Future programme.</p>
+</section>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<ol id="refs" class="references">
+<li id="ref-2022-acm-kg-review" property="citation" typeof="ScholarlyArticle">Hogan, A., al., et: <cite property="name">Knowledge graphs</cite>. ACM Comput. Surv. 54, (2021). https://doi.org/<a href="https://doi.org/10.1145/3447772">10.1145/3447772</a>.</li>
+<li id="ref-2021-ieee-liu-recommender-review" property="citation" typeof="ScholarlyArticle">Liu, J., Duan, L.: <cite property="name">A survey on knowledge graph-based recommender systems</cite>. In: 2021 <abbr class="caps" title="Institute of Electrical and Electronics Engineers">IEEE</abbr> 5th advanced information technology, electronic and automation control conference (IAEAC). pp. 2450–2453 (2021). https://doi.org/<a href="https://doi.org/10.1109/IAEAC50856.2021.9390863">10.1109/IAEAC50856.2021.9390863</a>.</li>
+<li id="ref-2019-acm-noy-companies-use-cases" property="citation" typeof="ScholarlyArticle">Noy, N., Gao, Y., Jain, A., Narayanan, A., Patterson, A., Taylor, J.: <cite property="name">Industry-scale knowledge graphs: Lessons and challenges</cite>. Commun. ACM. 62, 36–43 (2019). https://doi.org/<a href="https://doi.org/10.1145/3331166">10.1145/3331166</a>.</li>
+</ol>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<h2 class="unnumbered">Notes</h2>
+<ol>
+<li id="fn1"><p>Conceptboard: <a href="https://conceptboard.com/" class="uri">https://conceptboard.com/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Microsoft Whiteboard: <a href="https://www.microsoft.com/en-us/microsoft-365/microsoft-whiteboard" class="uri">https://www.microsoft.com/en-us/microsoft-365/microsoft-whiteboard</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Infinity Maps: <a href="https://infinitymaps.io/" class="uri">https://infinitymaps.io/</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><abbr class="caps" title="Shapes Constraint Language">SHACL</abbr>: <a href="https://www.w3.org/TR/shacl" class="uri">https://www.w3.org/TR/shacl</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p><abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> Core Components: <a href="https://www.w3.org/TR/shacl/#core-components" class="uri">https://www.w3.org/TR/shacl/#core-components</a><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p><abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> Rules were introduced as part of the <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> Advanced Features Note: <a href="https://www.w3.org/TR/shacl-af" class="uri">https://www.w3.org/TR/shacl-af</a>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Due to space limitations, we have not included sample triples for tags or edges.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+

@@ -3,7 +3,9 @@
   {% include head.html %}
   <body>
     {% include header.html %}
+    <main>
     {{ content | smartypants | caps }}
+    </main>
     {% include footer.html %}
   </body>
 </html>

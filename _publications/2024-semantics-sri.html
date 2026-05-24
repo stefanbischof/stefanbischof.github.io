@@ -1,0 +1,572 @@
+---
+title: "Semantic Smart Readiness Indicator Framework"
+id: BischofFiltzParreira2024
+authors:
+  - Stefan Bischof
+  - Erwin Filtz
+  - Josiane Xavier Parreira
+year: 2024
+venue: SEMANTiCS
+category: conference
+links:
+  - label: DOI
+    url: https://doi.org/10.3233/SSW240015
+  - label: Ontology
+    url: https://w3id.org/sri
+  - label: Zenodo
+    url: https://zenodo.org/doi/10.5281/zenodo.10047286
+abstract: |
+  The Smart Readiness Indicator (SRI) is an energy rating scheme targeted at buildings to evaluate their capacity to integrate and benefit from smart technologies for enhanced energy efficiency and overall performance. Existing tools for SRI assessment and rating do not provide a standard format for data exchange. However, there are several scenarios in which a FAIR, standardised data format is beneficial, such as data exchange between building tools, comparison of different assessments, or computing statistics about buildings.
+toc: |
+  <nav class="toc" aria-label="Article contents">
+  <p class="toc-heading">Table of Contents</p>
+  <ol>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#introduction"><span class="section-number">1</span>Introduction</a></li>
+  <li><a href="#sec:relatedwork"><span class="section-number">2</span>Related Work</a></li>
+  <li><a href="#sec:sri"><span class="section-number">3</span>Smart Readiness Indicator</a></li>
+  <li><a href="#sec:approach"><span class="section-number">4</span>Ontology Engineering</a>
+  <ol>
+  <li><a href="#ontology-requirements-specification"><span class="section-number">4.1</span>Ontology Requirements Specification</a></li>
+  <li><a href="#ontology-implementation"><span class="section-number">4.2</span>Ontology Implementation</a></li>
+  <li><a href="#ontology-publication-and-ontology-maintenance"><span class="section-number">4.3</span>Ontology Publication and Ontology Maintenance</a></li>
+  </ol></li>
+  <li><a href="#sec:ontology"><span class="section-number">5</span>Smart Readiness Indicator Information Model</a>
+  <ol>
+  <li><a href="#concept-instantiation-responsibilities">Concept Instantiation Responsibilities</a></li>
+  <li><a href="#sri-vocabulary">SRI Vocabulary</a></li>
+  </ol></li>
+  <li><a href="#sec:kg"><span class="section-number">6</span>SRI Knowledge Graph and SPARQL-based SRI score calculation</a>
+  <ol>
+  <li><a href="#knowledge-graph-construction"><span class="section-number">6.1</span>Knowledge Graph Construction</a></li>
+  <li><a href="#sparql-based-score-calculation-process"><span class="section-number">6.2</span>SPARQL-based Score Calculation Process</a></li>
+  </ol></li>
+  <li><a href="#sec:evaluation"><span class="section-number">7</span>Evaluation</a></li>
+  <li><a href="#sec:conclusion"><span class="section-number">8</span>Conclusion</a></li>
+  <li><a href="#references">References</a></li>
+  <li><a href="#footnotes">Notes</a></li>
+  </ol>
+  </nav>
+---
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1"><span class="section-number">1</span> Introduction</h2>
+<p>As part of the efforts to reduce greenhouse gas emissions, the European Union has defined specific measures to make buildings more energy efficient, which are crucial to achieving the <abbr class="caps" title="European Union">EU</abbr>’s goals of increasing the energy efficiency of Europe in all sectors by at least 32.5% by 2030.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> These measures are outlined in the Energy Performance of Buildings Directive (<abbr class="caps" title="European Union">EU</abbr> 2018/844) <span class="citation" data-cites="eudir">[<a href="#ref-eudir" role="doc-biblioref">1</a>]</span>. In particular, the potential of smart technologies in the building sector is heavily emphasised, and the concept of the Smart Readiness Indicator (<abbr class="caps" title="Smart Readiness Indicator">SRI</abbr>) is introduced.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> rates buildings according to their “smartness”, i.e. their ability to sense, interpret, communicate, and actively respond in an efficient manner to changing conditions in relation to:</p>
+<ol type="a">
+<li>the operation of technical building systems;</li>
+<li>the external environment (including energy grids); and</li>
+<li>demands from building occupants.</li>
+</ol>
+<p>The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> rating scheme aims to raise awareness of the benefits promised by smart building technologies and to encourage building renovations.</p>
+<p>Currently, a building’s <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment and rating is done manually by a certified <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessor – a task that takes hours to complete and does not scale over multiple buildings <span class="citation" data-cites="srireport">[<a href="#ref-srireport" role="doc-biblioref">2</a>]</span>. While there are ongoing work in developing digital <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> tools, they lack standardised formats for data exchange. In particular, none of the tools follows the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles <span class="citation" data-cites="wilkinson2016fair">[<a href="#ref-wilkinson2016fair" role="doc-biblioref">3</a>]</span>, which put emphasis on enhancing the ability of machines to automatically find and use the data. <span>Nevertheless, we see the benefit of having an interoperable data representation to allow the exchange and reuse of <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> data among different applications in the building domain.</span></p>
+<p>We propose a Semantic Smart Readiness Indicator framework, consisting of an <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> information model and a knowledge graph-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation. Our work is <span>motivated by and</span> aligned with recent efforts to create semantic data models for buildings. Graph-based building models such as Brick <span class="citation" data-cites="Balaji16">[<a href="#ref-Balaji16" role="doc-biblioref">4</a>]</span> and the Building Topology Ontology <span class="citation" data-cites="Rasmussen21">[<a href="#ref-Rasmussen21" role="doc-biblioref">5</a>]</span> capture the rich, formal descriptions of buildings – their architecture, the structure and composition of their subsystems – and have been shown to reduce development time for several different building applications <span class="citation" data-cites="Pritoni21">[<a href="#ref-Pritoni21" role="doc-biblioref">6</a>]</span>.</p>
+<p><span>By providing a semantic representation of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> information, our model can be seamlessly integrated with existing building models. Moreover, our knowledge graph-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation can natively compute the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scores, without the need of any data transformation nor external calculation services, thus avoiding additional maintenance effort. Another benefit is providing a more transparent score calculation process, where we see how the different services contribute to the final score. Aligned with the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles, our framework supports the exchange and comparison of <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> related data, for example, to share service catalogues, to enable different building analytics tools to make use of the data, thus avoiding vendor lock-in, and to allow the comparison of assessments of a building over time or across multiple buildings.</span></p>
+<p>This paper describes our proposed framework, the ontology engineering process, and the evaluation of both the model and the <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr>-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation.</p>
+<p>We summarise our contributions as follows:</p>
+<ol>
+<li><p>We provide a vocabulary to represent the concepts the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> consists of, including <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments for buildings;</p></li>
+<li><p>We describe a <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr>-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation process; and</p></li>
+<li><p>We leverage the advantages of a knowledge graph and demonstrate how it can be used to answer <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr>-related questions.</p></li>
+</ol>
+<p>The remainder of the paper is structured as follows: An overview of related work is presented in Section <a href="#sec:relatedwork" data-reference-type="ref" data-reference="sec:relatedwork">2</a>. In Section <a href="#sec:sri" data-reference-type="ref" data-reference="sec:sri">3</a> we provide background information about the smart readiness indicator. The ontology engineering process is described in Section <a href="#sec:approach" data-reference-type="ref" data-reference="sec:approach">4</a>, followed by the ontology description in Section <a href="#sec:ontology" data-reference-type="ref" data-reference="sec:ontology">5</a>. The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> knowledge graph is explained in Section <a href="#sec:kg" data-reference-type="ref" data-reference="sec:kg">6</a>. An evaluation of our framework is given in Section <a href="#sec:evaluation" data-reference-type="ref" data-reference="sec:evaluation">7</a>. Finally, Section <a href="#sec:conclusion" data-reference-type="ref" data-reference="sec:conclusion">8</a> concludes the paper.</p>
+</section>
+<section id="sec:relatedwork" class="level2" data-number="2">
+<h2 data-number="2"><span class="section-number">2</span> Related Work</h2>
+<p>The proposal of the Smart Readiness Indicator in 2018 has sparked research interest, leading to multiple research works being published. One stream of work focuses on the assessment of the proposed <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation methods, their applicability to the real world and possible future <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> improvements <span class="citation" data-cites="Fokaides20 Vigna20">[<a href="#ref-Fokaides20" role="doc-biblioref">7</a>, <a href="#ref-Vigna20" role="doc-biblioref">8</a>]</span>. Another stream of work discusses whether additional characteristics of a building should be represented and taken into account for the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation. Factual characteristics refer to technical capabilities of a building which are not covered by the current <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation method, such as energy storage and load-shifting <span class="citation" data-cites="Maerzinger19">[<a href="#ref-Maerzinger19" role="doc-biblioref">9</a>]</span>. Work focusing on spatial characteristics shows that the requirements of buildings located in northern countries <span class="citation" data-cites="Janhunen19">[<a href="#ref-Janhunen19" role="doc-biblioref">10</a>]</span> differ from buildings in southern countries <span class="citation" data-cites="Ramezani21">[<a href="#ref-Ramezani21" role="doc-biblioref">11</a>]</span>, due to, for instance, different heating systems or the exclusion of entire domains in the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment process, thus making building performance comparison difficult. The related work mentioned so far are concerned with the analysis of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation methods and their potential impact, and they neither provide an information model nor a <abbr class="caps" title="Knowledge Graph">KG</abbr>-based approach to the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation. In terms of a <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation framework, several <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation tools are currently being developed<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, supporting users to assess a building and calculate the its <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score. However, even though some of these tools provide functionalities to interact with other systems via data import/export, they can not be easily integrated with other building management tools.</p>
+<p>In the past decade, several ontologies have been published to describe building characteristics. The Building Topology Ontology (<abbr class="caps" title="Building Topology Ontology">BOT</abbr>) <span class="citation" data-cites="Rasmussen21">[<a href="#ref-Rasmussen21" role="doc-biblioref">5</a>]</span> allows the representation of the building topology, such as floors and rooms. The Brick model <span class="citation" data-cites="Balaji16">[<a href="#ref-Balaji16" role="doc-biblioref">4</a>]</span> provides a metadata scheme to represent buildings assets, like elevators and water distribution systems, as well as devices (e.g., sensors) installed in a building. Similar to Brick, the Real Estate Core (REC) <span class="citation" data-cites="Hammar19">[<a href="#ref-Hammar19" role="doc-biblioref">12</a>]</span> provides an interoperable schema for building knowledge graphs. The ETSI standardisation organisation has published the <abbr class="caps" title="Smart Applications REFerence Ontology">SAREF</abbr> ontology for Internet of Things (IoT) devices, such as the sensors found in smart buildings <span class="citation" data-cites="Garcia2023">[<a href="#ref-Garcia2023" role="doc-biblioref">13</a>]</span>. Different extensions of the <abbr class="caps" title="Smart Applications REFerence Ontology">SAREF</abbr> ontology have also been proposed, like the SAREF4BLDG <span class="citation" data-cites="Poveda18">[<a href="#ref-Poveda18" role="doc-biblioref">14</a>]</span> for representing building features<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. <span>The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> is relatively new topic in the smart building domain, and none of the existing building models allow the representation of <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments and scores.</span> Our work fills this gap, and it can be seen as an extension of existing building models.</p>
+</section>
+<section id="sec:sri" class="level2" data-number="3">
+<h2 data-number="3"><span class="section-number">3</span> Smart Readiness Indicator</h2>
+<div class="table-scroll"><table id="tab:service">
+
+<caption>Table 1: Example service H1a: “Heat Emission Control” of domain “Heating” with service maturity levels (rows) and impact points for three of the seven impact criteria.</caption>
+<thead>
+<tr>
+<th scope="col"  class="al-r"></th>
+<th scope="col" ></th>
+<th scope="col" colspan="4"  class="al-c booktabs-cmidrule">Impact Criteria Points</th>
+</tr>
+<tr>
+<th scope="col"  class="al-r">#</th>
+<th scope="col" >Description of service level</th>
+<th scope="col"  class="al-c">Energy efficiency</th>
+<th scope="col"  class="al-c">Energy flex. &amp; storage</th>
+<th scope="col"  class="al-c">Comfort</th>
+<th scope="col"  class="al-c">…</th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row"  class="al-r">0</th>
+<td >No automatic control</td>
+<td  class="al-c">0</td>
+<td  class="al-c">0</td>
+<td  class="al-c">0</td>
+<td  class="al-c">…</td>
+</tr>
+<tr>
+<th scope="row"  class="al-r">1</th>
+<td >Central automatic control (e.g. central thermostat)</td>
+<td  class="al-c">1</td>
+<td  class="al-c">0</td>
+<td  class="al-c">1</td>
+<td  class="al-c">…</td>
+</tr>
+<tr>
+<th scope="row"  class="al-r">2</th>
+<td >Individual room control (e.g. thermostatic valves, or electronic controller)</td>
+<td  class="al-c">2</td>
+<td  class="al-c">0</td>
+<td  class="al-c">2</td>
+<td  class="al-c">…</td>
+</tr>
+<tr>
+<th scope="row"  class="al-r">3</th>
+<td >Individual room control with communication between controllers and to <abbr class="caps" title="Building Automation and Control Systems">BACS</abbr></td>
+<td  class="al-c">2</td>
+<td  class="al-c">0</td>
+<td  class="al-c">2</td>
+<td  class="al-c">…</td>
+</tr>
+<tr>
+<th scope="row"  class="al-r">4</th>
+<td >Individual room control with communication and occupancy detection</td>
+<td  class="al-c">3</td>
+<td  class="al-c">0</td>
+<td  class="al-c">2</td>
+<td  class="al-c">…</td>
+</tr>
+</tbody>
+
+
+</table></div>
+<p>The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> is a common <abbr class="caps" title="European Union">EU</abbr> scheme for rating the smart readiness of buildings. The core idea of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> is that smart buildings are capable of providing services, which are described with a technology-agnostic name. Each service has different levels of maturity, and each maturity level, in turn, has impact points with respect to different impact criteria <span class="citation" data-cites="srireport">[<a href="#ref-srireport" role="doc-biblioref">2</a>]</span>. An example for the service “Heat emission control”, with three of the impact criteria <span>and five maturity levels</span> is shown in Table <a href="#tab:service" data-reference-type="ref" data-reference="tab:service">1</a>. The five maturity levels range from 0 (“No automatic control”) to its most mature level 4 (“Individual room control with communication and occupancy detection”). Each service belongs to a technical domain and influences one or more impact criteria, depending on the service level. There are a total of nine domains and seven impact criteria. In the example, the impact points for the maturity levels range from 0 to 3. As one can see, the number of impact points of a given maturity level is highly dependent on the impact criteria itself. For instance, the service in the example <span>has an impact on “Energy Efficiency” and “Comfort” but</span> does not impact “Energy flexibility and storage”. Moreover, an increase to maturity level 2 already creates the highest impact for “Comfort”, while <span>maturity</span> level 4 is required to reach the highest impact for “Energy efficiency”. A collection of services is called service catalogue. Depending on the context of the building, some of the services of the service catalogue might not apply.</p>
+<p>Given the service catalogue, and the building to be rated, the assessment and <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation is a multi-step procedure as follows <span class="citation" data-cites="srireport">[<a href="#ref-srireport" role="doc-biblioref">2</a>]</span>:</p>
+<dl>
+<dt>Step 1</dt>
+<dd>
+<p>A triage process define the relevant <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> services for the building;</p>
+</dd>
+<dt>Step 2</dt>
+<dd>
+<p>For each <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> service, its maturity level is assessed;</p>
+</dd>
+<dt>Step 3</dt>
+<dd>
+<p>Given the services and their levels, the impact criteria scores are calculated;</p>
+</dd>
+<dt>Step 4</dt>
+<dd>
+<p>The maximum impact scores for each domain-impact combination is calculated, and the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score is given as a percentage of the maximum achievable score;</p>
+</dd>
+<dt>Step 5</dt>
+<dd>
+<p>For each impact, the total weighted score is calculated based on the results from Steps 3 and 4 and the impact weights;</p>
+</dd>
+<dt>Step 6</dt>
+<dd>
+<p>The impact scores are aggregated along the three key capabilities;</p>
+</dd>
+<dt>Step 7</dt>
+<dd>
+<p>The key capability scores are aggregated to calculate the total smart-readiness score;</p>
+</dd>
+<dt>Step 8</dt>
+<dd>
+<p>As an optional step, the scores for each domain / impact combination are calculated.</p>
+</dd>
+</dl>
+<p>The first step is the triage process, which allows for the exclusion of individual services and domains from the assessment process without having a negative impact on the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score, e.g., heating is not required for buildings in South Europe, and the lack of heating therefore should not have a negative impact on the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score. The second step is the actual assessment process in which the assessor goes through the services offered by a building and decides their maturity level.</p>
+<div class="table-scroll"><table class="wide-table" id="tab:domains-impacts">
+
+<caption>Table 2: Example of domain-impact scores, total impact scores, and overall score (see <span class="citation" data-cites="srireport">[<a href="#ref-srireport" role="doc-biblioref">2</a>]</span>).</caption>
+<thead>
+<tr>
+<th scope="col" ></th>
+<th scope="col" colspan="7"  class="al-c booktabs-cmidrule">IMPACTS</th>
+<th scope="col"  class="al-c"></th>
+</tr>
+<tr>
+<th scope="col" >DOMAINS</th>
+<th scope="col"  class="al-c rotf">Energy efficiency</th>
+<th scope="col"  class="al-c rotf">Maintenance &amp; fault pred.</th>
+<th scope="col"  class="al-c rotf">Comfort</th>
+<th scope="col"  class="al-c rotf">Convenience</th>
+<th scope="col"  class="al-c rotf">Health &amp; well-being</th>
+<th scope="col"  class="al-c rotf">Information to occupants</th>
+<th scope="col"  class="al-c rotf">Energy flex. &amp; storage</th>
+<th scope="col"  class="al-c"><strong><abbr class="caps" title="Smart Readiness Indicator">SRI</abbr></strong></th>
+</tr></thead>
+<tbody>
+<tr>
+<th scope="row" >Heating</th>
+<td  class="al-c">32%</td>
+<td  class="al-c">18%</td>
+<td  class="al-c">62%</td>
+<td  class="al-c">  55%</td>
+<td  class="al-c">24%</td>
+<td  class="al-c">74%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Hot water</th>
+<td  class="al-c">17%</td>
+<td  class="al-c">  0%</td>
+<td  class="al-c">45%</td>
+<td  class="al-c">  70%</td>
+<td  class="al-c">67%</td>
+<td  class="al-c">83%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Cooling</th>
+<td  class="al-c">65%</td>
+<td  class="al-c">51%</td>
+<td  class="al-c">78%</td>
+<td  class="al-c">  72%</td>
+<td  class="al-c">61%</td>
+<td  class="al-c">55%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Controlled ventilation</th>
+<td  class="al-c">41%</td>
+<td  class="al-c">  0%</td>
+<td  class="al-c">55%</td>
+<td  class="al-c">  60%</td>
+<td  class="al-c">34%</td>
+<td  class="al-c">44%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Lighting</th>
+<td  class="al-c">85%</td>
+<td  class="al-c">14%</td>
+<td  class="al-c">90%</td>
+<td  class="al-c">100%</td>
+<td  class="al-c">83%</td>
+<td  class="al-c">15%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Dynamic envelope</th>
+<td  class="al-c">10%</td>
+<td  class="al-c">  0%</td>
+<td  class="al-c">31%</td>
+<td  class="al-c">  56%</td>
+<td  class="al-c">22%</td>
+<td  class="al-c">46%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Electricity</th>
+<td  class="al-c">10%</td>
+<td  class="al-c">  0%</td>
+<td  class="al-c">–</td>
+<td  class="al-c">–</td>
+<td  class="al-c">–</td>
+<td  class="al-c">68%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >EV charging</th>
+<td  class="al-c">–</td>
+<td  class="al-c">38%</td>
+<td  class="al-c">–</td>
+<td  class="al-c">  82%</td>
+<td  class="al-c">–</td>
+<td  class="al-c">84%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr>
+<tr>
+<th scope="row" >Monitoring &amp; control</th>
+<td  class="al-c">52%</td>
+<td  class="al-c">43%</td>
+<td  class="al-c">62%</td>
+<td  class="al-c">  72%</td>
+<td  class="al-c">45%</td>
+<td  class="al-c">64%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"></td>
+</tr></tbody>
+<tfoot>
+<tr>
+<th scope="row" >TOTAL</th>
+<td  class="al-c">39%</td>
+<td  class="al-c">18%</td>
+<td  class="al-c">60%</td>
+<td  class="al-c">71%</td>
+<td  class="al-c">48%</td>
+<td  class="al-c">59%</td>
+<td  class="al-c">0%</td>
+<td  class="al-c"><strong>42%</strong></td>
+</tr>
+</tfoot>
+
+
+</table></div>
+<p>The actual calculation process of the different scores, based on the assessment, starts with the third step. First, the impact of a selected service maturity level is calculated as a percentage of the maximum impact points for that service. Subsequently, the impact criteria scores are weighted on the nine domains as shown in Table <a href="#tab:domains-impacts" data-reference-type="ref" data-reference="tab:domains-impacts">2</a> . The weights depend on the type and location of the building. Finally, individual scores are aggregated into three key capability scores, which contribute equally, i.e., <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>3</mn></mrow><annotation encoding="application/x-tex">1/3</annotation></semantics></math> each, to the final <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score. The three key capabilities <span class="citation" data-cites="eudir">[<a href="#ref-eudir" role="doc-biblioref">1</a>]</span> refer to the abilities of a building to:</p>
+<ol type="a">
+<li>react to changes in the energy consumption;</li>
+<li>react to the needs of occupants; and</li>
+<li>participate in an energy grid.</li>
+</ol>
+<p>This multi-step <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation process results in an <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score for a building <span class="citation" data-cites="srireport">[<a href="#ref-srireport" role="doc-biblioref">2</a>]</span>.</p>
+<p>Currently, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> framework is in a test phase, in which <span>thirteen <abbr class="caps" title="European Union">EU</abbr> countries are participating<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. According to a recent newsletter from the European Commission, large non-residential buildings must adopt the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> schema by June 2027<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</span> <span>In response to this newly introduced building rating schema, and aligned with existing efforts on providing a semantic representation for buildings, our Semantic Smart Readiness Indicator framework provides an information model to represent both the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> catalogue and the building assessment.</span></p>
+<p>The ontology engineering process to create the model is described next, followed by a description of the model itself. Our <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation method is based on <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> queries to the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> knowledge graph, which will be described in more detail in Section <a href="#sec:kg" data-reference-type="ref" data-reference="sec:kg">6</a>.</p>
+</section>
+<section id="sec:approach" class="level2" data-number="4">
+<h2 data-number="4"><span class="section-number">4</span> Ontology Engineering</h2>
+<p>For the development of the ontology we followed the Linked Open Terms (<abbr class="caps" title="Linked Open Terms methodology">LOT</abbr>) methodology <span class="citation" data-cites="Poveda22">[<a href="#ref-Poveda22" role="doc-biblioref">15</a>]</span>. <abbr class="caps" title="Linked Open Terms methodology">LOT</abbr> splits the ontology development in four consecutive activities, namely,</p>
+<ol type="a">
+<li>ontology requirements specification;</li>
+<li>ontology implementation;</li>
+<li>ontology publication; and</li>
+<li>ontology maintenance.</li>
+</ol>
+<p>These are described in this section.</p>
+<section id="ontology-requirements-specification" class="level3" data-number="4.1">
+<h3 data-number="4.1"><span class="section-number">4.1</span> Ontology Requirements Specification</h3>
+<p>We start with the definition of the scope of the ontology by describing the use case, its requirements, and the definition of competency questions which should be possible to answer with our proposed ontology.</p>
+<h5 class="para-heading">Use case specification.</h5>
+<p>The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scheme is meant to incentivise buildings to become “smarter” and, consequently, more energy efficient. <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments and scores serve as a comparison measure across buildings in terms of their capabilities. Moreover, they can be used as input to building analysis applications, for example, to identify how buildings can improve their capabilities. Therefore, it would be beneficial to have <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> related information available in a format that is easily exchanged and ingested by different building analysis tools. Also, we need the means to compute the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scores given this new representation, in order to fully implement the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> methodology. In order to conform with the latest recommendations on data exchange, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr>-related information model should follow the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles for data reuse and exchange. The <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles correspond to findability, accessibility, interoperability, and reusability, as defined in <span class="citation" data-cites="wilkinson2016fair">[<a href="#ref-wilkinson2016fair" role="doc-biblioref">3</a>]</span>. In addition, given the availability of widely-used semantic building model, it is desirable the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> information be easily integrated to existing building models. Furthermore, as buildings <span>are supposed to be assessed multiple times</span> over their lifetime, provenance information is important. Lastly, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> concept is designed to be adaptable to different situations and buildings, therefore it is crucial any adjustment to the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scheme be easily incorporated into the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> model.</p>
+<h5 class="para-heading">Requirements.</h5>
+<p>Based on the use case specification, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> information model should meet the following requirements:</p>
+<dl>
+<dt>R 1</dt>
+<dd>
+<p>It should allow to represent <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments semantically;</p>
+</dd>
+<dt>R 2</dt>
+<dd>
+<p>It should record <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments’ provenance;</p>
+</dd>
+<dt>R 3</dt>
+<dd>
+<p>It should allow customisation to reflect the national <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> implementations;</p>
+</dd>
+<dt>R 4</dt>
+<dd>
+<p>It should allow a semantic-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation, according to the <abbr class="caps" title="European Union">EU</abbr>’s scores definition;</p>
+</dd>
+<dt>R 5</dt>
+<dd>
+<p>It should follow the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles; and</p>
+</dd>
+<dt>R 6</dt>
+<dd>
+<p>It should be easily integrated into existing building models such as BRICK and <abbr class="caps" title="Building Topology Ontology">BOT</abbr>.</p>
+</dd>
+</dl>
+<h5 class="para-heading">Competency questions.</h5>
+<p>The ontology creation process is driven by the following competency questions to ensure we cover all the required information:</p>
+<dl>
+<dt><abbr class="caps" title="Competency Question">CQ</abbr> 1</dt>
+<dd>
+<p>For a given building, who performed a given assessment and when?</p>
+</dd>
+<dt><abbr class="caps" title="Competency Question">CQ</abbr> 2</dt>
+<dd>
+<p>What is the total <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score resulted from a given building’s assessment?</p>
+</dd>
+<dt><abbr class="caps" title="Competency Question">CQ</abbr> 3</dt>
+<dd>
+<p>What are the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> impact scores of a given assessment?</p>
+</dd>
+<dt><abbr class="caps" title="Competency Question">CQ</abbr> 4</dt>
+<dd>
+<p>What are the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scores for the different <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> services of a given building and assessment?</p>
+</dd>
+<dt><abbr class="caps" title="Competency Question">CQ</abbr> 5</dt>
+<dd>
+<p>For a building with at least two assessments: how did the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score change?</p>
+</dd>
+</dl>
+<p>The first competency question relates to provenance information, namely, knowing who performed a building assessment and when, as buildings will be assessed multiple times, e.g., after new building equipment is installed. Competency questions 2–5 are targeted at the different scores generated during the calculation process, as explained in Section <a href="#sec:sri" data-reference-type="ref" data-reference="sec:sri">3</a>.</p>
+</section>
+<section id="ontology-implementation" class="level3" data-number="4.2">
+<h3 data-number="4.2"><span class="section-number">4.2</span> Ontology Implementation</h3>
+<p>For the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> ontology we reuse modelling approaches and concepts from different existing vocabularies and ontologies (<strong>R 1</strong>). We chose the <abbr class="caps" title="Resource Description Framework">RDF</abbr> Data Cube Vocabulary (<abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr>) <span class="citation" data-cites="rdfqb">[<a href="#ref-rdfqb" role="doc-biblioref">16</a>]</span> as a basis for the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary. The <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> vocabulary is built to represent multidimensional data such as statistical data in <abbr class="caps" title="Resource Description Framework">RDF</abbr>. <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> provides a modelling approach for hierarchical dimensions, measures, and attributes. This multi-dimensional modelling approach allows to represent the different data sets needed for different tasks in the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> framework, particularly for the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation process. We give definitions for four different data cubes in so called Data Structure Definitions (<abbr class="caps" title="Data Structure Definition">DSD</abbr>). We define dimensions, measures, and attributes necessary for these <abbr class="caps" title="Data Structure Definition">DSD</abbr>s. To represent hierarchical dimensions we use the Simple Knowledge Organization System (<abbr class="caps" title="Simple Knowledge Organization System">SKOS</abbr>) <span class="citation" data-cites="skos-ref">[<a href="#ref-skos-ref" role="doc-biblioref">17</a>]</span> as recommended by the <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> vocabulary. For use of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary we recommend to use <abbr class="caps" title="World Wide Web Consortium">W3C</abbr> <abbr class="caps" title="W3C PROV Ontology">PROV</abbr> <span class="citation" data-cites="prov-o">[<a href="#ref-prov-o" role="doc-biblioref">18</a>]</span> to express metadata of the data cubes and relationships between data cubes, as we do in our knowledge graph (see Section <a href="#sec:kg" data-reference-type="ref" data-reference="sec:kg">6</a>) (<strong>R 2</strong>). The vocabulary is described in detail in Section <a href="#sec:ontology" data-reference-type="ref" data-reference="sec:ontology">5</a>. The ontology is encoded in Turtle syntax, created by Protege<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> and text editors. More details on the ontology evaluation process and results are presented in Section <a href="#sec:evaluation" data-reference-type="ref" data-reference="sec:evaluation">7</a>.</p>
+</section>
+<section id="ontology-publication-and-ontology-maintenance" class="level3" data-number="4.3">
+<h3 data-number="4.3"><span class="section-number">4.3</span> Ontology Publication and Ontology Maintenance</h3>
+<p>We published the ontology on GitHub and used OnToology <span class="citation" data-cites="ontoology">[<a href="#ref-ontoology" role="doc-biblioref">19</a>]</span> to support the ontology engineering process. The tool automatically does syntax checks, generates documentation, diagrams and a <abbr class="caps" title="JavaScript Object Notation">JSON</abbr>-LD context. We registered the <abbr class="caps" title="Uniform Resource Identifier">URI</abbr><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> as a permanent <abbr class="caps" title="Uniform Resource Locator">URL</abbr> for our vocabulary and set up <abbr class="caps" title="Hypertext Transfer Protocol">HTTP</abbr> content negotiation to provide either the HTML documentation or the vocabulary in Turtle, N-Triples, <abbr class="caps" title="Resource Description Framework">RDF</abbr>/<abbr class="caps" title="Extensible Markup Language">XML</abbr> and <abbr class="caps" title="JavaScript Object Notation">JSON</abbr>-LD syntax, depending on the <code>Accept</code> <abbr class="caps" title="Hypertext Transfer Protocol">HTTP</abbr> header. We published the GitHub repository to Zenodo for permanent publication and for obtaining a Digital Object Identifier (DOI).We have submitted our vocabulary to <a href="prefix.cc" class="uri">prefix.cc</a> and the Linked Open Vocabularies (<abbr class="caps" title="Linked Open Vocabularies">LOV</abbr>) registry <span class="citation" data-cites="lov">[<a href="#ref-lov" role="doc-biblioref">20</a>]</span> to increase its visibility and findability.(<strong>R 5</strong>) We have used <abbr class="caps" title="FAIR Ontology Pitfall Scanner">FOOPS</abbr>! <span class="citation" data-cites="foops2021">[<a href="#ref-foops2021" role="doc-biblioref">21</a>]</span> to evaluate our ontology with respect to fulfilling the principles of <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> <span class="citation" data-cites="wilkinson2016fair">[<a href="#ref-wilkinson2016fair" role="doc-biblioref">3</a>]</span> data sharing. More details can be found in Section <a href="#sec:evaluation" data-reference-type="ref" data-reference="sec:evaluation">7</a>.</p>
+<p>The vocabulary is now in the maintenance phase. We are collecting feedback in issues of the GitHub repository<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> and plan to integrate updates in the future. In the next section we describe the main artefact of this methodology, the Smart Readiness Indicator Vocabulary, in detail.</p>
+</section>
+</section>
+<section id="sec:ontology" class="level2" data-number="5">
+<h2 data-number="5"><span class="section-number">5</span> Smart Readiness Indicator <span>Information</span> Model</h2>
+<figure id="fig:info-model" data-latex-placement="t">
+<img src="/assets/papers/2024-semantics-sri/sridiagram.svg" alt="Figure 1: SRI vocabulary, showing main classes, properties, and dataset structure definitions." />
+<figcaption>Figure 1: <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary, showing main classes, properties, and dataset structure definitions.</figcaption>
+</figure>
+<p>Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a> depicts an overview of the result of the ontology engineering process, namely, our <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary. We start with the <em>definitions</em> of the concepts which are instantiated later. In our model, these definitions include <abbr class="caps" title="RDF Schema">RDFS</abbr>/<abbr class="caps" title="Web Ontology Language">OWL</abbr> term definitions (classes, object properties and data properties), <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> data cube definitions (<abbr class="caps" title="Data Structure Definition">DSD</abbr>s, dimensions, measures, and attributes), and dimension hierarchies with <abbr class="caps" title="Simple Knowledge Organization System">SKOS</abbr>. The definitions are formalised in the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> Vocabulary.</p>
+<section id="concept-instantiation-responsibilities" class="level3 unnumbered">
+<h3 class="unnumbered">Concept Instantiation Responsibilities</h3>
+<p>Different official entities, namely the European Union, the <abbr class="caps" title="European Union">EU</abbr> member states and the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessors, are responsible for defining the concrete entities, instances and values. In Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a>, the different responsibilities are indicated by the background colours, as explained below.</p>
+<p>Entities instantiated by the <abbr class="caps" title="European Union">EU</abbr> in their directives and publications correspond to the nine technical domains, the seven impact criteria, the three key capabilities, and the five maturity levels. Since these instances are not subject to change by countries nor assessors, they must be reliably available to everyone. The instances are thus part of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> Vocabulary, and highlighted with a blue background in Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a>.</p>
+<p>Classes and data cubes, which are to be defined by the <abbr class="caps" title="European Union">EU</abbr> member states implementing the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr>, are the services, a service catalogue as well as the corresponding impact points and weights for the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation. These instances are highlighted with a red background in Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a> (<strong>R 3</strong>).</p>
+<figure id="lis:namespaces" data-latex-placement="t" style="text-align:left">
+<figcaption>Listing 1: Prefixes used in this paper for <abbr class="caps" title="Resource Description Framework">RDF</abbr> data and <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> queries.</figcaption>
+<div class="sourceCode" id="cb1"><pre class="sourceCode turtle"><code class="sourceCode turtle"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">sri:</span> <span class="dt">&lt;https://w3id.org/sri#&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">rdf:</span> <span class="dt">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">rdfs:</span> <span class="dt">&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">qb:</span> <span class="dt">&lt;http://purl.org/linked-data/cube#&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">prov:</span> <span class="dt">&lt;http://www.w3.org/ns/prov#&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">dcterms:</span> <span class="dt">&lt;http://purl.org/dc/terms/&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">skos:</span> <span class="dt">&lt;http://www.w3.org/2004/02/skos/core#&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">xsd:</span> <span class="dt">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">PREFIX</span> <span class="fu">foaf:</span> <span class="dt">&lt;http://xmlns.com/foaf/0.1/&gt;</span></span></code></pre></div>
+</figure>
+<p>During a building assessment, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessor records data about buildings and the assessments itself. Once the assessment is complete, the scores can be calculated. These concepts are thus instantiated during assessment and are highlighted in green in Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a>. Furthermore, we also introduce the namespaces used for all examples in this paper as indicated in Figure <a href="#lis:namespaces" data-reference-type="ref" data-reference="lis:namespaces">2</a>.</p>
+</section>
+<section id="sri-vocabulary" class="level3 unnumbered">
+<h3 class="unnumbered">SRI Vocabulary</h3>
+<p>The <em><abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> Vocabulary</em> is defined in a lightweight <abbr class="caps" title="Web Ontology Language">OWL</abbr> ontology based on the <abbr class="caps" title="Resource Description Framework">RDF</abbr> Data Cube Vocabulary <span class="citation" data-cites="rdfqb">[<a href="#ref-rdfqb" role="doc-biblioref">16</a>]</span>. The vocabulary defines the structure of the four <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> datasets, i.e. the service scores <code>sri:dsd-sriscores</code> and weight matrices <code>sri:dsd-weights</code> for the service catalogues, a well as the assessments <code>sri:dsd-assessments</code> and scores <code>sri:dsd-scores</code> for the actual building assessments. The dimensions needed for the definition of the <abbr class="caps" title="Data Structure Definition">DSD</abbr>s are shown as dashed lines in Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a>. The dimensions for functionality and impact are hierarchical, each with a top concept on their own. Regarding functionality, each technical domain contains several services. For impact, it means that each key capability contains one or more impact criteria. As recommended by the <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> specification, the hierarchy is represented as a <abbr class="caps" title="Simple Knowledge Organization System">SKOS</abbr> hierarchy with <code>skos:narrower</code>.</p>
+<p>A <code>sri:ServiceCatalogue</code> contains <span>an arbitrary number of</span> <code>sri:Service</code>s. Each service can have multiple levels of maturity, with their corresponding <span>impact points on the impact criteria</span> (see example in Table <a href="#tab:service" data-reference-type="ref" data-reference="tab:service">1</a>).</p>
+<p>The weight matrix (<code>dsd:weights</code>) needs to be defined by the member state. Adaptability is ensured by enabling member states to create as many different service catalogues, services, and weight matrices as they require. The definitions of the service catalogue (<code>sri:serviceCatalogue</code>) and weights (<code>sri:weights</code>) are the basis for the calculation of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scores.</p>
+<figure id="lis:turtle" data-latex-placement="t" style="text-align:left">
+<figcaption>Listing 2: <abbr class="caps" title="Resource Description Framework">RDF</abbr> representation of an example <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment.</figcaption>
+<div class="sourceCode" id="cb2"><pre class="sourceCode turtle"><code class="sourceCode turtle"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:52137378</span> <span class="kw">a</span> <span class="fu">qb:DataSet</span>, <span class="fu">prov:Collection</span> ;  </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qb:structure</span> <span class="fu">sri:dsd-assessment</span> ;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rdfs:label</span> <span class="st">&quot;Assessment Building A&quot;</span> ;  </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dcterms:created</span> <span class="st">&quot;2023-01-26&quot;</span><span class="sc">^^</span><span class="fu">xsd:date</span> ;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prov:generatedAtTime</span> <span class="st">&quot;2023-01-26T18:02:33&quot;</span><span class="sc">^^</span><span class="fu">xsd:dateTime</span> ;  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prov:wasAttributedTo</span> <span class="fu">ex:35072a92</span> ;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sri:building</span> <span class="fu">ex:cce2f0ee</span> ; </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sri:serviceCatalogue</span> <span class="fu">sri-ref:scB</span> ;  </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sri:weights</span> <span class="fu">sri-ref:n-eur-residential</span> .</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:52137378-9</span> <span class="fu">qb:dataSet</span> <span class="fu">ex:52137378</span> ;  </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sri:function</span> <span class="fu">sri-ref:h1a</span> ;  </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sri:level</span> <span class="fu">sri:level1</span> .</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ex:35072a92</span> <span class="fu">foaf:name</span> <span class="st">&quot;Billy McEssor&quot;</span> .</span></code></pre></div>
+</figure>
+<p>The class <code>sri:Building</code> serves as a natural extension and alignment point for <span>existing</span> building vocabularies/ontologies, e.g., <code>bot:Building</code>, <code>brick:Building</code>, or <code>s4bldg:Building</code> (<strong>R 6</strong>). An <em><abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment</em> consists of two <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> datasets (shown in green in Figure <a href="#fig:info-model" data-reference-type="ref" data-reference="fig:info-model">1</a>) with their corresponding metadata. One dataset (<code>sri:dsd-assessment</code>) represents the assessment, as created by the assessor, essentially observing for each service how smart-ready the building is equipped. As recommended by the <abbr class="caps" title="RDF Data Cube Vocabulary">QB</abbr> vocabulary, standardised metadata can be attached to the data cube, using Dublin Core Terms or <abbr class="caps" title="W3C PROV Ontology">PROV</abbr>, for example, to record the date and the assessor. The <span>other dataset (<code>sri:dsd-scores</code>)</span> represents the scores as calculated by the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation process, explained <span>in detail in the next section</span>. An assessment is connected to a building using <code>sri:building</code>. The scores are connected to the building (<code>sri:building</code>) and the assessment (<code>prov:wasDerivedFrom</code>). The separation of the assessments and scores enables a “copy&amp;edit” process, in which an assessment is duplicated without scores so that it can be changed afterwards, for example, to correct a mistake in the assessment or to update it after building improvements. In this case, the original and all derived assessments are connected using the predicate <code>prov:wasDerivedFrom</code>. By doing so, our model allows for the easy tracking of the <span>history</span> of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments over time <span>including information about responsible persons</span>.</p>
+<p>Finally, Figure <a href="#lis:turtle" data-reference-type="ref" data-reference="lis:turtle">3</a> shows an example of an <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment. In this example, <code>ex:52137378</code> is the dataset for the assessment, including links to the building, the service catalogue, the weights, and the assessor information. <code>ex:52137378-9</code> is an example of a service assessment (service <em>H1a</em>), and its respective <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> service maturity level (<code>sri:level</code> <em>level1</em>). This assessment has been created by assessor <code>ex:35072a92</code>.</p>
+</section>
+</section>
+<section id="sec:kg" class="level2" data-number="6">
+<h2 data-number="6"><span class="section-number">6</span> SRI Knowledge Graph and SPARQL-based SRI score calculation</h2>
+<p>Bases on the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> framework, our <abbr class="caps" title="Knowledge Graph">KG</abbr> contains the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary, the reference data, as well as all data related to a building assessment. This section describes the construction of the knowledge graph, custom extensions necessary in our use case, such as the services and weights currently used in the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> test phase, and the <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr>-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation process.</p>
+<section id="knowledge-graph-construction" class="level3" data-number="6.1">
+<h3 data-number="6.1"><span class="section-number">6.1</span> Knowledge Graph Construction</h3>
+<p>In a first step we initialised the knowledge graph with the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary and the reference data. Besides the instances already contained in the vocabulary, we specify the service catalogue, a data cube for the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> impact scores and a data cube for the weights. We use the <abbr class="caps" title="W3C PROV Ontology">PROV</abbr>-O ontology <span class="citation" data-cites="prov-o">[<a href="#ref-prov-o" role="doc-biblioref">18</a>]</span> to represent provenance metadata. Specifically, we record who created which data cube at what time (see Figure <a href="#lis:turtle" data-reference-type="ref" data-reference="lis:turtle">3</a> for an example). We use a standard <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> triple store to store the different graphs. The vocabulary and each data cube are contained in a separate named graph for easier data management. For the data cubes, the name of the graph is the same <abbr class="caps" title="Uniform Resource Identifier">URI</abbr> as the data cube, i.e., the instance of <code>qb:DataSet</code>.</p>
+<p><span>Regarding storage requirements, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> related data is not particularly large. The exact size of the <abbr class="caps" title="Knowledge Graph">KG</abbr> will depend on the number of <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> services marked as relevant. As an example, for an office building, in which all 54 services were relevant, the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> information, namely building metadata, <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment and scores’ breakdown, accounts for a total of 700 triples. Currently our <abbr class="caps" title="Knowledge Graph">KG</abbr> holds 60 <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessments, which sums up to a total of around 107k triples. A few examples can be found online <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>. Concerning data quality, we have used existing <abbr class="caps" title="Shapes Constraint Language">SHACL</abbr> shapes provided for the Data Cubes vocabulary, which are available online<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></span>. We use these shapes for validating the structure of the <abbr class="caps" title="Resource Description Framework">RDF</abbr> data cube instances, for example to ensure there are no duplicate observations and that all necessary dimensions are specified.</p>
+</section>
+<section id="sparql-based-score-calculation-process" class="level3" data-number="6.2">
+<h3 data-number="6.2"><span class="section-number">6.2</span> SPARQL-based Score Calculation Process</h3>
+<p>Once all necessary information is available in the triple store we can perform the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment and calculation workflow as described in Section <a href="#sec:sri" data-reference-type="ref" data-reference="sec:sri">3</a> (<strong>R 4</strong>). Before the assessment starts, the assessor needs to describe the building and decide which service catalogue and weight data cube are applicable. The first two steps are then performed by the assessor. Step 1 of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation workflow is the triage. The assessor decides which service is necessary for the assessment of the current building. In Step 2, the assessor assesses the building, records the maturity level of each service, and indicate which services are not relevant. As mentioned earlier, we store the assessment data cube in a separate named graph and the name of the graph is the same as the <abbr class="caps" title="Uniform Resource Identifier">URI</abbr> of the assessment data cube.</p>
+<figure id="lis:sparql-step7" data-latex-placement="t" style="text-align:left">
+<figcaption>Listing 3: Query to aggregate key capabilities scores to the building level (Step 7). <code>?sds</code> is the scores dataset, <code>?so</code> is the overall score <abbr class="caps" title="Uniform Resource Identifier">URI</abbr>, and <code>?as</code> is the overall score value.</figcaption>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 7 in the SRI methodology</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># documented in sections 1.3.6.7 on page 131f in the final report</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># available from https://data.europa.eu/doi/10.2833/41100</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;Total smart-readiness score for a building or building unit&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> { <span class="kw">GRAPH</span> <span class="va">?sds</span> {</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">?so</span> <span class="fu">sri:function</span> <span class="fu">sri:topDomain</span> ;  <span class="fu">sri:impact</span> <span class="fu">sri:topImpact</span> ; </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sri:score</span> <span class="va">?as</span> ; <span class="fu">qb:dataSet</span> <span class="va">?sds</span> . } }  </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> { {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span> <span class="va">?sds</span> (<span class="bu">AVG</span>(<span class="va">?score</span>) <span class="kw">AS</span> <span class="va">?as</span>) (<span class="bu">UUID</span>() <span class="kw">AS</span> <span class="va">?so</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">?keycap</span> <span class="kw">a</span> <span class="fu">sri:KeyCapability</span> .</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">GRAPH</span> <span class="va">?sds</span> {</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      <span class="va">[]</span> <span class="fu">sri:function</span> <span class="fu">sri:topDomain</span> ; <span class="fu">sri:impact</span> <span class="va">?keycap</span> ; </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>         <span class="fu">sri:score</span> <span class="va">?score</span> ; <span class="fu">qb:dataSet</span> <span class="va">?sds</span> .  }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  } <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="va">?sds</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>} }</span></code></pre></div>
+</figure>
+<p>With the assessment finished, we proceed to calculate the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scores. We implement the remaining six calculation steps of the workflow as a series of <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> INSERT queries. Step definitions might consist of aggregation operators, which are implemented using <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> aggregation queries. Consider Step 7 as an example to show how the step definition is converted to a <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> INSERT query. In Step 7, the scores of the three key capabilities are aggregated to compute the total <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score for the building. The <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> final report defines Step 7 as follows, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>t</mi></msub><annotation encoding="application/x-tex">s_t</annotation></semantics></math> is the total smart-readiness score of a building, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math> is one of the key capabilities <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>c</mi></msub><annotation encoding="application/x-tex">s_c</annotation></semantics></math> is the smart-readiness score of a key capability:</p>
+<div class="math-block"><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>t</mi></msub><mo>=</mo><munder><mo>∑</mo><mrow><mi>c</mi><mo>∈</mo><mi>C</mi></mrow></munder><mn>1</mn><mi>/</mi><mn>3</mn><msub><mi>s</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">s_t = \sum_{c \in C} 1/3 s_c</annotation></semantics></math></div>
+<p>Figure <a href="#lis:sparql-step7" data-reference-type="ref" data-reference="lis:sparql-step7">4</a> shows the <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query implementing this step. Here, we use the <code>AVG</code> function to sum up the individual key capability scores, with equal weights. The <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> queries implementing the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation workflow steps from Step 3 to Step 8 are available online<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>.</p>
+</section>
+</section>
+<section id="sec:evaluation" class="level2" data-number="7">
+<h2 data-number="7"><span class="section-number">7</span> Evaluation</h2>
+<p>We start with the evaluation results for the vocabulary and then describe the <abbr class="caps" title="Knowledge Graph">KG</abbr> evaluation which uses the vocabulary.</p>
+<figure id="fig:foops-results" data-latex-placement="t">
+<img src="/assets/papers/2024-semantics-sri/FoopsResults.png" style="width:80.0%" alt="Figure 2: Results of the FOOPS! Validator to measure the adherence of our vocabulary to the FAIR principles." />
+<figcaption>Figure 2: Results of the <abbr class="caps" title="FAIR Ontology Pitfall Scanner">FOOPS</abbr>! Validator to measure the adherence of our vocabulary to the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles.</figcaption>
+</figure>
+<p>As mentioned in Section <a href="#sec:approach" data-reference-type="ref" data-reference="sec:approach">4</a>, we used several tools to ensure a high quality of the vocabulary. To verify the logical consistency, we used the Hermit reasoner from Protege during the ontology encoding process. To evaluate the adherence of the vocabulary publishing step to the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles, we used the <abbr class="caps" title="FAIR Ontology Pitfall Scanner">FOOPS</abbr>! validator <span class="citation" data-cites="foops2021">[<a href="#ref-foops2021" role="doc-biblioref">21</a>]</span> (<strong>R 5</strong>). At the time of writing, the published <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> vocabulary achieved a score of 99% (see Figure <a href="#fig:foops-results" data-reference-type="ref" data-reference="fig:foops-results">5</a>). <abbr class="caps" title="FAIR Ontology Pitfall Scanner">FOOPS</abbr>! currently does not correctly recognise the <code>bibo:status</code> annotation of the ontology<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a>. Once this issue is fixed, we expect the <abbr class="caps" title="FAIR Ontology Pitfall Scanner">FOOPS</abbr>! score to reach 100%.</p>
+<p>The knowledge graph evaluation process is based on two approaches. In the first approach, we have considered a sample assessment from the official <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation sheet<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>, which includes the overall <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score for an assessment, as well as the individual key capability and impact criteria scores. We then recreated the same assessment within our framework and executed our <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr>-based score calculation process. The results obtained with both the official <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation sheet and our framework were the same, confirming the correctness of our calculation method (<strong>R 4</strong>).</p>
+<p>Our second evaluation approach is based on the competency questions defined in Section <a href="#sec:approach" data-reference-type="ref" data-reference="sec:approach">4</a>. The validation consists of providing <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> queries that are able to answer the competency questions. Below, we provide answers to all competency questions. Due to space limitations, we only present the <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query that answers <abbr class="caps" title="Competency Question">CQ</abbr> 2 in full. The queries to answer all the competency questions can be found online<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>.</p>
+<p>The first competency question (<abbr class="caps" title="Competency Question">CQ</abbr> 1) is aimed at providing additional information about the assessor, i.e. who performs the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment on the building. Each assessment is connected (<code>prov:wasAttributedTo</code>) to an agent. Furthermore, for each assessor, additional information is stored, such as full name, ID, and email address. Our solution enables querying all assessments of a particular assessor, if required, which would be a time-consuming manual process when working with individual Excel documents.</p>
+<figure id="lis:cq2" data-latex-placement="t" style="text-align:left">
+<figcaption>Listing 4: <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query answering <abbr class="caps" title="Competency Question">CQ</abbr> 2. The variable <code>?assessmentIRI</code> corresponds to a assessment and <code>?score</code> is the overall <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score for that assessment.</figcaption>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sparql"><code class="sourceCode sparql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="va">?score</span> <span class="kw">WHERE</span> { </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">?dataset</span> <span class="fu">rdf:type</span> <span class="fu">qb:DataSet</span> ;</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">qb:structure</span> <span class="fu">sri:dsd-scores</span> ;</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">prov:wasDerivedFrom</span> <span class="va">?assessmentIRI</span> .</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="va">?observation</span> <span class="fu">qb:dataSet</span> <span class="va">?dataset</span> ;</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sri:function</span> <span class="fu">sri:topDomain</span> ;</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sri:impact</span> <span class="fu">sri:topImpact</span> ;</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sri:score</span> <span class="va">?score</span> .</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</figure>
+<p>The only required input parameter for the query in order to answer <abbr class="caps" title="Competency Question">CQ</abbr> 2 is the unique assessment <abbr class="caps" title="Internationalized Resource Identifier">IRI</abbr> (<code>?assessmentIRI</code>). That means, we replace the <code>?assessmentIRI</code> variable with a concrete assessment <abbr class="caps" title="Internationalized Resource Identifier">IRI</abbr> before sending the <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query to the triple store. After the execution of the score calculation process, a new <code>qb:DataSet</code> containing the scores is created and connected to the assessment using the property <code>prov:wasDerivedFrom</code>. The result–bound to <code>?score</code>–is the smart readiness score of the whole building. Figure <a href="#lis:cq2" data-reference-type="ref" data-reference="lis:cq2">6</a> shows the <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> query to answer <abbr class="caps" title="Competency Question">CQ</abbr> 2.</p>
+<p><abbr class="caps" title="Competency Question">CQ</abbr> 3 is about gaining more insights into the scores of the seven impact criteria. The query that answers <abbr class="caps" title="Competency Question">CQ</abbr> 3 returns the individual impact scores, and provide a quick overview on which areas the building are performing well or poorly. Therefore, these scores can be used to support the decision-making process on which areas further investments should go. Additionally, we sort the results of the impact criteria in the same order as in the official <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> calculation sheet, which is implemented using <code>VALUES</code> with the impact name and sequence number and the <code>ORDER BY</code> clause.</p>
+<p>The answer to <abbr class="caps" title="Competency Question">CQ</abbr> 4 provides even more detailed information, as it adds the nine domains and presents the scores for all domain-impact combinations for a given assessment. This provides a profound analysis as it pinpoints the weaknesses and strengths of a building, for instance that the domain “Heating” already reaches a high energy efficiency but the domain “Cooling” still has some improvement potential.</p>
+<p><abbr class="caps" title="Competency Question">CQ</abbr> 5 targets the scenario in which a building has already been assessed multiple times, for example, when building improvements have been applied. In this case, we would like to compare assessments/scores of a particular building over time. This scenario can be extended to compare different assessments across different buildings.</p>
+</section>
+<section id="sec:conclusion" class="level2" data-number="8">
+<h2 data-number="8"><span class="section-number">8</span> Conclusion</h2>
+<p>We have introduced a Semantic Smart Readiness Indicator framework to represent <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> related information and compute <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> scores. Our framework is <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr>, flexible to accommodate specific <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> requirements, and can be aligned with existing semantic building models to facilitate data linking and exchange.</p>
+<p>In particular, we described our ontology engineering process, which follows the <abbr class="caps" title="Linked Open Terms methodology">LOT</abbr> methodology. Additionally, we have implemented a <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr>-based <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> score calculation process, which makes use of a knowledge graph created following the model. We have also evaluated the ontology and the knowledge graph, using additional external tools, and answering competency questions. The evaluation showed that our proposed information model is not only capable to represent the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> of a building, but it also provides answers to all our competency questions.</p>
+<p>This work was partially funded by the European Union’s Horizon 2020 research and innovation program project PHOENIX under grant agreement no. 893079.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<ol id="refs" class="references">
+<li id="ref-eudir" property="citation" typeof="ScholarlyArticle">European Parliament, Council of the European Union: <cite property="name"><a href="http://data.europa.eu/eli/dir/2018/844/oj"><cite class="nocase" property="name">Directive (<abbr class="caps" title="European Union">EU</abbr>) 2018/844 of the European Parliament and of the Council of 30 May 2018</cite></a></cite>. <cite property="name">OJ</cite>. L 156/75, 75–91 (2018).</li>
+<li id="ref-srireport" property="citation" typeof="ScholarlyArticle">Commission, E., Energy, D.-G. for, Verbeke, S., Aerts, D., Reynders, G., Ma, Y., Waide, P.: <cite property="name">Final report on the technical support to the development of a smart readiness indicator for buildings</cite>. Publications Office (2020). https://doi.org/<a href="https://doi.org/10.2833/41100">10.2833/41100</a>.</li>
+<li id="ref-wilkinson2016fair" property="citation" typeof="ScholarlyArticle">Wilkinson, M.D., Dumontier, M., Aalbersberg, Ij.J., Appleton, G., Axton, M., Baak, A., Blomberg, N., Boiten, J.-W., Silva Santos, L.B. da, Bourne, P.E., others: <cite property="name">The <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> guiding principles for scientific data management and stewardship</cite>. Scientific data. 3, 1–9 (2016). https://doi.org/<a href="https://doi.org/10.1038/sdata.2016.18">10.1038/sdata.2016.18</a>.</li>
+<li id="ref-Balaji16" property="citation" typeof="ScholarlyArticle">Balaji, B., Bhattacharya, A.A., Fierro, G., Gao, J., Gluck, J., Hong, D., Johansen, A., Koh, J., Ploennigs, J., Agarwal, Y., Berges, M., Culler, D.E., Gupta, R.K., Kjærgaard, M.B., Srivastava, M.B., Whitehouse, K.: <cite property="name">Brick: Towards a unified metadata schema for buildings</cite>. In: Proceedings of the 3rd <cite property="name">ACM</cite> international conference on systems for energy-efficient built environments, BuildSys@SenSys 2016, palo alto, CA, USA, november 16-17, 2016. pp. 41–50. <cite property="name">ACM</cite> (2016). https://doi.org/<a href="https://doi.org/10.1145/2993422.2993577">10.1145/2993422.2993577</a>.</li>
+<li id="ref-Rasmussen21" property="citation" typeof="ScholarlyArticle">Rasmussen, M.H., Lefrançois, M., Schneider, G.F., Pauwels, P.: <cite property="name"><cite property="name"><abbr class="caps" title="Building Topology Ontology">BOT</abbr>:</cite> The building topology ontology of the <cite property="name"><abbr class="caps" title="World Wide Web Consortium">W3C</abbr></cite> linked building data group</cite>. Semantic Web. 12, 143–161 (2021). https://doi.org/<a href="https://doi.org/10.3233/SW-200385">10.3233/SW-200385</a>.</li>
+<li id="ref-Pritoni21" property="citation" typeof="ScholarlyArticle">Pritoni, M., Paine, D., Fierro, G., Mosiman, C., Poplawski, M., Saha, A., Bender, J., Granderson, J.: <cite property="name">Metadata schemas and ontologies for building energy applications: A critical review and use case analysis</cite>. Energies. 14, (2021). https://doi.org/<a href="https://doi.org/10.3390/en14072024">10.3390/en14072024</a>.</li>
+<li id="ref-Fokaides20" property="citation" typeof="ScholarlyArticle">Fokaides, P.A., Panteli, C., Panayidou, A.: <cite property="name">How are the smart readiness indicators expected to affect the energy performance of buildings: First evidence and perspectives</cite>. Sustainability. 12, (2020). https://doi.org/<a href="https://doi.org/10.3390/su12229496">10.3390/su12229496</a>.</li>
+<li id="ref-Vigna20" property="citation" typeof="ScholarlyArticle">Vigna, I., Pernetti, R., Pernigotto, G., Gasparella, A.: <cite property="name">Analysis of the building smart readiness indicator calculation: A comparative case-study with two panels of experts</cite>. Energies. 13, (2020). https://doi.org/<a href="https://doi.org/10.3390/en13112796">10.3390/en13112796</a>.</li>
+<li id="ref-Maerzinger19" property="citation" typeof="ScholarlyArticle">Märzinger, T., Österreicher, D.: <cite property="name">Supporting the smart readiness indicator—a methodology to integrate a quantitative assessment of the load shifting potential of smart buildings</cite>. Energies. 12, (2019). https://doi.org/<a href="https://doi.org/10.3390/en12101955">10.3390/en12101955</a>.</li>
+<li id="ref-Janhunen19" property="citation" typeof="ScholarlyArticle">Janhunen, E., Pulkka, L., Säynäjoki, A., Junnila, S.: <cite property="name">Applicability of the smart readiness indicator for cold climate countries</cite>. Buildings. 9, (2019). https://doi.org/<a href="https://doi.org/10.3390/buildings9040102">10.3390/buildings9040102</a>.</li>
+<li id="ref-Ramezani21" property="citation" typeof="ScholarlyArticle">Ramezani, B., Silva, Manuel.G. da, Simões, N.: <cite property="name">Application of smart readiness indicator for mediterranean buildings in retrofitting actions</cite>. Energy and Buildings. 249, 111173 (2021). https://doi.org/<a href="https://doi.org/10.1016/j.enbuild.2021.111173">10.1016/j.enbuild.2021.111173</a>.</li>
+<li id="ref-Hammar19" property="citation" typeof="ScholarlyArticle">Hammar, K., Wallin, E.O., Karlberg, P., Hälleberg, D.: <cite property="name">The RealEstateCore ontology</cite>. In: Ghidini, C., Hartig, O., Maleshkova, M., Svátek, V., Cruz, I.F., Hogan, A., Song, J., Lefrançois, M., and Gandon, F. (eds.) The semantic web - <cite property="name">ISWC</cite> 2019 - 18th international semantic web conference, proceedings, part <cite property="name">II</cite>. pp. 130–145. Springer (2019). https://doi.org/<a href="https://doi.org/10.1007/978-3-030-30796-7\_9">10.1007/978-3-030-30796-7\_9</a>.</li>
+<li id="ref-Garcia2023" property="citation" typeof="ScholarlyArticle">García-Castro, R., Lefrançois, M., Poveda-Villalón, M., Daniele, L.: <cite property="name">The ETSI <abbr class="caps" title="Smart Applications REFerence Ontology">SAREF</abbr> ontology for smart applications: A long path of development and evolution</cite>. In: Energy smart appliances. pp. 183–215. John Wiley &amp; Sons, Ltd (2023). https://doi.org/<a href="https://doi.org/10.1002/9781119899457.ch7">10.1002/9781119899457.ch7</a>.</li>
+<li id="ref-Poveda18" property="citation" typeof="ScholarlyArticle">Poveda-Villalón, M., Garcı́a-Castro, R.: <cite property="name"><a href="https://ceur-ws.org/Vol-2159/02paper.pdf">Extending the <cite property="name"><abbr class="caps" title="Smart Applications REFerence Ontology">SAREF</abbr></cite> ontology for building devices and topology</a></cite>. In: Poveda-Villalón, M., Pauwels, P., and Roxin, A. (eds.) Proceedings of the 6th linked data in architecture and construction workshop, london, united kingdom, june 19-21, 2018. pp. 16–23. CEUR-WS.org (2018).</li>
+<li id="ref-Poveda22" property="citation" typeof="ScholarlyArticle">Poveda-Villalón, M., Fernández-Izquierdo, A., Fernández-López, M., Garcı́a-Castro, R.: <cite property="name"><cite property="name"><abbr class="caps" title="Linked Open Terms methodology">LOT</abbr>:</cite> An industrial oriented ontology engineering framework</cite>. Eng. Appl. Artif. Intell. 111, 104755 (2022). https://doi.org/<a href="https://doi.org/10.1016/J.ENGAPPAI.2022.104755">10.1016/J.ENGAPPAI.2022.104755</a>.</li>
+<li id="ref-rdfqb" property="citation" typeof="ScholarlyArticle">Reynolds, D., Cyganiak, R.: <cite property="name"><a href="https://www.w3.org/TR/2014/REC-vocab-data-cube-20140116/">The <cite property="name"><abbr class="caps" title="Resource Description Framework">RDF</abbr></cite> data cube vocabulary</a></cite>. <abbr class="caps" title="World Wide Web Consortium">W3C</abbr> (2014).</li>
+<li id="ref-skos-ref" property="citation" typeof="ScholarlyArticle">Bechhofer, S., Miles, A.: <cite property="name"><a href="https://www.w3.org/TR/2009/REC-skos-reference-20090818/"><cite property="name"><abbr class="caps" title="Simple Knowledge Organization System">SKOS</abbr></cite> simple knowledge organization system reference</a></cite>. <abbr class="caps" title="World Wide Web Consortium">W3C</abbr> (2009).</li>
+<li id="ref-prov-o" property="citation" typeof="ScholarlyArticle">Sahoo, S., McGuinness, D., Lebo, T.: <cite property="name"><a href="https://www.w3.org/TR/2013/REC-prov-o-20130430/"><cite property="name"><abbr class="caps" title="W3C PROV Ontology">PROV</abbr>-O</cite>: The <cite property="name"><abbr class="caps" title="W3C PROV Ontology">PROV</abbr></cite> ontology</a></cite>. <abbr class="caps" title="World Wide Web Consortium">W3C</abbr> (2013).</li>
+<li id="ref-ontoology" property="citation" typeof="ScholarlyArticle">Alobaid, A., Garijo, D., Poveda-Villalón, M., Santana-Perez, I., Fernández-Izquierdo, A., Corcho, O.: <cite property="name">Automating ontology engineering support activities with OnToology</cite>. Journal of Web Semantics. 57, 100472 (2019). https://doi.org/<a href="https://doi.org/10.1016/j.websem.2018.09.003">10.1016/j.websem.2018.09.003</a>.</li>
+<li id="ref-lov" property="citation" typeof="ScholarlyArticle">Vandenbussche, P.-Y., Atemezing, G.A., Poveda-Villalón, M., Vatant, B.: <cite property="name">Linked open vocabularies (<abbr class="caps" title="Linked Open Vocabularies">LOV</abbr>): A gateway to reusable semantic vocabularies on the web</cite>. Semantic Web. 8, 437–452 (2017). https://doi.org/<a href="https://doi.org/10.3233/SW-160213">10.3233/SW-160213</a>.</li>
+<li id="ref-foops2021" property="citation" typeof="ScholarlyArticle">Garijo, D., Corcho, O., Poveda-Villalón, M.: <cite property="name"><a href="http://ceur-ws.org/Vol-2980/paper321.pdf"><abbr class="caps" title="FAIR Ontology Pitfall Scanner">FOOPS</abbr>!: An ontology pitfall scanner for the <abbr class="caps" title="Findable, Accessible, Interoperable, Reusable">FAIR</abbr> principles</a></cite>. In: International semantic web conference (ISWC) 2021: Posters, demos, and industry tracks. CEUR-WS.org (2021).</li>
+</ol>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<h2 class="unnumbered">Notes</h2>
+<ol>
+<li id="fn1"><p><a href="https://energy.ec.europa.eu/topics/energy-strategy/clean-energy-all-europeans-package_en" class="uri">https://energy.ec.europa.eu/topics/energy-strategy/clean-energy-all-europeans-package_en</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings/smart-readiness-indicator_en" class="uri">https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings/smart-readiness-indicator_en</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings/smart-readiness-indicator/sri-implementation-tools_en#sri-digital-calculation-tools" class="uri">https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings/smart-readiness-indicator/sri-implementation-tools_en#sri-digital-calculation-tools</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://saref.etsi.org/saref4bldg/v1.1.2/" class="uri">https://saref.etsi.org/saref4bldg/v1.1.2/</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p><a href="https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings/smart-readiness-indicator/sri-eu-countries_en" class="uri">https://energy.ec.europa.eu/topics/energy-efficiency/energy-efficient-buildings/smart-readiness-indicator/sri-eu-countries_en</a><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p><a href="https://ec.europa.eu/newsroom/ener/newsletter-archives/52491" class="uri">https://ec.europa.eu/newsroom/ener/newsletter-archives/52491</a><a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p><a href="https://protege.stanford.edu/" class="uri">https://protege.stanford.edu/</a><a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p><a href="https://w3id.org/sri" class="uri">https://w3id.org/sri</a><a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p><a href="https://w3id.org/sri/git" class="uri">https://w3id.org/sri/git</a><a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p><a href="https://w3id.org/sri/doc/doc/sri-example.trig" class="uri">https://w3id.org/sri/doc/doc/sri-example.trig</a><a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p><a href="https://github.com/w3c/shacl/blob/master/shapes/datacube.shapes.ttl" class="uri">https://github.com/w3c/shacl/blob/master/shapes/datacube.shapes.ttl</a>.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p><a href="https://w3id.org/sri/doc/doc" class="uri">https://w3id.org/sri/doc/doc</a><a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>A bug report has been submitted.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>Can be requested as part of the <abbr class="caps" title="Smart Readiness Indicator">SRI</abbr> assessment package: <a href="https://ec.europa.eu/eusurvey/runner/SRI-assessment-package" class="uri">https://ec.europa.eu/eusurvey/runner/<abbr class="caps" title="Smart Readiness Indicator">SRI</abbr>-assessment-package</a>.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p><a href="https://w3id.org/sri/doc/doc/CQ.html" class="uri">https://w3id.org/sri/doc/doc/<abbr class="caps" title="Competency Question">CQ</abbr>.html</a><a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+

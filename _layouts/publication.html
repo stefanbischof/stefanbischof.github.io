@@ -21,8 +21,7 @@ layout: default
     </header>
 
     <div class="row pub-row">
-        <aside class="col3 publication-meta">
-            <br />
+        <aside class="col3 publication-meta" aria-label="Publication details">
             {% if page.venue -%}
             <p class="venue">
                 Published in: <em property="isPartOf">{{ page.venue }}</em>
@@ -43,7 +42,7 @@ layout: default
             %}
             <p class="patent-number">Patent: {{ page.patent_number }}</p>
             {% endif %} {% if page.links %}
-            <nav class="pub-links">
+            <nav class="pub-links" aria-label="Publication links">
                 {%- for link in page.links -%} {%- if link.label == "DOI" -%}
                 <a property="identifier" href="{{ link.url }}"
                     >{{ link.label }}</a
@@ -57,7 +56,6 @@ layout: default
                 >{%- endunless -%} {%- endfor -%}
             </nav>
             {% endif %}
-            <br />
         </aside>
 
         <div class="col6">
@@ -76,7 +74,7 @@ layout: default
         <div class="col3 toc-sidebar">{% if page.toc %}{{ page.toc }}{% endif %}</div>
     </div>
 
-    <nav class="back-link">
+    <nav class="back-link" aria-label="Site navigation">
         <a href="/publications/">&larr; Back to all publications</a>
     </nav>
 </article>
