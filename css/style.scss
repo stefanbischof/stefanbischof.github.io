@@ -17,16 +17,14 @@
     font-style: normal;
     font-weight: 200 900;
     font-display: swap;
-    src: url('/fonts/SourceSerif4Variable-Roman.woff2') format('woff2-variations'),
-         url('/fonts/SourceSerif4Variable-Roman.woff2') format('woff2');
+    src: url('/fonts/SourceSerif4Variable-Roman.woff2') format('woff2-variations');
 }
 @font-face {
     font-family: 'Source Serif 4';
     font-style: italic;
     font-weight: 200 900;
     font-display: swap;
-    src: url('/fonts/SourceSerif4Variable-Italic.woff2') format('woff2-variations'),
-         url('/fonts/SourceSerif4Variable-Italic.woff2') format('woff2');
+    src: url('/fonts/SourceSerif4Variable-Italic.woff2') format('woff2-variations');
 }
 
 $fontsize: 1.0625rem;
@@ -78,8 +76,6 @@ $highlight: #c33;
 	padding: 0.2rem 0.5rem 0.1rem;
 	font-family: $sansfont;
 	font-size: 0.8rem;
-	-moz-border-radius: 0.2rem;
-	-webkit-border-radius: 0.2rem;
 	border-radius: 0.2rem;
 	text-shadow: none;
 	background-image: none;
@@ -128,13 +124,11 @@ sup {
     vertical-align: baseline;
     line-height: 0;
     position: relative;
-    top: 0;
 }
 body > header {
     margin: 0;
     padding: $baseline 0 $baseline;
     @include font-size($big-scale, 1);
-    font-family: $seriffont;
     // Drop the weight from 700 → 500: bold-roman everywhere reads as one
     // monotone block; semibold keeps the masthead as a "title" without
     // letting it shout. opsz pushed to 28 for display-cut letterforms
@@ -173,6 +167,7 @@ h1, h2, h3 {
     font-weight: 400;
     font-family:  $seriffont;
     text-wrap: balance;
+    font-variant-numeric: lining-nums proportional-nums;
 }
 h1, h2, header.big {
     line-height: $baseline*2;
@@ -181,8 +176,7 @@ h1, h2, header.big {
 }
 h1 {
     @include font-size($big-scale, 2);
-line-height: $baseline*2;
-margin: 0;
+    margin: 0;
 }
 h2 {
  @include font-size($big-scale, 1);
@@ -211,9 +205,12 @@ p, li:last-child, h3, body > header, pre, textarea, figure {
 // aligns flush with the first text line. The ID selector (#footnotes)
 // gives specificity 1-0-x, overriding anything in the baseline rules above.
 // Also suppress the <p> child's own struts; the <li> context provides spacing.
+// overflow-wrap: break-word prevents long raw URLs (common in footnotes)
+// from overflowing the content column.
 #footnotes {
     li {
         &::before, &::after { display: none; }
+        overflow-wrap: break-word;
         > p {
             &::before, &::after { display: none; }
         }
@@ -257,17 +254,9 @@ div[typeof="ScholarlyArticle"] details.abstract-details,
 div[typeof="CreativeWork"] details.abstract-details,
 div[typeof="Thesis"] details.abstract-details {
     margin-bottom: 0;
-    padding-bottom: 0pt;
 }
-/*p > em {
-    font-style: normal;
-    font-weight: bold;
-}*/
 ul, ol, figure.highlight {
     margin: 0;
-}
-dd {
-margin-top: $baseline;
 }
 li {
 padding: 0;
@@ -283,7 +272,7 @@ margin: 0 0 0 1rem;
    --------------------------------------------------------------- */
 .section-number {
     color: #aaa;
-    font-variant-numeric: tabular-nums;  // keep numbers fixed-width so heading text aligns
+    font-variant-numeric: tabular-nums lining-nums;  // fixed-width lining so heading text aligns
     margin-right: 0.4em;
 }
 
@@ -337,10 +326,14 @@ margin: 0 0 0 1rem;
     grid-template-columns: 1fr 2fr 1fr;
     // Float overrides — col children are float:left by default; cancel that
     // inside the grid container so they behave as normal grid items.
+    // min-width: 0 is required: without it, 1fr tracks are stretched by the
+    // minimum content size of their items (e.g. TOC links with white-space:nowrap
+    // force the 1fr sidebar track wider, stealing space from the 2fr content).
     > .col3, > .col6 {
         float: none;
         width: auto;
         margin: 0;
+        min-width: 0;
     }
 }
 
@@ -392,12 +385,16 @@ margin: 0 0 0 1rem;
             color: inherit;
             display: block;
             padding: 0.1em 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             &:hover { color: $highlight; }
         }
-        // Sub-section list indented and slightly smaller
+        // Sub-section list indented. Font size is absolute (not relative em)
+        // so nesting doesn't compound: 0.9em of 0.9em of 0.8125rem → ~0.66rem.
         ol ol {
             padding-left: 1em;
-            font-size: 0.9em;
+            font-size: 0.8125rem;
         }
     }
 }
@@ -405,18 +402,39 @@ margin: 0 0 0 1rem;
 /* ---------------------------------------------------------------
    Abstract — italic body text, the conventional academic treatment
    for setting the abstract apart from the numbered sections.
-   The heading (h2 "Abstract") uses the same style as other h2s.
+   A bottom border + margin separates it visually from Section 1,
+   which otherwise starts with an identically-styled h2.
    --------------------------------------------------------------- */
+section.abstract {
+    border-bottom: 1px solid #e0d8d0;
+    margin-bottom: $baseline;
+}
+// "Abstract" is a label, not a peer section heading — style it like h3
+// (small-caps, upright, single baseline struts) rather than h2 (italic, 2×struts).
+section.abstract h2 {
+    font-size: 1rem;
+    font-style: normal;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.06em;
+    line-height: $baseline;
+    // Override the 2-baseline struts inherited from the global h1,h2 rule.
+    &::before { height: $baseline; }
+    &::after  { height: $baseline; }
+}
 section.abstract [property="abstract"] {
     font-style: italic;
 }
 
 /* ---------------------------------------------------------------
    Metadata sidebar — hyphenation for long venue names.
+   padding-top aligns the first <p> roughly with the abstract h2
+   (which has a 2-baseline strut before it). The <br> spacers in the
+   template have been removed; rhythm comes from <p> baseline struts.
    --------------------------------------------------------------- */
 .publication-meta {
     hyphens: auto;
     word-break: break-word;
+    padding-top: $baseline;
 }
 
 /* ---------------------------------------------------------------
@@ -493,9 +511,6 @@ section.abstract [property="abstract"] {
 list-style-type: none;
 padding-left: 0;
 }
-.code {
-
-}
 .caps, abbr.caps {
     font-variant-caps: all-small-caps;
     letter-spacing: 0.04em;
@@ -508,14 +523,22 @@ abbr.caps {
     border-bottom: none;
     cursor: help;           // signals that a tooltip (title=) is available
 }
+
+// Source Serif 4 Italic has no smcp/c2sc OpenType tables at all (verified).
+// In italic contexts, reset to Roman so the real small-cap glyphs are used.
+// Upright small caps within italic text is the classical typographic convention
+// when a typeface lacks italic small caps.
+em .caps, em abbr.caps,
+cite .caps, cite abbr.caps,
+i .caps, i abbr.caps,
+section.abstract .caps, section.abstract abbr.caps {
+    font-style: normal;
+}
 a {
 text-decoration: none;
 color: #333;
 background-image: linear-gradient(to top, transparent 0%, $highlight 1%, $highlight 5%, transparent 8%);
 text-shadow: white 0.1rem 0px 0px, white -0.1rem 0px 0px;
-}
-hr ~ * a {
-border-width: 0;
 }
 hr {
 clear: both;
@@ -524,7 +547,7 @@ margin: $baseline 0 $baseline;
 }
 
 .row {
-margin: 0 0;
+margin: 0;
 }
 .row:after, .row:before {
 clear:both;
@@ -567,11 +590,8 @@ pre, figure, code, textarea {
     color: #666;
     resize: none;
     overflow: hidden;
- white-space: pre-wrap;       /* css-3 */
- white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
- white-space: -pre-wrap;      /* Opera 4-6 */
- white-space: -o-pre-wrap;    /* Opera 7 */
- word-wrap: break-word;       /* Internet Explorer  */
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 pre, textarea {
     margin-top: $baseline/3;
@@ -670,6 +690,224 @@ figure > figcaption {
     text-align: center;
     margin: ($baseline * 0.5) auto 0;
     max-width: 90%;
+    font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* Code listings inside figures must stay left-aligned even though the parent
+   figure has text-align:center (which centres <img> elements via display:block
+   + margin:auto, but would otherwise centre inline/pre content too). */
+figure div.sourceCode,
+figure pre {
+    text-align: left;
+}
+
+/* ---------------------------------------------------------------
+   Listing figures — compact vertical rhythm.
+   A listing figure (<figure class="listing"> or <figure id="lis:…">)
+   accumulates space from several sources that stack badly:
+     • figure::before / ::after  baseline struts  (1 × $baseline each)
+     • div.sourceCode margin-top / -bottom        ($baseline each)
+     • div.sourceCode padding-top / -bottom       ($baseline/2 each)
+     • figcaption margin                          ($baseline/2)
+   Replace all of that with a single controlled margin on the figure
+   and remove the inner stacking.
+   --------------------------------------------------------------- */
+figure.listing,
+figure[id^="lis:"] {
+    margin: ($baseline * 0.75) 0;
+}
+
+// Suppress the shared baseline pseudo-element struts that apply to
+// all <figure> elements — we use explicit margin instead.
+// Also suppress the <pre> struts: the global rule gives baseline-before/after
+// to every <pre>, which adds ~1 line of blank space inside the code box.
+figure.listing::before, figure.listing::after,
+figure[id^="lis:"]::before, figure[id^="lis:"]::after,
+figure.listing pre::before, figure.listing pre::after,
+figure[id^="lis:"] pre::before, figure[id^="lis:"] pre::after {
+    display: none;
+}
+
+// Remove sourceCode's own margin; the figure margin provides spacing.
+figure.listing div.sourceCode,
+figure[id^="lis:"] div.sourceCode {
+    margin: 0;
+    padding: ($baseline * 0.5) 1rem;   // half-line top/bottom inside the code box
+}
+
+figure.listing > figcaption,
+figure[id^="lis:"] > figcaption {
+    text-align: left;
+    margin: 0 0 ($baseline * 0.15) 0;   // small gap between label and code
+    max-width: none;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* ---------------------------------------------------------------
+   Tables — booktabs style (no box/vertical rules; three horizontal
+   rules only).  fix_table_thead() injects <thead>, <tfoot>,
+   stub <th scope="row">, .booktabs-cmidrule, and wraps each table
+   in <div class="table-scroll">.
+   --------------------------------------------------------------- */
+
+// Scroll wrapper — lets wide tables overflow horizontally rather than
+// blowing out the text column.
+.content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: $baseline 0;
+    font-size: 0.9rem;
+    line-height: $baseline;
+    font-variant-numeric: tabular-nums lining-nums;
+    border-top: 2px solid #403830;    // toprule
+    border-bottom: 2px solid #403830; // bottomrule
+}
+
+// Scroll wrapper — must come AFTER .content table so margin: 0 wins
+// (same specificity, source order decides).
+// overflow-x:auto implicitly makes overflow-y:auto which can clip the 2px
+// bottom border — padding-bottom: 4px prevents that.
+.table-scroll {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin: $baseline 0;
+}
+.table-scroll table {
+    margin: 0;       // wrapper owns the vertical rhythm
+    min-width: 100%; // fill the wrapper, still scrolls if wider
+}
+// Wide tables (rotated headers) must size to their natural content width —
+// don't stretch to fill the text column, which would push excess space into
+// the non-rotated stub/summary columns. Specificity (0,2,1) beats
+// .table-scroll table (0,1,1), so min-width: 0 wins.
+// margin: 0 auto centres the table within the scroll wrapper when it is
+// narrower than the content column (mirrors LaTeX \centering behaviour).
+.content table.wide-table {
+    width: auto;
+    min-width: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+.content th,
+.content td {
+    border: none;
+    padding: 0.35rem 0.65rem;
+    vertical-align: top;
+    text-align: left;
+}
+// Alignment classes injected by fix_table_align_styles() in html-build.py,
+// replacing pandoc's inline style="text-align: ..." attributes.
+// Specificity (0,2,1) beats .content th/td (0,2,1) via source order.
+.content .al-c { text-align: center; }
+.content .al-r { text-align: right; }
+// Midrule 1: below the last header row
+.content thead tr:last-child th {
+    border-bottom: 1px solid #403830;
+}
+// Column headers: small-caps
+.content thead th {
+    font-weight: 600;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.02em;
+    vertical-align: bottom;
+}
+// Midrule 2: above the footer (tfoot)
+.content tfoot tr:first-child td,
+.content tfoot tr:first-child th {
+    border-top: 1px solid #403830;
+}
+// Stub column: row headers use normal weight, no small-caps
+.content tbody th[scope="row"],
+.content tfoot th[scope="row"] {
+    font-weight: 400;
+    font-variant-caps: normal;
+    letter-spacing: normal;
+}
+// \cmidrule: partial underline on the matching header cell(s)
+.content th.booktabs-cmidrule,
+.content td.booktabs-cmidrule {
+    border-bottom: 1px solid #403830;
+    padding-bottom: 0.2rem;
+}
+// Fallback midrule for tables without <thead>
+.content tbody tr:first-child td,
+.content tbody tr:first-child th {
+    border-top: 1px solid #403830;
+}
+
+// Wide tables: rotate column-label headers marked with class="rotf" by
+// fix_table_thead().  Restores the \rotf{} bottom-to-top effect from LaTeX.
+// The stub column (first th) is left untouched by the Python code.
+.content thead th.rotf {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    vertical-align: bottom;
+    text-align: left;
+    padding: 0.65rem 0.2rem 0.2rem;  // top becomes left in vertical mode
+}
+.content caption {
+    caption-side: top;
+    color: #666;
+    font-size: 0.85rem;
+    padding-bottom: 0.3rem;
+    text-align: left;
+}
+
+/* ---------------------------------------------------------------
+   Description lists — used for steps, requirements, and competency
+   questions generated from LaTeX \begin{description}…\end{description}.
+   Renders as a hanging-indent list: term bold, definition indented.
+   --------------------------------------------------------------- */
+// Grid layout: term and definition on the same line.
+// dt takes as much space as it needs; dd fills the rest.
+// Row gap provides the only vertical spacing between entries.
+.content dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5em;
+    row-gap: ($baseline * 0.15);
+    margin: $baseline 0;
+    padding: 0;
+}
+.content dt {
+    grid-column: 1;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    align-self: baseline;
+}
+.content dt::after {
+    content: ':';
+    font-weight: 400;
+}
+.content dd {
+    grid-column: 2;
+    margin: 0;
+    padding: 0;
+    align-self: baseline;
+}
+// Pandoc wraps <dd> and <li> content in <p>, which inherits the global
+// baseline struts (a full line above and below each item). Suppress all of
+// them — the <p> struts on the wrapped content AND the li:first-child /
+// li:last-child struts on the <li> itself.
+//
+// Why suppress li:first-child::before too? The list marker (list-style-
+// position: outside) aligns to the first line box inside <li>. After
+// suppressing <p>::before, that first line box becomes the li::before strut —
+// an invisible inline-block — so the marker appears alone on its own line
+// before the text. Suppressing it fixes that.
+//
+// Outer spacing (between the list and surrounding paragraphs) comes from the
+// <p>::after / <p>::before struts on those paragraphs, which is sufficient.
+.content dd > p,
+.content li > p {
+    &::before, &::after { display: none; }
+}
+.content li:first-child::before,
+.content li:last-child::after {
+    display: none;
 }
 
 /* ---------------------------------------------------------------
@@ -699,10 +937,8 @@ figure > figcaption {
     margin: 0;
 }
 .authors {
-    color: #678;
-    .first, .last {
-	
-    }
+    // Warm-shifted from the cool #678 to harmonise with the #403830 ink palette.
+    color: #786870;
 }
 @media only screen and (max-width: 40rem) {
     html { font-size: 0.9rem; line-height: $baseline*0.8;}
@@ -742,6 +978,24 @@ figure > figcaption {
 
 // (Dark-mode block moved to the end of this file so its overrides
 //  win the cascade against later light-mode declarations.)
+
+/* ---------------------------------------------------------------
+   Back link — "← Back to all publications" nav below the article.
+   Styled as a quiet small-caps navigation cue rather than an inline
+   body link (no gradient underline, muted color).
+   --------------------------------------------------------------- */
+.back-link {
+    margin: $baseline 0;
+    a {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.05em;
+        font-size: 0.9rem;
+        color: #999;
+        background-image: none;
+        text-shadow: none;
+        &:hover { color: $highlight; }
+    }
+}
 
 /* ---------------------------------------------------------------
    Publication link list ( DOI · PDF · Details ) — small caps,
