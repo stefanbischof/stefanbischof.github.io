@@ -1,0 +1,104 @@
+---
+id: BischofSchenner2020
+title: "Towards a Railway Topology Ontology to Integrate and Query Rail Data Silos"
+authors:
+  - Stefan Bischof
+  - Gottfried Schenner
+year: 2020
+venue: Posters and Demos Track of ISWC
+category: poster
+links:
+  - label: CEUR
+    url: https://ceur-ws.org/Vol-2721/paper588.pdf
+  - label: Video
+    url: https://youtu.be/5D8i7IfxaHM
+abstract: |
+  Engineering projects in the railway domain typically involve a large number of subsystems. Therefore a common understanding of the domain is essential. In the past this has been provided by XML-based data exchange standards and UML-based object-oriented models. With the increasing adoption of semantic technologies for engineering projects the demand to provide these standard data models in the form of ontologies has grown. We describe requirements and challenges to define an open standard ontology for railway topologies based on existing standards. The purpose of the finished ontology will be to enable topological queries and reasoning for railway networks in a standardized and reusable manner.
+toc: |
+  <nav class="toc" aria-label="Article contents">
+  <p class="toc-heading">Table of Contents</p>
+  <ol>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#introduction"><span class="section-number">1</span>Introduction</a></li>
+  <li><a href="#requirements"><span class="section-number">2</span>Requirements</a></li>
+  <li><a href="#existing-models-of-railway-topology"><span class="section-number">3</span>Existing Models of Railway Topology</a></li>
+  <li><a href="#rail-topology-ontology"><span class="section-number">4</span>Rail Topology Ontology</a></li>
+  <li><a href="#conclusion"><span class="section-number">5</span>Conclusion</a></li>
+  <li><a href="#references">References</a></li>
+  <li><a href="#footnotes">Notes</a></li>
+  </ol>
+  </nav>
+---
+
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1"><span class="section-number">1</span> Introduction</h2>
+<p>A common understanding of the different railway subsystems is vital for successful railway engineering projects. Historically, plans, drawings and lists were used to exchange information for engineering between stakeholders. Digital equivalents replaced these artifacts. To simplify railway simulation and operation applications, data exchange formats were standardised. Ideally, we could simply integrate rail data exports and thereby enable a domain expert to query data from a wide array of systems in an integrated knowledge graph system.</p>
+<p>Different rail infrastructure systems and subsystems are modelled by different tools resulting in a number of <em>independent</em> files describing the same real-world station. Automatically integrating these files is hardly feasible due to different modelling approaches and the lack of a canonical naming scheme of all different entities. To pose a query to a system with integrated data, domain experts have to know the domain model of the system well. Introducing yet-another domain model puts system adoption at risk.</p>
+<p>We start to address these two problems with a common unified railway topology, formalised as an <abbr class="caps" title="Web Ontology Language">OWL</abbr> ontology. <abbr class="caps" title="Resource Description Framework">RDF</abbr> and <abbr class="caps" title="Web Ontology Language">OWL</abbr> together with an <abbr class="caps" title="Extract, Transform, Load">ETL</abbr> (extract, transform, load) pipeline should simplify the data integration task and international standards as a base should increase adoption <span class="citation" data-cites="eswc2019">[<a href="#ref-eswc2019" role="doc-biblioref">1</a>]</span>. In this poster we discuss different existing railway topology models, formulate concrete requirements and describe a preliminary ontology to enable certain topological queries.</p>
+</section>
+<section id="requirements" class="level2" data-number="2">
+<h2 data-number="2"><span class="section-number">2</span> Requirements</h2>
+<p>Our ontology engineering process is guided by three resources: competency questions, adherence to data exchange standards and best practices.</p>
+<p>In a first iteration the following two competency questions were chosen:</p>
+<ol>
+<li><p>If a train runs from A to B on the railway network, which infrastructure elements (including their direction and orientation) will be traversed?</p></li>
+<li><p>What are the possible paths between A and B on the railway network?</p></li>
+</ol>
+<p>We have the following requirements regarding modelling the railway domain and adherence to existing data exchange standards: (i) The ontology must be able to represent the (logical) topology of a railway network, (ii) The ontology must at least contain the main infrastructure elements found in every railway network, i.e., track, switches, signal and (iii) The (logical) position and orientation of these infrastructure elements in the railway network must be defined.</p>
+<p>When designing the railway ontology we are following ontology engineering best practices as far as possible. Specifically, the ontology should be vendor independent, reusable and openly available. The concepts of the ontology must be well documented (especially important in engineering as it must be absolutely clear which concepts of the real world correspond to concepts of the ontology) and the ontology should be minimal, i.e., does not contain any aspects not related to the topology of railway networks.</p>
+</section>
+<section id="existing-models-of-railway-topology" class="level2" data-number="3">
+<h2 data-number="3"><span class="section-number">3</span> Existing Models of Railway Topology</h2>
+<figure id="fig:railwaytopologymodels" data-latex-placement="tb">
+<img src="/assets/papers/2020-iswc-railway-topology/RailwayTopologyExamples.svg" alt="Figure 1: Railway network topology models" />
+<figcaption>Figure 1: Railway network topology models</figcaption>
+</figure>
+<p>Historically, many different models for railway systems topology have been proposed, starting with straightforward graph-based models, for example by Hansen <span class="citation" data-cites="hansen1998formalising">[<a href="#ref-hansen1998formalising" role="doc-biblioref">2</a>]</span>. Figure <a href="#fig:railwaytopologymodels" data-reference-type="ref" data-reference="fig:railwaytopologymodels">1</a> shows how a section of an example railway network (shown at the top) consisting of three signals, three tracks and one switch would be represented in three different models:</p>
+<p>The <em>component-port model</em> – here every relevant infrastructure element is represented by a component which is connected to other elements by ports. The EURIS method <span class="citation" data-cites="van1998euris">[<a href="#ref-van1998euris" role="doc-biblioref">3</a>]</span> uses this model.</p>
+<p>The <em>double vertex graph model</em> – which is an extension of a standard graph-based model. Instead of a single vertex, double vertices are used, each vertex representing one possible direction of a vehicle on the railway network. Commercial tools like the railway network simulation tool OpenTrack <span class="citation" data-cites="nash2004railroad">[<a href="#ref-nash2004railroad" role="doc-biblioref">4</a>]</span> use this model.</p>
+<p>The <em>connexity graph model</em> turns earlier ideas upside down: instead of crossings and switches being modelled as nodes, the connexity graph <span class="citation" data-cites="gely2010multi">[<a href="#ref-gely2010multi" role="doc-biblioref">5</a>]</span> models the tracks in between as nodes called <code>NetElements</code> connected by <code>NetRelations</code>. <code>NetElements</code> and <code>NetRelations</code> can furthermore be recursively composed on different levels of abstraction. RailTopoModel (<abbr class="caps" title="RailTopoModel">RTM</abbr>) <span class="citation" data-cites="IRS30100">[<a href="#ref-IRS30100" role="doc-biblioref">6</a>]</span> uses the connexity graph model to represent the railway network topology. We decided to base our ontology on the RailTopoModel because it is a standard of the International Union of Railways (<abbr class="caps" title="Union internationale des chemins de fer (International Union of Railways)">UIC</abbr>).</p>
+</section>
+<section id="rail-topology-ontology" class="level2" data-number="4">
+<h2 data-number="4"><span class="section-number">4</span> Rail Topology Ontology</h2>
+<p>None of the earlier existing work with comparable goals like RaCoOn <span class="citation" data-cites="tutcher2015enabling">[<a href="#ref-tutcher2015enabling" role="doc-biblioref">7</a>]</span>, InteGRail <span class="citation" data-cites="shingler2008rcm">[<a href="#ref-shingler2008rcm" role="doc-biblioref">8</a>]</span> or Smart-Rails<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> satisfied our requirements completely. Common issues are limitations to a small number of use-cases, a single vendor, a different modelling scope or simply missing ontology resources. General transportation ontologies like km4city<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> contain railway concepts but are too unspecific to answer the topological questions required in an railway engineering context.</p>
+<p>To avoid some of these limitations, ensure adoption and avoid creating yet-another rail domain model, we reuse existing standards as far as possible. For our purposes and requirements the most relevant standards are <abbr class="caps" title="RailTopoModel">RTM</abbr> and RailML. <abbr class="caps" title="RailTopoModel">RTM</abbr> and RailML share a similar goal with our approach to "foster the Federation of Railway Digital Models" <span class="citation" data-cites="collart2019reliability">[<a href="#ref-collart2019reliability" role="doc-biblioref">9</a>]</span> (<abbr class="caps" title="RailTopoModel">RTM</abbr>) and reducing the number of system-to-system interfaces and data exchange formats (RailML). <abbr class="caps" title="RailTopoModel">RTM</abbr> is an abstract topology data model instantiated by RailML. RailML is an <abbr class="caps" title="Extensible Markup Language">XML</abbr> based data exchange format for railway data.</p>
+<p>Although RailML provides <abbr class="caps" title="Extensible Markup Language">XML</abbr>-Schema files, automatically generated ontologies turned out impractical and needed considerable manual effort to be practically usable. For example it is unclear if <abbr class="caps" title="XML Schema Definition">XSD</abbr> element types correspond to classes of the ontology or are merely a construct for structuring the <abbr class="caps" title="Extensible Markup Language">XML</abbr> file. Similar problems, although to a lesser extent, occurred when automatically transforming the RailML <abbr class="caps" title="Unified Modeling Language">UML</abbr> model to an ontology.</p>
+<p>We expect the number of concepts and properties of a usable ontology to be relatively small, thus we use a bottom up approach, i.e., add those concepts that are mandatory for satisfying the requirements of our envisioned ontology.</p>
+<figure id="fig:railsample" data-latex-placement="tb">
+<img src="/assets/papers/2020-iswc-railway-topology/railsample.svg" alt="Figure 2: Instance model consisting of topology and infrastructure of the simple example in Fig. 1. Dotted connections hide corresponding nodes for positioning functional infrastructure entities on the topology." />
+<figcaption>Figure 2: Instance model consisting of topology and infrastructure of the simple example in Fig. <a href="#fig:railwaytopologymodels" data-reference-type="ref" data-reference="fig:railwaytopologymodels">1</a>. Dotted connections hide corresponding nodes for positioning functional infrastructure entities on the topology.</figcaption>
+</figure>
+<p>Figure <a href="#fig:railsample" data-reference-type="ref" data-reference="fig:railsample">2</a> models the example topology of Fig. <a href="#fig:railwaytopologymodels" data-reference-type="ref" data-reference="fig:railwaytopologymodels">1</a> by using the adapted concepts of <abbr class="caps" title="RailTopoModel">RTM</abbr> and RailML. On the topological level, based on the <abbr class="caps" title="RailTopoModel">RTM</abbr>, <code>NetElements</code> (<code>ne1</code>, <code>ne2</code>, <code>ne3</code>) are connected to each other by <code>NetRelations</code> (<code>nr12</code>, <code>nr13</code>, <code>nr23</code>). Attributes define how ends of <code>NetElements</code>, e.g., ends of a track, are connected. Functional infrastructure entities from RailML, tracks, signals and switches, are then attached to the topology entities and thereby located.</p>
+</section>
+<section id="conclusion" class="level2" data-number="5">
+<h2 data-number="5"><span class="section-number">5</span> Conclusion</h2>
+<p>Knowledge Graphs and Semantic Web technologies are promising technologies to integrate rail data from different systems. The graph nature of rail networks together with a large number of highly interconnected parts and components suits graph-based representations well.</p>
+<p><abbr class="caps" title="Extensible Markup Language">XML</abbr> standards such as RailML have been created to mitigate the proliferation of schemas and object-oriented models for a domain, i.e., to at least allow a tool-independent exchange of data. Building on top of these efforts and together with the RailML community, we are currently in the process of defining a reusable standard ontology for rail topology and specific parts of rail infrastructure to support engineering. This is an ongoing effort and we invite everybody interested to contact us via email or the RailML forum. We also plan to contact research groups that have done similar work in the past, e.g., the RAISO ontology <span class="citation" data-cites="bellini2016raiso">[<a href="#ref-bellini2016raiso" role="doc-biblioref">10</a>]</span>.</p>
+<p>In a typical engineering tool the data of a RailML file is converted into a tool-specific data schema. This conversion step is no longer needed in a Knowledge Graph system as the instance data based on the RailML ontology can be imported directly and linked to additional data sources. This enables the reuse of queries and algorithms based on the ontology.</p>
+<p>Furthermore, we are currently working on mappings from existing proprietary infrastructure data to the presented ontology as well as an implementation to answer our competency questions.</p>
+<p>While some features of <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> 1.1, such as property path expressions, are powerful tools to explore an <abbr class="caps" title="Resource Description Framework">RDF</abbr> graph, it is not clear yet if, or to what extent, our competency questions can be answered by a <abbr class="caps" title="SPARQL Protocol and RDF Query Language">SPARQL</abbr> endpoint with <abbr class="caps" title="Web Ontology Language">OWL</abbr> reasoning alone – extensive post-processing might be necessary.</p>
+<p>To guide future developments, we are working with different user groups to formulate more competency questions relevant for their business.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<ol id="refs" class="references">
+<li id="ref-eswc2019" property="citation" typeof="ScholarlyArticle">Bischof, S., Schenner, G.: <cite property="name">Challenges of constructing a railway knowledge graph</cite>. In: The semantic web: ESWC 2019 satellite events. pp. 253–256 (2019).</li>
+<li id="ref-hansen1998formalising" property="citation" typeof="ScholarlyArticle">Hansen, K.M.: <cite property="name">Formalising railway interlocking systems</cite>. In: Nordic seminar on dependable computing systems. pp. 83–94. Citeseer (1998).</li>
+<li id="ref-van1998euris" property="citation" typeof="ScholarlyArticle">Dijk, F. van, Fokkink, W., Kolk, G., Ven, P. van de, Vlijmen, B. van: <cite property="name"><cite property="name">EURIS</cite>, a specification method for distributed interlockings</cite>. In: SAFECOMP. pp. 296–305 (1998).</li>
+<li id="ref-nash2004railroad" property="citation" typeof="ScholarlyArticle">Nash, A., Huerlimann, D.: <cite property="name">Railroad simulation using OpenTrack</cite>. WIT Transactions on The Built Environment. 74, (2004).</li>
+<li id="ref-gely2010multi" property="citation" typeof="ScholarlyArticle">Gély, L., Dessagne, G., Pesneau, P., Vanderbeck, F.: <cite property="name">A multi scalable model based on a connexity graph representation</cite>. Computers in Railways XII. 1, 193–204 (2010).</li>
+<li id="ref-IRS30100" property="citation" typeof="ScholarlyArticle"><em><span>RailTopoModel</span> – railway infrastructure topological model</em>. International Union of Railway (<abbr class="caps" title="Union internationale des chemins de fer (International Union of Railways)">UIC</abbr>) (2016).</li>
+<li id="ref-tutcher2015enabling" property="citation" typeof="ScholarlyArticle">Tutcher, J., Easton, J.M., Roberts, C.: <cite property="name">Enabling data integration in the rail industry using <abbr class="caps" title="Resource Description Framework">RDF</abbr> and <abbr class="caps" title="Web Ontology Language">OWL</abbr>: The RaCoOn ontology</cite>. ASCE-ASME Journal of Risk and Uncertainty in Engineering Systems, Part A: Civil Engineering. 3, F4015001 (2015).</li>
+<li id="ref-shingler2008rcm" property="citation" typeof="ScholarlyArticle">Shingler, R., Fadin, G., Umiliacchi, P.: <cite property="name">From RCM to predictive maintenance: The InteGRail approach</cite>. In: 2008 4th IET international conference on railway condition monitoring. IET (2008).</li>
+<li id="ref-collart2019reliability" property="citation" typeof="ScholarlyArticle">Magnien, A.: <cite property="name"><cite property="name">RailTopoModel</cite> – a cornerstone to foster the federation of railway digital models</cite>. In: RSSRail’19 (2019).</li>
+<li id="ref-bellini2016raiso" property="citation" typeof="ScholarlyArticle">Bellini, P., Nesi, P., Zaza, I.: <cite property="name"><cite property="name">RAISO</cite>: RAilway infrastructures and signaling ontology for configuration management, verification and validation</cite>. In: 2016 IEEE tenth international conference on semantic computing. pp. 350–353. IEEE (2016).</li>
+</ol>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<h2 class="unnumbered">Notes</h2>
+<ol>
+<li id="fn1"><p><a href="https://ontology.tno.nl/smart-rail/" class="uri">https://ontology.tno.nl/smart-rail/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="http://www.disit.org/km4city/schema" class="uri">http://www.disit.org/km4city/schema</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
