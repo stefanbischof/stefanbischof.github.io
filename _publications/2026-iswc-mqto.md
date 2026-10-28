@@ -11,8 +11,9 @@ authors:
 year: 2026
 venue: ISWC 2026 Resource Track
 category: conference
-status: forthcoming
 links:
+  - label: DOI
+    url: https://doi.org/10.1007/978-3-032-42026-8_27
   - label: Ontology
     url: https://w3id.org/mqto
   - label: Code
