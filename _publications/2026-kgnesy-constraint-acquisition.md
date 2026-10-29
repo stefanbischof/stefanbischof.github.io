@@ -10,6 +10,8 @@ venue: Third International Workshop on Knowledge Graphs and Neurosymbolic AI (KG
 category: workshop
 status: forthcoming
 links:
+  - label: PDF
+    url: https://kg-nesy.github.io/paper/kgnesy-paper6.pdf
   - label: arXiv preprint
     url: https://arxiv.org/abs/2609.29876
 abstract: |
